@@ -1,0 +1,41 @@
+<div class="columns">
+    <div class="column mr-3">
+        @for (item of portsMapped; track item.id; let index = $index) {
+            <div class="card" (click)="loadMappedPorts(index)">
+                <div class="card-content">
+                    <div class="content">
+                        <h3>Server Name: {{item.sourceServer}}</h3>
+                        <h5>Total Mapped ports: {{item.totalMappedPorts}}</h5>
+                        <h5>Associated Servers: {{item.totalMappedServers}}</h5>
+                        <button class="button is-primary mr-2" [routerLink]="['/mapping', index]">Edit</button>
+                        <button class="button is-danger" (click)="deleteServer(index)" [disabled]="this.portsMapped.length <= 2">Delete</button>
+                    </div>
+                </div>
+            </div>
+        }
+        <button class="button is-primary" [routerLink]="['/mapping', 'new']">+</button>
+    </div>
+    <div class="column">
+        <h3>Source Server: {{sourceServer}}</h3>
+        <div class="table is-fullwidth">
+            <thead>
+                <tr>
+                    <th>Source Server</th>
+                    <th>Service</th>
+                    <th>Ports</th>
+                    <th>Protocol</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (item of portsDisplay; track item.targetServerId) {
+                    <tr>
+                        <td>{{item.targetServerName}}</td>
+                        <td>{{item.targetService}}</td>
+                        <td>{{item.toPort}}</td>
+                        <td>{{item.protocol}}</td>
+                    </tr>
+                    }
+            </tbody>
+        </div>
+    </div>
+</div>

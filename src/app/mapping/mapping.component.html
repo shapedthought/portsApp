@@ -1,0 +1,115 @@
+<p>Mapping works: {{id}}</p>
+
+<div class="columns">
+    <div class="column">
+        <label class="label">Server Name: {{serverName}}</label>
+        <input class="input" type="text" [(ngModel)]="serverName" [disabled]="disableNameChange">
+    </div>
+    <div class="column">
+        <label class="label">Product</label>
+        <div class="select is-fullwidth">
+            <select [(ngModel)]="selectedProduct" (change)="changeApp(selectedProduct)">
+            @for (item of products; track item.id) {
+                
+                    <option>{{item.productName}}</option>
+            }
+        </select>
+        </div>
+    </div>
+    <div class="column">
+        <label class="label">Target Server: {{selectedTargetServer}}</label>
+        <div class="select is-fullwidth">
+            <select [(ngModel)]="selectedTargetServer">
+            @for (item of servers; track item.id) {
+                
+                    <option>{{item.name}}</option>
+            }
+        </select>
+        </div>
+    </div>
+</div>
+<div class="columns">
+    <div class="column scrollable-table-container">
+        <h2>Source Service</h2>
+        <table class="table is-fullwidth">
+        <thead>
+            <tr>
+                <th>Source Service</th>
+                <th>Select</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (item of sourceServices; track item.id; let index = $index) {
+                <tr [ngClass]="{'is-bold': index === sourceServiceSelected}">
+                    <td>{{item.name}}</td>
+                    <td><button class="button is-primary" (click)="selectService(index)">Select</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    </div>
+    <div class="column scrollable-table-container">
+        <h2>Target Service for {{sourceServiceName}}</h2>
+        <table class="table is-fullwidth">
+        <thead>
+            <tr>
+                <th>Target Service</th>
+                <th>Ports</th>
+                <th>Protocol</th>
+                <th>Add</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (item of targetServices; track item.id; let index = $index) {
+                <tr>
+                    <td>{{item.targetService}}</td>
+                    <td>{{item.ports}}</td>
+                    <td>{{item.protocol}}</td>
+                    <td><button class="button is-primary" (click)="addService(index)" [disabled]="this.serverName.length < 3">Add</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    </div>
+</div>
+<div class="columns">
+    <div class="column">
+        @if (selectedPortMapping.sourceServer.length > 0) {
+            <h2>Mapped Services</h2>
+        
+        <table class="table is-fullwidth">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Source Server</th>
+                <th>Target Server</th>
+                <th>Source Service</th>
+                <th>Target Service</th>
+                <th>Ports</th>
+                <th>Protocol</th>
+                <th>Remove</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (item of selectedPortMapping.mappedPorts; track item.targetServerId; let index = $index) {
+                <tr>
+                    <td>{{item.product}}</td>
+                    <td>{{selectedPortMapping.sourceServer}}</td>
+                    <td>{{item.targetServerName}}</td>
+                    <td>{{item.sourceService}}</td>
+                    <td>{{item.targetService}}</td>
+                    <td>{{item.toPort}}</td>
+                    <td>{{item.protocol}}</td>
+                    <td><button class="button is-danger" (click)="removeService(index)">Remove</button></td>
+                </tr>
+            }
+        </table>
+    }
+    </div>
+</div>
+<div class="columns">
+    <div class="column">
+        <button class="button is-primary mr-2" [disabled]="this.mappedServices.length == 0">Save</button>
+        <button class="button is-warning" [routerLink]="['/']">Back</button>
+    </div>
+</div>

@@ -1,0 +1,10 @@
+.is-bold {
+    font-weight: bold;
+}
+
+.scrollable-table-container {
+    max-height: 400px; /* Adjust the height as needed */
+    overflow-y: auto;
+    overflow-x: hidden; /* Optional: hides horizontal scrollbar if not needed */
+    border: 1px solid #ddd; /* Optional: adds a border around the scrollable area */
+}
