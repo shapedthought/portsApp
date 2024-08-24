@@ -7,7 +7,7 @@ export interface TargetServices {
 }
 
 export interface Service {
-    id: number;
+    id?: number;
     name: string;
     targetServices: TargetServices[];
 }
@@ -38,9 +38,14 @@ export interface SourceServiceRequest {
     productName: string;
 }
 
+export interface SourceService {
+    id: number;
+    sourceService: string;
+}
+
 export interface TargetServiceRequest {
     productName: string;
-    fromPort: number;
+    fromPort: string;
 }
 
 export interface FullServiceRequest {
@@ -49,24 +54,23 @@ export interface FullServiceRequest {
     toPort: number;
 }
 
-export interface FullSeriveResponse {
-    productName: string;
-    fromPort: number;
-    toPort: number;
-    targetServer: string;
-    targetService: string;
+export interface FullServiceResponse {
+    product: string;
+    fromPort: string;
+    toPort: string;
     protocol: string;
+    port: string;
+    description: string;
 }
 
 export interface MappedPorts {
-    targetServerId: string;
+    targetServerId: number;
     targetServerName: string;
     sourceService: string;
     targetService: string;
     description: string;
     product: string;
-    fromPort: string;
-    toPort: string;
+    port: string;
     protocol: string;
 }
 
@@ -78,13 +82,12 @@ export interface PortMapping {
     mappedPorts: MappedPorts[];
 }
 
-export interface Server {
-    id: number;
-    name: string;
-    targetServices: TargetServices[];
-}
-
 export interface Product {
     id?: number;
     productName: string;
+}
+
+export interface Server {
+    id: number;
+    name: string;
 }

@@ -1,7 +1,9 @@
 <div class="columns">
     <div class="column mr-3">
         @for (item of portsMapped; track item.id; let index = $index) {
-            <div class="card" (click)="loadMappedPorts(index)">
+            <div class="card" 
+                [ngClass]="{'is-selected': selectedCardIndex === index}"
+                (click)="loadMappedPorts(index)">
                 <div class="card-content">
                     <div class="content">
                         <h3>Server Name: {{item.sourceServer}}</h3>
@@ -13,29 +15,59 @@
                 </div>
             </div>
         }
-        <button class="button is-primary" [routerLink]="['/mapping', 'new']">+</button>
+        <!-- <button class="button is-primary" [routerLink]="['/mapping', 'new']">Add Server & Mapping</button> -->
     </div>
     <div class="column">
-        <h3>Source Server: {{sourceServer}}</h3>
-        <div class="table is-fullwidth">
-            <thead>
-                <tr>
-                    <th>Source Server</th>
-                    <th>Service</th>
-                    <th>Ports</th>
-                    <th>Protocol</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for (item of portsDisplay; track item.targetServerId) {
+        @if (portsDisplay.length > 0) {
+            <h4 class="title is-4">Source Server: {{sourceServer}}</h4>
+            <div class="table is-fullwidth">
+                <thead>
                     <tr>
-                        <td>{{item.targetServerName}}</td>
-                        <td>{{item.targetService}}</td>
-                        <td>{{item.toPort}}</td>
-                        <td>{{item.protocol}}</td>
+                        <th>Target Server</th>
+                        <th>Service</th>
+                        <th>Ports</th>
+                        <th>Protocol</th>
                     </tr>
-                    }
-            </tbody>
-        </div>
+                </thead>
+                <tbody>
+                    @for (item of portsDisplay; track item) {
+                        <tr>
+                            <td>{{item.targetServerName}}</td>
+                            <td>{{item.targetService}}</td>
+                            <td>{{item.port}}</td>
+                            <td>{{item.protocol}}</td>
+                        </tr>
+                        }
+                </tbody>
+            </div> 
+        } @else {
+            <h4 class="title is-4">{{sourceServer}}: No ports mapped</h4>
+        }
+
     </div>
+</div>
+<!-- Button to open the modal -->
+<button class="button is-primary" (click)="openModal()">Add Server</button>
+
+<!-- Modal structure -->
+<div class="modal" [ngClass]="{'is-active': isModalActive}">
+  <div class="modal-background" (click)="closeModal()"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Server Name</p>
+      <button class="delete" aria-label="close" (click)="closeModal()"></button>
+    </header>
+    <section class="modal-card-body">
+      <div class="field">
+        <label class="label">Server Name</label>
+        <div class="control">
+          <input class="input" type="text" [(ngModel)]="serverName" placeholder="Enter server name">
+        </div>
+      </div>
+    </section>
+    <footer class="modal-card-foot">
+      <button class="button is-success mr-2" (click)="submitModal()" [disabled]="serverName.length < 2">Submit</button>
+      <button class="button" (click)="closeModal()">Cancel</button>
+    </footer>
+  </div>
 </div>
