@@ -61,12 +61,15 @@
       <div class="field">
         <label class="label">Server Name</label>
         <div class="control">
-          <input class="input" type="text" [(ngModel)]="serverName" placeholder="Enter server name">
+          <input class="input" type="text" [(ngModel)]="serverName" placeholder="Enter server name" (change)="checkServerName(serverName)">
+          @if (this.repeatServerName) {
+            <p class="help is-danger">No duplicate server names!</p>
+          }
         </div>
       </div>
     </section>
     <footer class="modal-card-foot">
-      <button class="button is-success mr-2" (click)="submitModal()" [disabled]="serverName.length < 2">Submit</button>
+      <button class="button is-success mr-2" (click)="submitModal()" [disabled]="serverName.length < 2 || this.repeatServerName">Submit</button>
       <button class="button" (click)="closeModal()">Cancel</button>
     </footer>
   </div>

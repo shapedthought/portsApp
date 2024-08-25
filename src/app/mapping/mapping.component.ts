@@ -16,6 +16,7 @@ import { Router } from '@angular/router';
 })
 export class MappingComponent {
 
+
   id = 0;
   sourceServiceSelected = 0;
   serverName = 'Change me';
@@ -39,6 +40,7 @@ export class MappingComponent {
     totalMappedServers: 0,
     mappedPorts: []
   };
+  repeatServerName: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -50,45 +52,30 @@ export class MappingComponent {
   }
 
   ngOnInit() { 
-    
-    const idParam = this.route.snapshot.params['id'];
-    this.portMapping = this.dataService.getMappedPorts();
 
-    if (idParam == "new") {
-      this.id = -1;
+  const idParam = this.route.snapshot.params['id'];
+  this.portMapping = this.dataService.getMappedPorts();
+  this.servers = this.dataService.getServers();
+  
+  // Get the ID
+  this.id = parseInt(idParam)
 
-      this.portMapping = this.dataService.addNewServer("Change me");
-      this.selectedPortMapping = this.portMapping[this.portMapping.length - 1];
-      this.servers = this.dataService.getServers();
-      this.selectedTargetServer = this.servers[0].name;
-      this.selectedProduct = 'VB365';
+  // Get the port mappings based on the ID
+  this.selectedPortMapping = this.portMapping[this.id];
+  console.log(this.selectedPortMapping);
 
-    } else {
-      this.portMapping = this.dataService.getMappedPorts();
-      this.servers = this.dataService.getServers();
-      
-      // Get the ID
-      this.id = parseInt(idParam)
+  // Get the  serv=er name from the port mapping
+  this.serverName = this.selectedPortMapping.sourceServer;
 
-      // Get the port mappings based on the ID
-      this.selectedPortMapping = this.portMapping[this.id];
-      console.log(this.selectedPortMapping);
+  this.selectedTargetServer = this.servers[0].name;
 
-      // Get the  serv=er name from the port mapping
-      this.serverName = this.selectedPortMapping.sourceServer;
-
-      this.selectedTargetServer = this.servers[0].name;
-
-      if (this.serverName == this.selectedTargetServer) { 
-        // If the server name is the same as the target server, then select the other server
-        this.selectedTargetServer = this.servers.filter(server => server.name !== this.serverName)[0].name;
-      }
-
-
-      this.selectedProduct = this.selectedPortMapping.mappedPorts.length > 0 ? this.selectedPortMapping.mappedPorts[0].product : 'VB365';
-      console.log('selectedProduct: ' + this.selectedProduct);
-
+  if (this.serverName == this.selectedTargetServer) { 
+    // If the server name is the same as the target server, then select the other server
+    this.selectedTargetServer = this.servers.filter(server => server.name !== this.serverName)[0].name;
   }
+
+  this.selectedProduct = this.selectedPortMapping.mappedPorts.length > 0 ? this.selectedPortMapping.mappedPorts[0].product : 'VB365';
+  console.log('selectedProduct: ' + this.selectedProduct);
 
   this.getApps();
   this.getSourceData();
@@ -101,7 +88,6 @@ export class MappingComponent {
       this.fullServiceResponse = data;
       this.sourceServiceName = this.sourceServices[index].name
       this.sourceServiceSelected = index; 
-      // this.targetServices = this.fullServiceResponse[0].productName;
     });
   }
   // Updates 
@@ -123,12 +109,7 @@ export class MappingComponent {
   }
 
   saveMapping() {
-    if (this.id == -1) {
-      // this.dataService.addPortMapping(this.selectedPortMapping);
-    } else {
-      this.dataService.updatePortMapping(this.selectedPortMapping, this.selectedPortMapping.id);
-    }
-
+    this.dataService.updatePortMapping(this.selectedPortMapping, this.selectedPortMapping.id);
     this.router.navigate(['']);
   }
 
@@ -157,9 +138,32 @@ export class MappingComponent {
   }
 
   updateName(newName: string) {
-    this.selectedPortMapping.sourceServer = newName;
+    this.checkServerName(newName);
+    if (this.repeatServerName) {
+      return;
+    }
     this.dataService.updateName(newName, this.id);
+    this.selectedPortMapping.sourceServer = newName;
     this.servers = this.dataService.getServers();
+    
   }
 
+  checkServerName(name: string) {
+    const serverNames = this.servers.map(server => server.name);
+    if (serverNames.includes(name)) {
+      this.repeatServerName = true;
+    } else {
+      this.repeatServerName = false;
+    }
+  }
+
+  updateTargetPortmapping() {
+    const servers = this.selectedPortMapping.mappedPorts.map(mappedPort => mappedPort.targetServerName);
+    this.selectedPortMapping.totalMappedServers = Array.from(new Set(servers)).length;
+  }
+
+  updateTargetServer(index: number, newTargetServer: string) {
+    // this.selectedPortMapping.mappedPorts[index].targetServerName = newTargetServer
+    console.log(this.selectedPortMapping.mappedPorts);
+  }
 }

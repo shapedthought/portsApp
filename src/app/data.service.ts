@@ -64,11 +64,17 @@ export class DataService {
   }
 
   updateName(newName: string, index: number) {
-    if (index === -1) {
-      this.mappedPorts[this.mappedPorts.length - 1].sourceServer = newName;
-    } else {  
-      this.mappedPorts[index].sourceServer = newName;
+    const oldName = this.mappedPorts[index].sourceServer;
+    this.mappedPorts.forEach(portMapping => {
+      portMapping.mappedPorts.forEach(mappedPort => {
+        if (mappedPort.targetServerName === oldName) {
+          mappedPort.targetServerName = newName;
+        }
+      });
     }
+    );
+    this.mappedPorts[index].sourceServer = newName;
+
   }
 
   constructor() { }

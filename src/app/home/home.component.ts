@@ -18,6 +18,7 @@ export class HomeComponent {
   serverName: string = '';
   serverIndex = 2;
   sourceServer = '';
+  repeatServerName: boolean = false;
 
   portsMapped: PortMapping[] = []
   portsDisplay: MappedPorts[] = [];
@@ -39,6 +40,15 @@ export class HomeComponent {
 
   getServerData(): void {
     this.portsMapped = this.dataService.getMappedPorts();
+  }
+
+  checkServerName(name: string) {
+    const serverNames = this.portsMapped.map(portMapping => portMapping.sourceServer);
+    if (serverNames.includes(name)) {
+      this.repeatServerName = true;
+    } else {
+      this.repeatServerName = false;
+    }
   }
 
   deleteServer(index: number): void { 
