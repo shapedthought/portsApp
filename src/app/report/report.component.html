@@ -1,1 +1,41 @@
 <p>report works!</p>
+
+<div class="columns">
+    <div class="column">
+        <table class="table is-fullwidth">
+            <thead>
+                <tr>
+                    <th>Source Server</th>
+                    <th>Target Server</th>
+                    <th>Product</th>
+                    <th>Source Service</th>
+                    <th>Target Service</th>
+                    <th>Ports</th>
+                    <th>Protocol</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for(item of portMapping; track item; let index = $index) {
+                    @for (target of item.mappedPorts; track target; let index = $index) {
+                    <tr>
+                        <td>{{item.sourceServer}}</td>
+                        <td>{{target.targetServerName}}</td>
+                        <td>{{target.product}}</td>
+                        <td>{{target.sourceService}}</td>
+                        <td>{{target.targetService}}</td>
+                        <td>{{target.port}}</td>
+                        <td>{{target.protocol}}</td>
+                        
+                    </tr>
+                }
+                }
+            </tbody>
+        </table>
+</div>
+</div>
+<div class="columns">
+    <div class="column">
+        <button class="button is-primary" [routerLink]="['/']" >Back</button>   
+    </div>
+</div>
+
