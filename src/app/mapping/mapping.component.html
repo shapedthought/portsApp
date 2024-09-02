@@ -103,10 +103,8 @@
                 <tr>
                     <td>{{item.product}}</td>
                     <td>{{selectedPortMapping.sourceServer}}</td>
-                    <!-- <td>{{item.targetServerName}}</td> -->
                     <td>
                         <div class="select is-fullwidth">
-                            <!-- <select [(ngModel)]="item.targetServerName" (change)="updateTargetServer(index, item.targetServerName)"> -->
                             <select [(ngModel)]="item.targetServerName" (change)="updateTargetPortmapping()">
                             @for (server of servers; track server) {
                                 

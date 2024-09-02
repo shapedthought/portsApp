@@ -43,7 +43,9 @@
         } @else {
             <h4 class="title is-4">{{sourceServer}}: No ports mapped</h4>
         }
-
+        @if (portsDisplay.length > 0) {
+    <textarea class="textarea custom-textarea" placeholder="Code Area" rows="10">{{codeString}}</textarea>
+        }
     </div>
 </div>
 <!-- Button to open the modal -->

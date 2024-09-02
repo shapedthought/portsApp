@@ -9,3 +9,9 @@
 .is-selected {
     background-color: rgb(223, 237, 226);
   }
+
+.custom-textarea {
+    background-color: black;
+    color: white;
+    font-family: 'Courier New', Courier, monospace;
+  }

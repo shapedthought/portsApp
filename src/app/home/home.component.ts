@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MappedPorts, PortMapping } from '../services';
-import { DataService } from '../data.service'; 
+import { DataService } from '../data.service';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 
@@ -11,7 +11,7 @@ import Swal from 'sweetalert2';
   standalone: true,
   imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+  styleUrl: './home.component.css',
 })
 export class HomeComponent {
   isModalActive: boolean = false;
@@ -19,8 +19,9 @@ export class HomeComponent {
   serverIndex = 2;
   sourceServer = '';
   repeatServerName: boolean = false;
+  codeString = '';
 
-  portsMapped: PortMapping[] = []
+  portsMapped: PortMapping[] = [];
   portsDisplay: MappedPorts[] = [];
   selectedCardIndex: number | null = null;
 
@@ -43,7 +44,9 @@ export class HomeComponent {
   }
 
   checkServerName(name: string) {
-    const serverNames = this.portsMapped.map(portMapping => portMapping.sourceServer);
+    const serverNames = this.portsMapped.map(
+      (portMapping) => portMapping.sourceServer
+    );
     if (serverNames.includes(name)) {
       this.repeatServerName = true;
     } else {
@@ -51,10 +54,10 @@ export class HomeComponent {
     }
   }
 
-  deleteServer(index: number): void { 
+  deleteServer(index: number): void {
     Swal.fire({
       title: 'Are you sure you want to delete this server?',
-      text: "This will also delete all mapped ports to this server.",
+      text: 'This will also delete all mapped ports to this server.',
       showDenyButton: true,
       confirmButtonText: `Yes`,
       denyButtonText: `No`,
@@ -64,8 +67,8 @@ export class HomeComponent {
         this.portsMapped = this.dataService.getMappedPorts();
         this.portsDisplay = [];
       }
-    })
-    
+    });
+
     // this.dataService.deleteServer(index);
     // this.portsMapped = this.dataService.getMappedPorts();
   }
@@ -74,24 +77,42 @@ export class HomeComponent {
     this.selectedCardIndex = index;
     this.portsDisplay = this.portsMapped[index].mappedPorts;
     this.sourceServer = this.portsMapped[index].sourceServer;
+    const tcpStrings = Array.from(
+      new Set(
+        this.portsDisplay
+          .filter((mappedPort) => mappedPort.protocol.includes('TCP'))
+          .flatMap((mappedPort) => mappedPort.port.split(' ').filter(Boolean).filter(port => !isNaN(Number(port))))
+      )
+    ).join(',');
+    const udpStrings = Array.from(
+      new Set(
+        this.portsDisplay
+          .filter((mappedPort) => mappedPort.protocol.includes('UDP'))
+          .flatMap((mappedPort) => mappedPort.port.split(' ').filter(Boolean))
+      )
+    ).join(',');
+
+    this.codeString = `New-NetFirewallRule -DisplayName "ALLOW VEEAM TCP PORTS ${tcpStrings}" -Direction inbound -Profile Any -Action Allow -LocalPort ${tcpStrings} -Protocol TCP`;
+    if (udpStrings) {
+      this.codeString += `\n\nNew-NetFirewallRule -DisplayName "ALLOW VEEAM UDP PORTS ${udpStrings}" -Direction inbound -Profile Any -Action Allow -LocalPort ${udpStrings} -Protocol UDP`;
+    }
   }
 
   checkForMappedPorts(index: number): boolean {
-    if (this.portsMapped[index].mappedPorts.length > 0 || this.portsMapped.length > 2) {
+    if (
+      this.portsMapped[index].mappedPorts.length > 0 ||
+      this.portsMapped.length > 2
+    ) {
       return true;
     } else {
       return false;
     }
   }
 
-  constructor(
-    private dataService: DataService
-  ) { 
-  }
+  constructor(private dataService: DataService) {}
 
   ngOnInit(): void {
     this.portsMapped = this.dataService.getMappedPorts();
     this.sourceServer = this.portsMapped[0].sourceServer;
   }
-    
 }
