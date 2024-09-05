@@ -77,24 +77,35 @@ export class HomeComponent {
     this.selectedCardIndex = index;
     this.portsDisplay = this.portsMapped[index].mappedPorts;
     this.sourceServer = this.portsMapped[index].sourceServer;
+
+    const processPortString = (portString: string): string => {
+      if (portString.includes('to')) {
+        return portString.split('to').map(item => item.trim()).join('-')
+      } else {
+        return portString
+      }
+    };
+
     const tcpStrings = Array.from(
       new Set(
         this.portsDisplay
           .filter((mappedPort) => mappedPort.protocol.includes('TCP'))
-          .flatMap((mappedPort) => mappedPort.port.split(' ').filter(Boolean).filter(port => !isNaN(Number(port))))
+          .map((mappedPort) => processPortString(mappedPort.port))
+          .flatMap(item => item.split(' ').filter(Boolean))
       )
     ).join(',');
     const udpStrings = Array.from(
       new Set(
         this.portsDisplay
           .filter((mappedPort) => mappedPort.protocol.includes('UDP'))
-          .flatMap((mappedPort) => mappedPort.port.split(' ').filter(Boolean))
+          .map((mappedPort) => processPortString(mappedPort.port))
+          .flatMap(item => item.split(' ').filter(Boolean))
       )
     ).join(',');
 
-    this.codeString = `New-NetFirewallRule -DisplayName "ALLOW VEEAM TCP PORTS ${tcpStrings}" -Direction inbound -Profile Any -Action Allow -LocalPort ${tcpStrings} -Protocol TCP`;
+    this.codeString = `New-NetFirewallRule -DisplayName "ALLOW VEEAM TCP PORTS" -Direction inbound -Profile Any -Action Allow -LocalPort ${tcpStrings} -Protocol TCP`;
     if (udpStrings) {
-      this.codeString += `\n\nNew-NetFirewallRule -DisplayName "ALLOW VEEAM UDP PORTS ${udpStrings}" -Direction inbound -Profile Any -Action Allow -LocalPort ${udpStrings} -Protocol UDP`;
+      this.codeString += `\n\nNew-NetFirewallRule -DisplayName "ALLOW VEEAM UDP PORTS" -Direction inbound -Profile Any -Action Allow -LocalPort ${udpStrings} -Protocol UDP`;
     }
   }
 
