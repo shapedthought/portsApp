@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { MappedPorts, PortMapping } from '../services';
+import { MappedPorts, PortMapping, ShowMappedPorts } from '../services';
 import { DataService } from '../data.service';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
@@ -23,7 +23,10 @@ export class HomeComponent {
 
   portsMapped: PortMapping[] = [];
   portsDisplay: MappedPorts[] = [];
+  inboundPortsDisplay: MappedPorts[] = [];
   selectedCardIndex: number | null = null;
+
+  showMappedPorts: ShowMappedPorts[] = []; 
 
   submitModal() {
     this.dataService.addNewServer(this.serverName);
@@ -75,21 +78,64 @@ export class HomeComponent {
 
   loadMappedPorts(index: number): void {
     this.selectedCardIndex = index;
+
+    // reduce the mapped ports by grouping them by the tartget server name
     this.portsDisplay = this.portsMapped[index].mappedPorts;
     this.sourceServer = this.portsMapped[index].sourceServer;
 
     const processPortString = (portString: string): string => {
       if (portString.includes('to')) {
         return portString.split('to').map(item => item.trim()).join('-')
-      } else {
+      }
+      else if (portString.includes(',')) {
+        return portString.replaceAll(',', '')
+      }
+      else {
         return portString
       }
     };
 
+    let portsReduces = new Map();
+
+    // reduce the mapped ports by grouping them by the targetServerName, targetService and protocol
+    this.portsMapped[index].mappedPorts.forEach(mappedPort => {
+      const key = `${mappedPort.targetServerName}-${mappedPort.targetService}-${mappedPort.protocol}`;
+      const index = portsReduces.get(key);
+      if (!portsReduces.has(key)) {
+        portsReduces.set(key, [mappedPort.port]);
+      } else {
+        if (index.includes(mappedPort.port)) {
+          return
+        }
+        portsReduces.set(key, [...index, mappedPort.port]);
+      }
+    });
+
+    // convert the map to an array
+    this.showMappedPorts = Array.from(portsReduces).map(([key, value]) => {
+      const [targetServerName, targetService, protocol] = key.split('-');
+      return {
+        targetServerName,
+        targetService,
+        protocol,
+        port: value.join(', ')
+      };
+    });
+
+    console.log('portsReduces');
+    console.log(this.showMappedPorts);
+
+    this.inboundPortsDisplay = this.portsMapped
+      .map(item => item.mappedPorts.filter(mappedPort => mappedPort.targetServerName === this.sourceServer))
+      .flat();
+
+      
     const tcpStrings = Array.from(
       new Set(
         this.portsDisplay
+          // filter the protocol 
           .filter((mappedPort) => mappedPort.protocol.includes('TCP'))
+          // map the mapped port throught the process port string function
           .map((mappedPort) => processPortString(mappedPort.port))
           .flatMap(item => item.split(' ').filter(Boolean))
       )
@@ -103,9 +149,9 @@ export class HomeComponent {
       )
     ).join(',');
 
-    this.codeString = `New-NetFirewallRule -DisplayName "ALLOW VEEAM TCP PORTS" -Direction inbound -Profile Any -Action Allow -LocalPort ${tcpStrings} -Protocol TCP`;
+    this.codeString = `TCP Ports: ${tcpStrings}`;
     if (udpStrings) {
-      this.codeString += `\n\nNew-NetFirewallRule -DisplayName "ALLOW VEEAM UDP PORTS" -Direction inbound -Profile Any -Action Allow -LocalPort ${udpStrings} -Protocol UDP`;
+      this.codeString += `\n\nUDP Ports: ${udpStrings}`;
     }
   }
 

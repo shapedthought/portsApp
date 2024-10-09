@@ -23,7 +23,7 @@ export class HttpService {
 
   getApps(): Observable<Product[]>{
 
-    return this.http.get<string[]>('http://localhost:8000/', {}).pipe(
+    return this.http.get<string[]>('http://localhost:8001/', {}).pipe(
       map(products => products.map((product, index) => ({ id: index + 1, productName: product }))),
       catchError(this.handleError)
     );
@@ -33,7 +33,7 @@ export class HttpService {
 
       const targetServices: TargetServices[] = [];
 
-      return this.http.post<string[]>('http://localhost:8000/source', productName).pipe(
+      return this.http.post<string[]>('http://localhost:8001/source', productName).pipe(
         map(services => services.map((service, index) => ({ id: index + 1, name: service, targetServices: targetServices }))),
         catchError(this.handleError)
       );
@@ -43,7 +43,7 @@ export class HttpService {
   
     const targetServices: TargetServiceRequest = { productName: productName, fromPort };
   
-    return this.http.post<FullServiceResponse[]>('http://localhost:8000/allTarget', targetServices ).pipe(
+    return this.http.post<FullServiceResponse[]>('http://localhost:8001/allTarget', targetServices ).pipe(
       catchError(this.handleError)
     );
   }

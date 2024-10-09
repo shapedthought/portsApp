@@ -7,8 +7,9 @@
                 <div class="card-content">
                     <div class="content">
                         <h3>Server Name: {{item.sourceServer}}</h3>
-                        <h5>Total Mapped ports: {{item.totalMappedPorts}}</h5>
-                        <h5>Associated Servers: {{item.totalMappedServers}}</h5>
+                        <h5>Total Outbound ports: {{item.totalMappedPorts}}</h5>
+                        <h5>Total Inbound ports: </h5>
+                        <h5>Target Server qty: {{item.totalMappedServers}}</h5>
                         <button class="button is-primary mr-2" [routerLink]="['/mapping', index]">Edit</button>
                         <button class="button is-danger" (click)="deleteServer(index)" [disabled]="this.portsMapped.length <= 2">Delete</button>
                     </div>
@@ -18,8 +19,9 @@
         <!-- <button class="button is-primary" [routerLink]="['/mapping', 'new']">Add Server & Mapping</button> -->
     </div>
     <div class="column">
-        @if (portsDisplay.length > 0) {
-            <h4 class="title is-4">Source Server: {{sourceServer}}</h4>
+        @if (showMappedPorts.length > 0) {
+            <h4 class="title">Source Server: {{sourceServer}}</h4>
+            <h4 class="is-size-4">Outbound ports</h4>
             <div class="table is-fullwidth">
                 <thead>
                     <tr>
@@ -30,7 +32,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for (item of portsDisplay; track item) {
+                    @for (item of showMappedPorts; track item) {
                         <tr>
                             <td>{{item.targetServerName}}</td>
                             <td>{{item.targetService}}</td>
@@ -40,11 +42,42 @@
                         }
                 </tbody>
             </div> 
+          } @else {
+            <h4 class="title is-4">{{sourceServer}}: No outbound ports mapped</h4>
+          }
+            @if (inboundPortsDisplay.length > 0) {
+            <h4 class="is-size-4">Inbound ports</h4> 
+            <div class="table is-fullwidth">
+              <thead>
+                <tr>
+                  <th>Source Server</th>
+                  <th>Service</th>
+                  <th>Ports</th>
+                  <th>Protocol </th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (item of inboundPortsDisplay; track item) {
+                <tr>
+                  <td>{{item.sourceServerName}}</td>
+                  <td>{{item.sourceService}}</td>
+                  <td>{{item.port}}</td>
+                  <td>{{item.protocol}}</td>
+                </tr>
+                }
+              </tbody>
+            </div> 
         } @else {
-            <h4 class="title is-4">{{sourceServer}}: No ports mapped</h4>
+            <h4 class="title is-4">{{sourceServer}}: No inbound ports mapped</h4>
         }
+   
         @if (portsDisplay.length > 0) {
-    <textarea class="textarea custom-textarea" placeholder="Code Area" rows="10">{{codeString}}</textarea>
+    <!-- <textarea class="textarea custom-textarea" placeholder="Code Area" rows="10">{{codeString}}</textarea> -->
+     <div class="card">
+      <div class="card-content">
+        <textarea class="textarea">{{codeString}}</textarea>
+      </div>
+     </div>
         }
     </div>
 </div>

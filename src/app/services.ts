@@ -64,6 +64,8 @@ export interface FullServiceResponse {
 }
 
 export interface MappedPorts {
+    sourceServerId: number;
+    sourceServerName: string;  
     targetServerId: number;
     targetServerName: string;
     sourceService: string;
@@ -72,6 +74,13 @@ export interface MappedPorts {
     product: string;
     port: string;
     protocol: string;
+}
+
+export interface ShowMappedPorts {
+    targetServerName: string;
+    targetService: string;
+    protocol: string;
+    port: string;
 }
 
 export interface PortMapping {

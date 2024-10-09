@@ -93,6 +93,8 @@ export class MappingComponent {
   // Updates 
   updateService(index: number) {
     let mappedPorts: MappedPorts = {
+      sourceServerId: this.id,
+      sourceServerName: this.serverName,
       targetServerId: this.selectedPortMapping.id,
       targetServerName: this.selectedTargetServer,
       sourceService: this.sourceServiceName,
