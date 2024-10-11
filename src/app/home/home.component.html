@@ -1,4 +1,13 @@
 <div class="columns">
+  <div class="column mt-2">
+    <div class="is-pulled-right">
+      <button class="button is-primary mr-2" (click)="getExcelData()" [disabled]="checkMappedPortLength()">Export</button>
+      <button class="button is-primary" [routerLink]="['/report']" [disabled]="checkMappedPortLength()">Report</button>
+    </div>
+  </div>
+</div>
+
+<div class="columns">
     <div class="column mr-3">
         @for (item of portsMapped; track item.id; let index = $index) {
             <div class="card" 
@@ -16,7 +25,6 @@
                 </div>
             </div>
         }
-        <!-- <button class="button is-primary" [routerLink]="['/mapping', 'new']">Add Server & Mapping</button> -->
     </div>
     <div class="column">
         @if (showMappedPorts.length > 0) {
@@ -71,14 +79,13 @@
             <h4 class="title is-4">{{sourceServer}}: No inbound ports mapped</h4>
         }
    
-        @if (portsDisplay.length > 0) {
-    <!-- <textarea class="textarea custom-textarea" placeholder="Code Area" rows="10">{{codeString}}</textarea> -->
+        <!-- @if (portsDisplay.length > 0) {
      <div class="card">
       <div class="card-content">
         <textarea class="textarea">{{codeString}}</textarea>
       </div>
      </div>
-        }
+        } -->
     </div>
 </div>
 <!-- Button to open the modal -->
@@ -109,3 +116,17 @@
     </footer>
   </div>
 </div>
+
+<footer class="footer mt-4">
+  <div class="content has-text-centered">
+    <p>
+      If you would like to view the code for this project, contribute, raise an issue or have any recommendations, please visit the following links:
+    </p>
+    <p>
+      <strong>Ports App Front End Project Git: </strong> <a href="https://github.com/shapedthought/portsApp">https://github.com/shapedthought/portsApp</a>
+    </p>
+    <p>
+      <strong>Ports App Backend End Project Git: </strong> <a href="https://github.com/shapedthought/ports_server">https://github.com/shapedthought/ports_server</a>
+    </p>
+  </div>
+</footer>

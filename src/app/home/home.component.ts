@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MappedPorts, PortMapping, ShowMappedPorts } from '../services';
 import { DataService } from '../data.service';
+import { HttpService } from '../http.service';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -27,6 +29,7 @@ export class HomeComponent {
   selectedCardIndex: number | null = null;
 
   showMappedPorts: ShowMappedPorts[] = []; 
+  portsServer = 'https://app.veeambp.com/ports_server/';
 
   submitModal() {
     this.dataService.addNewServer(this.serverName);
@@ -166,7 +169,26 @@ export class HomeComponent {
     }
   }
 
-  constructor(private dataService: DataService) {}
+  checkMappedPortLength(): boolean {
+    const mappedPortsTotal = this.portsMapped.flatMap(mappedPort => mappedPort.mappedPorts).length;
+    if (mappedPortsTotal > 0) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  getExcelData(): void {
+    this.httpService.generateExcelData(this.portsMapped).subscribe((data) => {
+      const urlUpdated = `${this.portsServer}${data.file_url.split('.com/')[1]}`;
+      window.open(urlUpdated);
+    });
+  }
+
+  constructor(
+    private dataService: DataService,
+    private httpService: HttpService
+  ) {}
 
   ngOnInit(): void {
     this.portsMapped = this.dataService.getMappedPorts();
