@@ -1,4 +1,4 @@
-FROM node:20.16.0 as node
+FROM node:20.16.0 AS build
 
 WORKDIR /usr/src/app
 
@@ -14,6 +14,6 @@ RUN npm run build
 
 FROM nginx:latest
 
-COPY --from=node /usr/src/app/dist/portsApp /usr/share/nginx/html
+COPY --from=build /usr/src/app/dist/ports-app /usr/share/nginx/html
 
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
