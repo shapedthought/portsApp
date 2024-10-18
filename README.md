@@ -1,6 +1,6 @@
 # PortsApp
 
-This is the front-end project for the Ports App which is hosted on the Veeam Architectd Site https://www.veeambp.com/
+This is the front-end project for the Ports App which is hosted on the Veeam Architects Site https://www.veeambp.com/
 
 This is an Angular project so you will need to download the NPM packages
 
@@ -21,7 +21,7 @@ FROM:
 <head>
   <meta charset="utf-8">
   <title>PortsApp</title>
-  <base href="/ports_app/">
+  <base href="/magic-ports/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
