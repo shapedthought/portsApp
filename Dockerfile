@@ -14,6 +14,6 @@ RUN npm run build
 
 FROM nginx:latest
 
-COPY --from=build /usr/src/app/dist/ports-app /usr/share/nginx/html
+COPY --from=build /usr/src/app/dist/ports-app/browser /usr/share/nginx/html
 
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
