@@ -10,6 +10,7 @@ import { FullServiceResponse, PortMapping, Product, Service, TargetServiceReques
 export class HttpService {
 
   serverUrl = 'https://app.veeambp.com/ports_server/';
+  // serverUrl = 'http://localhost:8001';
 
   constructor(private  http: HttpClient) {
   } 

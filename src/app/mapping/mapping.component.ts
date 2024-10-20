@@ -37,6 +37,7 @@ export class MappingComponent {
     id: 1,
     sourceServer: '',
     totalMappedPorts: 0,
+    totalMappedInboundPorts: 0,
     totalMappedServers: 0,
     mappedPorts: []
   };

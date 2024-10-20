@@ -87,6 +87,7 @@ export interface PortMapping {
     id: number;
     sourceServer: string;
     totalMappedPorts: number;
+    totalMappedInboundPorts: number;
     totalMappedServers: number;
     mappedPorts: MappedPorts[];
 }

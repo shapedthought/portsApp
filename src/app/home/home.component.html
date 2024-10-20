@@ -17,7 +17,7 @@
                     <div class="content">
                         <h3>Server Name: {{item.sourceServer}}</h3>
                         <h5>Total Outbound ports: {{item.totalMappedPorts}}</h5>
-                        <h5>Total Inbound ports: </h5>
+                        <h5>Total Inbound ports: {{item.totalMappedInboundPorts}} </h5>
                         <h5>Target Server qty: {{item.totalMappedServers}}</h5>
                         <button class="button is-primary mr-2" [routerLink]="['/mapping', index]">Edit</button>
                         <button class="button is-danger" (click)="deleteServer(index)" [disabled]="this.portsMapped.length <= 2">Delete</button>
