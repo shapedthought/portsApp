@@ -1,98 +1,193 @@
-<div class="columns">
-  <div class="column mt-2">
-    <div class="is-pulled-right">
-      <button class="button is-primary mr-2" (click)="getExcelData()" [disabled]="checkMappedPortLength()">Export</button>
-      <button class="button is-primary" [routerLink]="['/report']" [disabled]="checkMappedPortLength()">Report</button>
+<div class="columns mt-2">
+  <div class="column">
+    <div class="buttons is-pulled-right">
+      <button
+        class="button is-primary mr-2"
+        [routerLink]="['/report']"
+        [disabled]="checkMappedPortLength()"
+      >
+        Report
+      </button>
+      <button
+        class="button is-primary mr-2"
+        (click)="getExcelData()"
+        [disabled]="checkMappedPortLength()"
+      >
+        Excel
+      </button>
+      <button
+        class="button is-primary mr-2"
+        [disabled]="checkMappedPortLength()"
+        (click)="savePortMappings()"
+      >
+        Save
+      </button>
+      <div class="file is-primary mr-2">
+        <label class="file-label">
+          <input
+            class="file-input"
+            type="file"
+            name="resume"
+            accept="json"
+            (change)="uploadPortMappings($event)"
+          />
+          <span class="file-cta">
+            <span class="file-icon">
+              <i class="fas fa-upload"></i>
+            </span>
+            <span class="file-label">Upload</span>
+          </span>
+        </label>
+      </div>
     </div>
   </div>
 </div>
 
 <div class="columns">
-    <div class="column mr-3">
+ 
+  <!-- <button class="button is-small" (click)="this.showTable = !this.showTable">Cards</button> -->
+  <div class="column mr-3">
+    <h3 class="is-bold">Click table to select server</h3>
+    <table class="table is-fullwidth">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Outbound</th>
+          <th>Inbound</th>
+          <th>Targets</th>
+          <th>Edit</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
         @for (item of portsMapped; track item.id; let index = $index) {
-            <div class="card" 
-                [ngClass]="{'is-selected': selectedCardIndex === index}"
-                (click)="loadMappedPorts(index)">
-                <div class="card-content">
-                    <div class="content">
-                        <h3>Server Name: {{item.sourceServer}}</h3>
-                        <h5>Total Outbound ports: {{item.totalMappedPorts}}</h5>
-                        <h5>Total Inbound ports: {{item.totalMappedInboundPorts}} </h5>
-                        <h5>Target Server qty: {{item.totalMappedServers}}</h5>
-                        <button class="button is-primary mr-2" [routerLink]="['/mapping', index]">Edit</button>
-                        <button class="button is-danger" (click)="deleteServer(index)" [disabled]="this.portsMapped.length <= 2">Delete</button>
-                    </div>
-                </div>
-            </div>
+        <tr
+          [ngClass]="{ 'is-selected': selectedCardIndex === index }"
+          (click)="loadMappedPorts(index)"
+        >
+          <td>{{ item.sourceServer }}</td>
+          <td>{{ item.totalMappedPorts }}</td>
+          <td>{{ item.totalMappedInboundPorts }}</td>
+          <td>{{ item.totalMappedServers }}</td>
+          <td>
+            <button class="button is-info" [routerLink]="['/mapping', index]">
+              <span class="icon-text">
+                <span class="icon">
+                  <i class="fas fa-edit"></i>
+                </span>
+              </span>
+            </button>
+          </td>
+          <td>
+            <button
+              class="button is-danger"
+              (click)="deleteServer(index); $event.stopPropagation()"
+              [disabled]="this.portsMapped.length <= 2"
+            >
+              <span class="icon-text">
+                <span class="icon">
+                  <i class="fas fa-trash"></i>
+                </span>
+              </span>
+            </button>
+          </td>
+        </tr>
         }
-    </div>
-    <div class="column">
-        @if (showMappedPorts.length > 0) {
-            <h4 class="title">Source Server: {{sourceServer}}</h4>
-            <h4 class="is-size-4">Outbound ports</h4>
-            <div class="table is-fullwidth">
-                <thead>
-                    <tr>
-                        <th>Target Server</th>
-                        <th>Service</th>
-                        <th>Ports</th>
-                        <th>Protocol</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (item of showMappedPorts; track item) {
-                        <tr>
-                            <td>{{item.targetServerName}}</td>
-                            <td>{{item.targetService}}</td>
-                            <td>{{item.port}}</td>
-                            <td>{{item.protocol}}</td>
-                        </tr>
-                        }
-                </tbody>
-            </div> 
-          } @else {
-            <h4 class="title is-4">{{sourceServer}}: No outbound ports mapped</h4>
-          }
-            @if (inboundPortsDisplay.length > 0) {
-            <h4 class="is-size-4">Inbound ports</h4> 
-            <div class="table is-fullwidth">
-              <thead>
-                <tr>
-                  <th>Source Server</th>
-                  <th>Service</th>
-                  <th>Ports</th>
-                  <th>Protocol </th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (item of inboundPortsDisplay; track item) {
-                <tr>
-                  <td>{{item.sourceServerName}}</td>
-                  <td>{{item.sourceService}}</td>
-                  <td>{{item.port}}</td>
-                  <td>{{item.protocol}}</td>
-                </tr>
-                }
-              </tbody>
-            </div> 
-        } @else {
-            <h4 class="title is-4">{{sourceServer}}: No inbound ports mapped</h4>
-        }
-   
-        <!-- @if (portsDisplay.length > 0) {
-     <div class="card">
+      </tbody>
+    </table>
+    <button class="button is-primary is-small mr-2" (click)="openModal()">Add Server</button>
+    <button class="button is-danger is-small" (click)="cleaAllMappedPorts()">Clear All</button>
+  </div>
+
+  <!-- <div class="column mr-3">
+    <button class="button is-small" (click)="this.showTable = !this.showTable">Table</button>
+    @for (item of portsMapped; track item.id; let index = $index) {
+    <div
+      class="card"
+      [ngClass]="{ 'is-selected': selectedCardIndex === index }"
+      (click)="loadMappedPorts(index)"
+    >
       <div class="card-content">
-        <textarea class="textarea">{{codeString}}</textarea>
+        <div class="content">
+          <h3>Server Name: {{ item.sourceServer }}</h3>
+          <h5>Total Outbound ports: {{ item.totalMappedPorts }}</h5>
+          <h5>Total Inbound ports: {{ item.totalMappedInboundPorts }}</h5>
+          <h5>Target Server qty: {{ item.totalMappedServers }}</h5>
+          <button
+            class="button is-primary mr-2"
+            [routerLink]="['/mapping', index]"
+          >
+            Edit
+          </button>
+          <button
+            class="button is-danger"
+            (click)="deleteServer(index)"
+            [disabled]="this.portsMapped.length <= 2"
+          >
+            Delete
+          </button>
+        </div>
       </div>
-     </div>
-        } -->
     </div>
+    }
+  </div> -->
+  <div class="column">
+    @if (showMappedPorts.length > 0) {
+    <h4 class="title">Source Server: {{ sourceServer }}</h4>
+    <h4 class="is-size-4">Outbound ports</h4>
+    <div class="table is-fullwidth">
+      <thead>
+        <tr>
+          <th>Target Server</th>
+          <!-- <th>Service</th> -->
+          <th>Ports</th>
+          <th>Protocol</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of showMappedPorts; track item.serverName) {
+        <tr>
+          <td>{{ item.serverName }}</td>
+          <!-- <td>{{ item.service }}</td> -->
+          <td>{{ item.port }}</td>
+          <td>{{ item.protocol }}</td>
+        </tr>
+        }
+      </tbody>
+    </div>
+    } @else {
+    <h4 class="title is-4">{{ sourceServer }}: No outbound ports mapped</h4>
+    } @if (showMappedInboundPorts.length > 0) {
+    <h4 class="is-size-4">Inbound ports</h4>
+    <div class="table is-fullwidth">
+      <thead>
+        <tr>
+          <th>Source Server</th>
+          <!-- <th>Service</th> -->
+          <th>Ports</th>
+          <th>Protocol</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of showMappedInboundPorts; track item) {
+        <tr>
+          <td>{{ item.serverName }}</td>
+          <!-- <td>{{ item.service }}</td> -->
+          <td>{{ item.port }}</td>
+          <td>{{ item.protocol }}</td>
+        </tr>
+        }
+      </tbody>
+    </div>
+    } @else {
+    <h4 class="title is-4">{{ sourceServer }}: No inbound ports mapped</h4>
+    }
+  </div>
 </div>
 <!-- Button to open the modal -->
-<button class="button is-primary" (click)="openModal()">Add Server</button>
 
 <!-- Modal structure -->
-<div class="modal" [ngClass]="{'is-active': isModalActive}">
+<div class="modal" [ngClass]="{ 'is-active': isModalActive }">
   <div class="modal-background" (click)="closeModal()"></div>
   <div class="modal-card">
     <header class="modal-card-head">
@@ -103,15 +198,35 @@
       <div class="field">
         <label class="label">Server Name</label>
         <div class="control">
-          <input class="input" type="text" [(ngModel)]="serverName" placeholder="Enter server name" (change)="checkServerName(serverName)">
+          <input
+            class="input"
+            type="text"
+            [(ngModel)]="serverName"
+            placeholder="Enter server name"
+            (change)="checkServerName(serverName)"
+          />
           @if (this.repeatServerName) {
-            <p class="help is-danger">No duplicate server names!</p>
+          <p class="help is-danger">No duplicate server names!</p>
+          } @else if (serverName.length < 4 || serverName.length > 20) {
+          <p class="help is-danger">
+            Server name must be between 4 and 20 characters
+          </p>
           }
         </div>
       </div>
     </section>
     <footer class="modal-card-foot">
-      <button class="button is-success mr-2" (click)="submitModal()" [disabled]="serverName.length < 2 || this.repeatServerName">Submit</button>
+      <button
+        class="button is-success mr-2"
+        (click)="submitModal()"
+        [disabled]="
+          serverName.length < 4 ||
+          serverName.length > 20 ||
+          this.repeatServerName
+        "
+      >
+        Submit
+      </button>
       <button class="button" (click)="closeModal()">Cancel</button>
     </footer>
   </div>
@@ -120,13 +235,21 @@
 <footer class="footer mt-4">
   <div class="content has-text-centered">
     <p>
-      If you would like to view the code for this project, contribute, raise an issue or have any recommendations, please visit the following links:
+      If you would like to view the code for this project, contribute, raise an
+      issue or have any recommendations, please visit the following links:
     </p>
     <p>
-      <strong>Ports App Front End Project Git: </strong> <a href="https://github.com/shapedthought/portsApp">https://github.com/shapedthought/portsApp</a>
+      <strong>Ports App Front End Project Git: </strong>
+      <a href="https://github.com/shapedthought/portsApp"
+        >https://github.com/shapedthought/portsApp</a
+      >
     </p>
     <p>
-      <strong>Ports App Backend End Project Git: </strong> <a href="https://github.com/shapedthought/ports_server">https://github.com/shapedthought/ports_server</a>
+      <strong>Ports App Backend End Project Git: </strong>
+      <a href="https://github.com/shapedthought/ports_server"
+        >https://github.com/shapedthought/ports_server</a
+      >
     </p>
+    <p>Version: 0.2.0</p>
   </div>
 </footer>

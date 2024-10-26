@@ -77,8 +77,8 @@ export interface MappedPorts {
 }
 
 export interface ShowMappedPorts {
-    targetServerName: string;
-    targetService: string;
+    serverName: string;
+    service: string;
     protocol: string;
     port: string;
 }

@@ -9,8 +9,8 @@ import { FullServiceResponse, PortMapping, Product, Service, TargetServiceReques
 })
 export class HttpService {
 
-  serverUrl = 'https://app.veeambp.com/ports_server/';
-  // serverUrl = 'http://localhost:8001';
+  // serverUrl = 'https://app.veeambp.com/ports_server';
+  serverUrl = 'http://localhost:8001';
 
   constructor(private  http: HttpClient) {
   } 
@@ -37,7 +37,7 @@ export class HttpService {
 
       const targetServices: TargetServices[] = [];
 
-      return this.http.post<string[]>(`${this.serverUrl}source`, productName).pipe(
+      return this.http.post<string[]>(`${this.serverUrl}/source`, productName).pipe(
         map(services => services.map((service, index) => ({ id: index + 1, name: service, targetServices: targetServices }))),
         catchError(this.handleError)
       );
@@ -47,14 +47,14 @@ export class HttpService {
   
     const targetServices: TargetServiceRequest = { productName: productName, fromPort };
   
-    return this.http.post<FullServiceResponse[]>(`${this.serverUrl}allTarget`, targetServices ).pipe(
+    return this.http.post<FullServiceResponse[]>(`${this.serverUrl}/allTarget`, targetServices ).pipe(
       catchError(this.handleError)
     );
   }
 
   generateExcelData(portsMapping: PortMapping[]): Observable<{ file_url: string}> {
     const mappedPorts = portsMapping.flatMap(portMapping => portMapping.mappedPorts);
-    return this.http.post<{ file_url: string}>(`${this.serverUrl}generateExcelWithUrl`, mappedPorts).pipe(
+    return this.http.post<{ file_url: string}>(`${this.serverUrl}/generateExcelWithUrl`, mappedPorts).pipe(
       catchError(this.handleError)
     );
   }

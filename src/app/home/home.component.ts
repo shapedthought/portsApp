@@ -6,7 +6,7 @@ import { DataService } from '../data.service';
 import { HttpService } from '../http.service';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
-import { map } from 'rxjs';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-home',
@@ -22,6 +22,7 @@ export class HomeComponent {
   sourceServer = '';
   repeatServerName: boolean = false;
   codeString = '';
+  showTable: boolean = true;
 
   portsMapped: PortMapping[] = [];
   portsDisplay: MappedPorts[] = [];
@@ -29,6 +30,7 @@ export class HomeComponent {
   selectedCardIndex: number | null = null;
 
   showMappedPorts: ShowMappedPorts[] = []; 
+  showMappedInboundPorts: ShowMappedPorts[] = [];
   portsServer = 'https://app.veeambp.com/ports_server/';
 
   submitModal() {
@@ -74,9 +76,6 @@ export class HomeComponent {
         this.portsDisplay = [];
       }
     });
-
-    // this.dataService.deleteServer(index);
-    // this.portsMapped = this.dataService.getMappedPorts();
   }
 
   loadMappedPorts(index: number): void {
@@ -102,7 +101,7 @@ export class HomeComponent {
 
     // reduce the mapped ports by grouping them by the targetServerName, targetService and protocol
     this.portsMapped[index].mappedPorts.forEach(mappedPort => {
-      const key = `${mappedPort.targetServerName}-${mappedPort.targetService}-${mappedPort.protocol}`;
+      const key = `${mappedPort.targetServerName}-${mappedPort.protocol}`;
       const index = portsReduces.get(key);
       if (!portsReduces.has(key)) {
         portsReduces.set(key, [mappedPort.port]);
@@ -116,21 +115,45 @@ export class HomeComponent {
 
     // convert the map to an array
     this.showMappedPorts = Array.from(portsReduces).map(([key, value]) => {
-      const [targetServerName, targetService, protocol] = key.split('-');
+      const [serverName, protocol] = key.split('-');
       return {
-        targetServerName,
-        targetService,
+        serverName,
+        service: '',
         protocol,
         port: value.join(', ')
       };
     });
 
-    console.log('portsReduces');
-    console.log(this.showMappedPorts);
-
-    this.inboundPortsDisplay = this.portsMapped
+    const tempTargetPorts = this.portsMapped
       .map(item => item.mappedPorts.filter(mappedPort => mappedPort.targetServerName === this.sourceServer))
       .flat();
+
+    let portsReducesInbound = new Map();
+
+    tempTargetPorts.forEach(mappedPort => {
+      const key = `${mappedPort.sourceServerName}-${mappedPort.protocol}`;
+      const index = portsReducesInbound.get(key);
+      if (!portsReducesInbound.has(key)) {
+        portsReducesInbound.set(key, [mappedPort.port]);
+      } else {
+        if (index.includes(mappedPort.port)) {
+          return
+        }
+        portsReducesInbound.set(key, [...index, mappedPort.port]);
+      }
+    }
+    );
+
+    this.showMappedInboundPorts = Array.from(portsReducesInbound).map(([key, value]) => {
+      const [serverName, protocol] = key.split('-');
+      return {
+        serverName,
+        service: '',
+        protocol,
+        port: value.join(', ')
+      };
+    });
+
 
       
     const tcpStrings = Array.from(
@@ -157,6 +180,23 @@ export class HomeComponent {
       this.codeString += `\n\nUDP Ports: ${udpStrings}`;
     }
   }
+
+  cleaAllMappedPorts(): void {
+    Swal.fire({
+      title: 'Are you sure you want to delete all mappings?',
+      text: 'This cannot be undone.',
+      showDenyButton: true,
+      confirmButtonText: `Yes`,
+      denyButtonText: `No`,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.dataService.deleteAll();
+        this.portsMapped = this.dataService.getMappedPorts();
+        this.portsDisplay = [];
+      }
+    });
+  }
+
 
   checkForMappedPorts(index: number): boolean {
     if (
@@ -185,12 +225,38 @@ export class HomeComponent {
     });
   }
 
+  savePortMappings(): void {
+    const dataStr = JSON.stringify(this.portsMapped, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `port-mappings-${uuidv4()}.json`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  }
+
+  uploadPortMappings(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const result = e.target?.result as string;
+        this.portsMapped = JSON.parse(result);
+        this.dataService.uploadPortMapping(this.portsMapped);
+      };
+      reader.readAsText(file);
+    }
+  }
+
   constructor(
     private dataService: DataService,
     private httpService: HttpService
   ) {}
 
   ngOnInit(): void {
+    this.dataService.loadPortMapping();
     this.portsMapped = this.dataService.getMappedPorts();
     this.sourceServer = this.portsMapped[0].sourceServer;
   }
