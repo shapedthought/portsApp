@@ -77,6 +77,7 @@ export interface MappedPorts {
 }
 
 export interface ShowMappedPorts {
+    index: number;
     serverName: string;
     service: string;
     protocol: string;
@@ -90,6 +91,12 @@ export interface PortMapping {
     totalMappedInboundPorts: number;
     totalMappedServers: number;
     mappedPorts: MappedPorts[];
+    allOutboundPortsTcp: string[];
+    allOutboundPortsUdp: string[];
+    allInboundPortsTcp: string[];
+    allInboundPortsUdp: string[];
+    mappedPortsByProtocol: ShowMappedPorts[];
+    mappedPortsByProtocolInbound: ShowMappedPorts[];
 }
 
 export interface Product {

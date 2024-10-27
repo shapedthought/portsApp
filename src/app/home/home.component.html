@@ -44,7 +44,6 @@
 </div>
 
 <div class="columns">
- 
   <!-- <button class="button is-small" (click)="this.showTable = !this.showTable">Cards</button> -->
   <div class="column mr-3">
     <h3 class="is-bold">Click table to select server</h3>
@@ -95,8 +94,12 @@
         }
       </tbody>
     </table>
-    <button class="button is-primary is-small mr-2" (click)="openModal()">Add Server</button>
-    <button class="button is-danger is-small" (click)="cleaAllMappedPorts()">Clear All</button>
+    <button class="button is-primary is-small mr-2" (click)="openModal()">
+      Add Server
+    </button>
+    <button class="button is-danger is-small" (click)="cleaAllMappedPorts()">
+      Clear All
+    </button>
   </div>
 
   <!-- <div class="column mr-3">
@@ -139,21 +142,25 @@
       <thead>
         <tr>
           <th>Target Server</th>
-          <!-- <th>Service</th> -->
           <th>Ports</th>
           <th>Protocol</th>
         </tr>
       </thead>
       <tbody>
-        @for (item of showMappedPorts; track item.serverName) {
+        @for (item of showMappedPorts; track item.index) {
         <tr>
           <td>{{ item.serverName }}</td>
-          <!-- <td>{{ item.service }}</td> -->
           <td>{{ item.port }}</td>
           <td>{{ item.protocol }}</td>
         </tr>
         }
       </tbody>
+      @if (codeStringTcp.length > 0) {
+      <p>TCP Ports: {{ codeStringTcp }}</p>
+      } 
+      @if (codeStringUdp.length > 0) {
+      <p>UDP Ports: {{ codeStringUdp }}</p>
+      } 
     </div>
     } @else {
     <h4 class="title is-4">{{ sourceServer }}: No outbound ports mapped</h4>
@@ -163,22 +170,22 @@
       <thead>
         <tr>
           <th>Source Server</th>
-          <!-- <th>Service</th> -->
           <th>Ports</th>
           <th>Protocol</th>
         </tr>
       </thead>
       <tbody>
-        @for (item of showMappedInboundPorts; track item) {
+        @for (item of showMappedInboundPorts; track item.index) {
         <tr>
           <td>{{ item.serverName }}</td>
-          <!-- <td>{{ item.service }}</td> -->
           <td>{{ item.port }}</td>
           <td>{{ item.protocol }}</td>
         </tr>
         }
       </tbody>
     </div>
+    <p>TCP Ports: {{ codeStringInboundTcp }}</p>
+    <p>UDP Ports: {{ codeStringInboundUdp }}</p>
     } @else {
     <h4 class="title is-4">{{ sourceServer }}: No inbound ports mapped</h4>
     }

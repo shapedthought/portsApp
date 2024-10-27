@@ -45,6 +45,12 @@ export class MappingComponent {
     totalMappedInboundPorts: 0,
     totalMappedServers: 0,
     mappedPorts: [],
+    allInboundPortsTcp: [],
+    allInboundPortsUdp: [],
+    allOutboundPortsTcp: [],
+    allOutboundPortsUdp: [],
+    mappedPortsByProtocol: [],
+    mappedPortsByProtocolInbound: [],
   };
   repeatServerName: boolean = false;
 
@@ -102,7 +108,13 @@ export class MappingComponent {
   splitAndAddComman(port: string): string {
     if (port.includes(',')) {
       return port;
-    } 
+    } else if (port.includes('(')) {
+      const parts = port.split("(");
+      return parts[0].trim();
+    } else if (port.includes('to')) {
+      return port.replace('to', '-').replaceAll(' ', '');
+    }
+    
     const parts = port.split(" ");
     if (parts.length == 2) {
       return parts.join(', ');
@@ -148,16 +160,6 @@ export class MappingComponent {
       protocol: this.fullServiceResponse[index].protocol,
     };
     this.selectedPortMapping.mappedPorts.push(mappedPorts);
-    // moving the logic to the data service
-
-    // this.selectedPortMapping.totalMappedPorts =
-    //   this.selectedPortMapping.mappedPorts.length;
-    // let servers = this.selectedPortMapping.mappedPorts.map(
-    //   (mappedPort) => mappedPort.targetServerName
-    // );
-    // this.selectedPortMapping.totalMappedServers = Array.from(
-    //   new Set(servers)
-    // ).length;
   }
 
   // Save the mapping trigged by the save button

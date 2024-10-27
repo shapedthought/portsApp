@@ -76,7 +76,5 @@ Currently the http service uses hardlinks to the API endpoint, this may change i
 
 ## To Do
 
-- Add on successful upload or show if there is an error.
-- Work on the inbound port aggregation for display purposes.
-- Remap the inbound ports list so it aggregates the ports like the outbound does currently, but it does not persist the data in the data service.
+- Add alert on successful upload or if there is an error.
 - Look at adding mermaid diagram output, this will require the in and out bound port remapping (see aboeve) to be stored in the data service.
