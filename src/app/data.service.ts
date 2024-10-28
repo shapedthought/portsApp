@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { PortMapping, Server } from './services';
+import { MappedPorts, PortMapping, Server } from './services';
 
 @Injectable({
   providedIn: 'root',
@@ -130,125 +130,89 @@ export class DataService {
   }
 
   recalculateServerMapedPorts(): void {
-    // Inbound ports
-    this.mappedPorts.forEach((portMapping) => {
-      let portsReduces = new Map<string, string[]>();
-      portMapping.mappedPorts.forEach((mappedPort) => {
-        const key = `${mappedPort.targetServerName}-${mappedPort.protocol}`;
-        const index = portsReduces.get(key);
-        if (!portsReduces.has(key)) {
-          portsReduces.set(key, [mappedPort.port]);
-        } else {
-          if (index && index.includes(mappedPort.port)) {
-            return;
-          }
-          portsReduces.set(key, [...(index || []), mappedPort.port]);
-        }
-      });
-      let showMappedIndex = 0;
-      portMapping.mappedPortsByProtocol = Array.from(portsReduces).map(
-        ([key, value]) => {
-          const [serverName, protocol] = key.split('-');
-          let showMapped = {
-            index: showMappedIndex,
-            serverName,
-            service: '',
-            protocol,
-            port: value.join(', '),
-          };
-          showMappedIndex++;
-          return showMapped;
-        }
-      );
-    });
-
-    this.mappedPorts.forEach((portMapping) => {
-      let portsReducesInbound = new Map<string, string[]>();
-      this.mappedPorts
-        .map((item) =>
-          item.mappedPorts.filter(
-            (mappedPort) =>
-              mappedPort.targetServerName === portMapping.sourceServer
-          )
-        )
-        .flat()
-        .forEach((mappedPort) => {
-          const key = `${mappedPort.sourceServerName}-${mappedPort.protocol}`;
-          const index = portsReducesInbound.get(key);
-          if (!portsReducesInbound.has(key)) {
-            portsReducesInbound.set(key, [mappedPort.port]);
-          } else {
-            if (index && index.includes(mappedPort.port)) {
-              return;
-            }
-            portsReducesInbound.set(key, [...(index || []), mappedPort.port]);
-          }
-        });
-
-      let showMappedInboundIndex = 0;
-      portMapping.mappedPortsByProtocolInbound = Array.from(
-        portsReducesInbound
-      ).map(([key, value]) => {
+    const mapToProtocolArray = (map: Map<string, Set<string>>) => {
+      let index = 0;
+      return Array.from(map.entries()).map(([key, ports]) => {
         const [serverName, protocol] = key.split('-');
-        let showMapped = {
-          index: showMappedInboundIndex,
+        return {
+          index: index++,
           serverName,
           service: '',
           protocol,
-          port: value.join(', '),
+          port: Array.from(ports).join(', '),
         };
-        showMappedInboundIndex++;
-        return showMapped;
       });
+    };
+
+    const reducePorts = (ports: MappedPorts[], keyFn: (port: MappedPorts) => string) => {
+      return ports.reduce((acc, port) => {
+        const key = keyFn(port);
+        if (!acc.has(key)) {
+          acc.set(key, new Set([port.port]));
+        } else {
+          acc.get(key)?.add(port.port);
+        }
+        return acc;
+      }, new Map<string, Set<string>>());
+    };
+
+    this.mappedPorts.forEach((portMapping) => {
+      const outboundPorts = reducePorts(portMapping.mappedPorts, (port: MappedPorts) => `${port.targetServerName}-${port.protocol}`);
+      portMapping.mappedPortsByProtocol = mapToProtocolArray(outboundPorts);
+
+      const inboundPorts = reducePorts(
+        this.mappedPorts.flatMap((item) =>
+          item.mappedPorts.filter(
+            (mappedPort) => mappedPort.targetServerName === portMapping.sourceServer
+          )
+        ),
+        (port) => `${port.sourceServerName}-${port.protocol}`
+      );
+      portMapping.mappedPortsByProtocolInbound = mapToProtocolArray(inboundPorts);
     });
   }
 
   // Recalculate the mapped ports for each server
   recalculateMappedPorts(): void {
     this.mappedPorts.forEach((portMapping) => {
-      let ports: string[] = [];
-      let tcpPorts: string[] = [];
-      let udpPorts: string[] = [];
+      const ports = new Set<string>();
+      const tcpPorts = new Set<string>();
+      const udpPorts = new Set<string>();
       let portRange = 0;
-      portMapping.mappedPorts.forEach((mappedPort) => {
-        const { port, protocol } = mappedPort;
+
+      portMapping.mappedPorts.forEach(({ port, protocol }) => {
         const isTCP = protocol.includes('TCP');
         const isUDP = protocol.includes('UDP');
 
         if (port.includes(',')) {
           port.split(',').forEach((p) => {
             const trimmedPort = p.trim();
-            ports.push(trimmedPort);
-            if (isTCP) tcpPorts.push(trimmedPort);
-            if (isUDP) udpPorts.push(trimmedPort);
+            ports.add(trimmedPort);
+            if (isTCP) tcpPorts.add(trimmedPort);
+            if (isUDP) udpPorts.add(trimmedPort);
           });
         } else if (port.includes('-')) {
-          ports.push(port);
-          if (isTCP) tcpPorts.push(port);
-          if (isUDP) udpPorts.push(port);
+          ports.add(port);
+          if (isTCP) tcpPorts.add(port);
+          if (isUDP) udpPorts.add(port);
           const [start, end] = port.split('-').map(Number);
           portRange += end - start;
         } else {
-          ports.push(port);
-          if (isTCP) tcpPorts.push(port);
-          if (isUDP) udpPorts.push(port);
+          ports.add(port);
+          if (isTCP) tcpPorts.add(port);
+          if (isUDP) udpPorts.add(port);
         }
       });
-      portMapping.totalMappedPorts =
-        Array.from(new Set(ports)).length + portRange;
-      portMapping.totalMappedServers = Array.from(
-        new Set(
-          portMapping.mappedPorts.map(
-            (mappedPort) => mappedPort.targetServerName
-          )
-        )
-      ).length;
-      const [portQty, tcpPortsIn, udpPortsIn] = this.getTotalInboundPorts(
-        portMapping.sourceServer
-      );
+
+      portMapping.totalMappedPorts = ports.size + portRange;
+      portMapping.totalMappedServers = new Set(
+        portMapping.mappedPorts.map(({ targetServerName }) => targetServerName)
+      ).size;
+
+      const [portQty, tcpPortsIn, udpPortsIn] = this.getTotalInboundPorts(portMapping.sourceServer);
       portMapping.totalMappedInboundPorts = portQty;
-      portMapping.allOutboundPortsTcp = Array.from(new Set(tcpPorts));
-      portMapping.allInboundPortsUdp = Array.from(new Set(udpPorts));
+      portMapping.allOutboundPortsTcp = Array.from(tcpPorts);
+      portMapping.allOutboundPortsUdp = Array.from(udpPorts);
       portMapping.allInboundPortsTcp = tcpPortsIn;
       portMapping.allInboundPortsUdp = udpPortsIn;
     });
