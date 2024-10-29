@@ -184,8 +184,12 @@
         }
       </tbody>
     </div>
+    @if (codeStringInboundTcp.length > 0) {
     <p>TCP Ports: {{ codeStringInboundTcp }}</p>
+    }
+    @if (codeStringInboundUdp.length > 0) {
     <p>UDP Ports: {{ codeStringInboundUdp }}</p>
+    }
     } @else {
     <h4 class="title is-4">{{ sourceServer }}: No inbound ports mapped</h4>
     }

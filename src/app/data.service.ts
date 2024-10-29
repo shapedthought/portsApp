@@ -106,6 +106,7 @@ export class DataService {
     const removedServer = this.mappedPorts.splice(index, 1);
     this.recalculateServerMapedPorts();
     this.recalculateMappedPorts();
+    this.savePortMapping(this.mappedPorts);
   }
 
   // Add a new server to the port mapping
