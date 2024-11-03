@@ -20,8 +20,8 @@ export class ReportComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.dataService.loadPortMapping();
     this.portMapping = this.dataService.getMappedPorts();
-    console.log(this.portMapping);
   }
 
 }

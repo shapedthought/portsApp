@@ -36,14 +36,12 @@
         <thead>
             <tr>
                 <th>Source Service</th>
-                <!-- <th>Select</th> -->
             </tr>
         </thead>
         <tbody>
             @for (item of sourceServices; track item.id; let index = $index) {
                 <tr [ngClass]="{'is-bold': index === sourceServiceSelected}" (click)="selectService(index)" >
                     <td>{{item.name}}</td>
-                    <!-- <td><button class="button is-primary" (click)="selectService(index)">Select</button></td> -->
                 </tr>
             }
         </tbody>
