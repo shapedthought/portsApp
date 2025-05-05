@@ -17,11 +17,10 @@ import { HttpService } from '../http.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-mapping',
-  standalone: true,
-  imports: [NgClass, FormsModule, RouterLink],
-  templateUrl: './mapping.component.html',
-  styleUrl: './mapping.component.css',
+    selector: 'app-mapping',
+    imports: [NgClass, FormsModule, RouterLink],
+    templateUrl: './mapping.component.html',
+    styleUrl: './mapping.component.css'
 })
 export class MappingComponent {
   id = 0;

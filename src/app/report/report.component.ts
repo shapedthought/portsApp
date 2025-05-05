@@ -4,12 +4,11 @@ import { DataService } from '../data.service';
 import { PortMapping } from '../services';
 
 @Component({
-  selector: 'app-report',
-  standalone: true,
-  imports: [RouterLink],
-  providers: [],
-  templateUrl: './report.component.html',
-  styleUrl: './report.component.css'
+    selector: 'app-report',
+    imports: [RouterLink],
+    providers: [],
+    templateUrl: './report.component.html',
+    styleUrl: './report.component.css'
 })
 export class ReportComponent implements OnInit {
 
