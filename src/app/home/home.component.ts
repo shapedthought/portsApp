@@ -7,6 +7,7 @@ import { HttpService } from '../http.service';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { v4 as uuidv4 } from 'uuid';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -16,6 +17,7 @@ import { v4 as uuidv4 } from 'uuid';
   styleUrl: './home.component.css',
 })
 export class HomeComponent {
+  portsServer = environment.portsServer;
   isModalActive: boolean = false;
   serverName: string = '';
   serverIndex = 2;
@@ -34,7 +36,6 @@ export class HomeComponent {
 
   showMappedPorts: ShowMappedPorts[] = [];
   showMappedInboundPorts: ShowMappedPorts[] = [];
-  portsServer = 'https://app.veeambp.com/ports_server/';
 
   submitModal() {
     this.dataService.addNewServer(this.serverName);

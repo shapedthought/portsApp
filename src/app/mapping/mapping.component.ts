@@ -17,10 +17,10 @@ import { HttpService } from '../http.service';
 import { Router } from '@angular/router';
 
 @Component({
-    selector: 'app-mapping',
-    imports: [NgClass, FormsModule, RouterLink],
-    templateUrl: './mapping.component.html',
-    styleUrl: './mapping.component.css'
+  selector: 'app-mapping',
+  imports: [NgClass, FormsModule, RouterLink],
+  templateUrl: './mapping.component.html',
+  styleUrl: './mapping.component.css',
 })
 export class MappingComponent {
   id = 0;
@@ -52,6 +52,7 @@ export class MappingComponent {
     mappedPortsByProtocolInbound: [],
   };
   repeatServerName: boolean = false;
+  selectedDescription = 'Click on The Service to see the description';
 
   constructor(
     private route: ActivatedRoute,
@@ -104,28 +105,30 @@ export class MappingComponent {
       });
   }
 
+  updateDescription(index: number) {
+    this.selectedDescription = this.fullServiceResponse[index].description;
+  }
+
   splitAndAddComman(port: string): string {
     if (port.includes(',')) {
       return port;
     } else if (port.includes('(')) {
-      const parts = port.split("(");
+      const parts = port.split('(');
       return parts[0].trim();
     } else if (port.includes('to')) {
       return port.replace('to', '-').replaceAll(' ', '');
     }
-    
-    const parts = port.split(" ");
+
+    const parts = port.split(' ');
     if (parts.length == 2) {
       return parts.join(', ');
     } else {
       return port;
     }
-
   }
 
   // Updates
   updateService(index: number) {
-
     let checkeAdded = false;
     // check if the service is already mapped
     this.selectedPortMapping.mappedPorts.forEach((mappedPort) => {
@@ -145,7 +148,9 @@ export class MappingComponent {
       return;
     }
     // Add the service to the mapped ports in the mapping component
-    const checkedPort = this.splitAndAddComman(this.fullServiceResponse[index].port);
+    const checkedPort = this.splitAndAddComman(
+      this.fullServiceResponse[index].port
+    );
     let mappedPorts: MappedPorts = {
       sourceServerId: this.id,
       sourceServerName: this.serverName,
@@ -228,5 +233,4 @@ export class MappingComponent {
       new Set(servers)
     ).length;
   }
-
 }
