@@ -73,7 +73,7 @@ export class MappingComponent {
     // Get the port mappings based on the ID
     this.selectedPortMapping = this.portMapping[this.id];
 
-    // Get the  serv=er name from the port mapping
+    // Get the  server name from the port mapping
     this.serverName = this.selectedPortMapping.sourceServer;
 
     this.selectedTargetServer = this.servers[0].name;
@@ -102,6 +102,7 @@ export class MappingComponent {
         this.fullServiceResponse = data;
         this.sourceServiceName = this.sourceServices[index].name;
         this.sourceServiceSelected = index;
+        console.log(this.fullServiceResponse);
       });
   }
 
@@ -133,7 +134,8 @@ export class MappingComponent {
     // check if the service is already mapped
     this.selectedPortMapping.mappedPorts.forEach((mappedPort) => {
       if (
-        mappedPort.targetService === this.fullServiceResponse[index].toPort &&
+        mappedPort.targetService ===
+          this.fullServiceResponse[index].targetService &&
         mappedPort.sourceService === this.sourceServiceName &&
         mappedPort.product === this.fullServiceResponse[index].product &&
         mappedPort.protocol === this.fullServiceResponse[index].protocol &&
@@ -157,7 +159,7 @@ export class MappingComponent {
       targetServerId: this.selectedPortMapping.id,
       targetServerName: this.selectedTargetServer,
       sourceService: this.sourceServiceName,
-      targetService: this.fullServiceResponse[index].toPort,
+      targetService: this.fullServiceResponse[index].targetService,
       description: this.fullServiceResponse[index].description,
       product: this.fullServiceResponse[index].product,
       port: checkedPort,

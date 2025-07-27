@@ -66,11 +66,11 @@ export class HttpService {
 
   getTarget(
     productName: string,
-    fromPort: string
+    sourceService: string
   ): Observable<FullServiceResponse[]> {
     const targetServices: TargetServiceRequest = {
       productName: productName,
-      fromPort,
+      sourceService: sourceService,
     };
 
     return this.http
@@ -80,7 +80,10 @@ export class HttpService {
       )
       .pipe(
         map((response) => {
-          response.sort((a, b) => a.toPort.localeCompare(b.toPort));
+          response.map((item, id) => {
+            item.id = id + 1;
+            return item;
+          });
           return response;
         }),
         catchError(this.handleError)

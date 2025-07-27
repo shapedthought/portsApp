@@ -37,6 +37,7 @@
     </div>
   </div>
 </div>
+<h3 class="subtitle is-3">Source Services for {{ selectedProduct }}</h3>
 <div class="columns">
   <div class="column scrollable-table-container">
     <table class="table is-fullwidth">
@@ -57,24 +58,36 @@
       </tbody>
     </table>
   </div>
-  <div class="column scrollable-table-container">
+</div>
+<h3 class="subtitle is-3">Target Services</h3>
+<p>Click the target name to see the description in the box below.</p>
+<p>Total services: {{ fullServiceResponse.length }}</p>
+<div class="columns">
+  <div class="column mt-5 scrollable-table-container">
     @if (sourceServiceName.length > 0 && serverName != 'Change me') {
-    <h2>Target Services for {{ sourceServiceName }}</h2>
-    <p>Click the target name to see information about the target service</p>
-
     <table class="table is-fullwidth">
       <thead>
         <tr>
+          <th>Section</th>
+          <th>Subsection</th>
           <th>Target Service</th>
           <th>Ports</th>
           <th>Protocol</th>
+
           <th>Add</th>
         </tr>
       </thead>
       <tbody>
-        @for (item of fullServiceResponse; track item; let index = $index) {
+        @for (item of fullServiceResponse; track item.id; let index = $index) {
         <tr (click)="updateDescription(index)">
-          <td>{{ item.toPort }}</td>
+          <td>{{ item.subheading }}</td>
+          <td>
+            {{ item.subheadingL2 }}
+            @if(item.subheadingL3.length > 0) {
+            <br />{{ item.subheadingL3 }}
+            }
+          </td>
+          <td>{{ item.targetService }}</td>
           <td>{{ item.port }}</td>
           <td>{{ item.protocol }}</td>
           <td>
