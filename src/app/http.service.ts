@@ -15,7 +15,7 @@ import { environment } from '../environments/environment';
   providedIn: 'root',
 })
 export class HttpService {
-  portsServer = environment.portsServer;
+  private readonly portsServer = environment.portsServer;
 
   constructor(private http: HttpClient) {}
 
