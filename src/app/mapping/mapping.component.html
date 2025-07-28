@@ -1,130 +1,192 @@
+<div class="columns">
+  <div class="column">
+    <label class="label">Server Name: {{ serverName }}</label>
+    <input
+      class="input"
+      type="text"
+      [(ngModel)]="serverName"
+      (blur)="updateName(serverName)"
+    />
+    @if (this.repeatServerName) {
+    <p class="help is-danger">No duplicate server names!</p>
+    }
+  </div>
+  <div class="column">
+    <label class="label">Product</label>
+    <div class="select is-fullwidth">
+      <select
+        [(ngModel)]="selectedProduct"
+        (change)="changeApp(selectedProduct)"
+      >
+        @for (item of products; track item.id) {
 
-<div class="columns">
-    <div class="column">
-        <label class="label">Server Name: {{serverName}}</label>
-        <input class="input" type="text" [(ngModel)]="serverName" (blur)="updateName(serverName)">
-        @if (this.repeatServerName) {
-            <p class="help is-danger">No duplicate server names!</p>
+        <option>{{ item.productName }}</option>
         }
+      </select>
     </div>
-    <div class="column">
-        <label class="label">Product</label>
-        <div class="select is-fullwidth">
-            <select [(ngModel)]="selectedProduct" (change)="changeApp(selectedProduct)">
-            @for (item of products; track item.id) {
-                
-                    <option>{{item.productName}}</option>
-            }
-        </select>
-        </div>
+  </div>
+  <div class="column">
+    <label class="label">Target Server: {{ selectedTargetServer }}</label>
+    <div class="select is-fullwidth">
+      <select [(ngModel)]="selectedTargetServer">
+        @for (item of servers; track item.id) {
+
+        <option>{{ item.name }}</option>
+        }
+      </select>
     </div>
-    <div class="column">
-        <label class="label">Target Server: {{selectedTargetServer}}</label>
-        <div class="select is-fullwidth">
-            <select [(ngModel)]="selectedTargetServer">
-            @for (item of servers; track item.id) {
-                
-                    <option>{{item.name}}</option>
-            }
-        </select>
-        </div>
-    </div>
+  </div>
 </div>
+<h3 class="subtitle is-3">Source Services for {{ selectedProduct }}</h3>
 <div class="columns">
-    <div class="column scrollable-table-container">
-        <table class="table is-fullwidth">
-        <thead>
-            <tr>
-                <th>Source Service</th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (item of sourceServices; track item.id; let index = $index) {
-                <tr [ngClass]="{'is-bold': index === sourceServiceSelected}" (click)="selectService(index)" >
-                    <td>{{item.name}}</td>
-                </tr>
-            }
-        </tbody>
+  <div class="column scrollable-table-container">
+    <table class="table is-fullwidth">
+      <thead>
+        <tr>
+          <th>Source Service</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of sourceServices; track item.id; let index = $index) {
+        <tr
+          [ngClass]="{ 'is-bold': index === sourceServiceSelected }"
+          (click)="selectService(index)"
+        >
+          <td>{{ item.name }}</td>
+        </tr>
+        }
+      </tbody>
     </table>
-    </div>
-    <div class="column scrollable-table-container">
-        @if (sourceServiceName.length > 0 && serverName != 'Change me') {
-        <h2>Target Services for {{sourceServiceName}}</h2>
-        
-        <table class="table is-fullwidth">
-        <thead>
-            <tr>
-                <th>Target Service</th>
-                <th>Ports</th>
-                <th>Protocol</th>
-                <th>Add</th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (item of fullServiceResponse; track item; let index = $index) {
-                <tr>
-                    <td>{{item.toPort}}</td>
-                    <td>{{item.port}}</td>
-                    <td>{{item.protocol}}</td>
-                    <td><button class="button is-primary" (click)="updateService(index)" [disabled]="this.serverName.length < 3 || repeatServerName">Add</button></td>
-                </tr>
+  </div>
+</div>
+<h3 class="subtitle is-3">Target Services</h3>
+<p>Click the target name to see the description in the box below.</p>
+<p>Total services: {{ fullServiceResponse.length }}</p>
+<div class="columns">
+  <div class="column mt-5 scrollable-table-container">
+    @if (sourceServiceName.length > 0 && serverName != 'Change me') {
+    <table class="table is-fullwidth">
+      <thead>
+        <tr>
+          <th>Section</th>
+          <th>Subsection</th>
+          <th>Target Service</th>
+          <th>Ports</th>
+          <th>Protocol</th>
+
+          <th>Add</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of fullServiceResponse; track item.id; let index = $index) {
+        <tr (click)="updateDescription(index)">
+          <td>{{ item.subheading }}</td>
+          <td>
+            {{ item.subheadingL2 }}
+            @if(item.subheadingL3.length > 0) {
+            <br />{{ item.subheadingL3 }}
             }
-        </tbody>
+          </td>
+          <td>{{ item.targetService }}</td>
+          <td>{{ item.port }}</td>
+          <td>{{ item.protocol }}</td>
+          <td>
+            <button
+              class="button is-primary"
+              (click)="updateService(index)"
+              [disabled]="this.serverName.length < 3 || repeatServerName"
+            >
+              Add
+            </button>
+          </td>
+        </tr>
+        }
+      </tbody>
     </table>
     } @else if (serverName == 'Change me') {
-        <h2>Please Change server name</h2>
+    <h2>Please Change server name</h2>
     } @else {
-        <h2>Please select a service</h2>
+    <h2>Please select a service</h2>
     }
+  </div>
+</div>
+
+<div class="columns">
+  <div class="column">
+    <div class="card">
+      <div class="card-content">
+        <h2 class="title is-4">Description</h2>
+        <p class="content">{{ selectedDescription }}</p>
+      </div>
     </div>
+  </div>
+</div>
+
+<div class="columns">
+  <div class="column">
+    @if (selectedPortMapping.mappedPorts.length > 0) {
+    <h2>Mapped Services</h2>
+
+    <table class="table is-fullwidth">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Source Server</th>
+          <th>Target Server</th>
+          <th>Source Service</th>
+          <th>Target Service</th>
+          <th>Ports</th>
+          <th>Protocol</th>
+          <th>Remove</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of selectedPortMapping.mappedPorts; track item; let index =
+        $index) {
+        <tr>
+          <td>{{ item.product }}</td>
+          <td>{{ selectedPortMapping.sourceServer }}</td>
+          <td>
+            <div class="select is-fullwidth">
+              <select
+                [(ngModel)]="item.targetServerName"
+                (change)="updateTargetPortmapping()"
+              >
+                @for (server of servers; track server) {
+
+                <option>{{ server.name }}</option>
+                }
+              </select>
+            </div>
+          </td>
+          <td>{{ item.sourceService }}</td>
+          <td>{{ item.targetService }}</td>
+          <td>{{ item.port }}</td>
+          <td>{{ item.protocol }}</td>
+          <td>
+            <button class="button is-danger" (click)="removeService(index)">
+              Remove
+            </button>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+
+    }
+  </div>
 </div>
 <div class="columns">
-    <div class="column">
-        @if (selectedPortMapping.mappedPorts.length > 0) {
-            <h2>Mapped Services</h2>
-        
-        <table class="table is-fullwidth">
-        <thead>
-            <tr>
-                <th>Product</th>
-                <th>Source Server</th>
-                <th>Target Server</th>
-                <th>Source Service</th>
-                <th>Target Service</th>
-                <th>Ports</th>
-                <th>Protocol</th>
-                <th>Remove</th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (item of selectedPortMapping.mappedPorts; track item; let index = $index) {
-                <tr>
-                    <td>{{item.product}}</td>
-                    <td>{{selectedPortMapping.sourceServer}}</td>
-                    <td>
-                        <div class="select is-fullwidth">
-                            <select [(ngModel)]="item.targetServerName" (change)="updateTargetPortmapping()">
-                            @for (server of servers; track server) {
-                                
-                                    <option>{{server.name}}</option>
-                            }
-                        </select>
-                        </div>
-                     </td>
-                    <td>{{item.sourceService}}</td>
-                    <td>{{item.targetService}}</td>
-                    <td>{{item.port}}</td>
-                    <td>{{item.protocol}}</td>
-                    <td><button class="button is-danger" (click)="removeService(index)">Remove</button></td>
-                </tr>
-            }
-        </table>
-    }
-    </div>
-</div>
-<div class="columns">
-    <div class="column">
-        <button class="button is-primary mr-2" [disabled]="selectedPortMapping.mappedPorts.length == 0 || repeatServerName" (click)="saveMapping()">Save</button>
-        <button class="button is-warning" [routerLink]="['/']">Back</button>
-    </div>
+  <div class="column">
+    <button
+      class="button is-primary mr-2"
+      [disabled]="
+        selectedPortMapping.mappedPorts.length == 0 || repeatServerName
+      "
+      (click)="saveMapping()"
+    >
+      Save
+    </button>
+    <button class="button is-warning" [routerLink]="['/']">Back</button>
+  </div>
 </div>

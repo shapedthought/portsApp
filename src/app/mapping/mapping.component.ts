@@ -18,7 +18,6 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-mapping',
-  standalone: true,
   imports: [NgClass, FormsModule, RouterLink],
   templateUrl: './mapping.component.html',
   styleUrl: './mapping.component.css',
@@ -53,6 +52,7 @@ export class MappingComponent {
     mappedPortsByProtocolInbound: [],
   };
   repeatServerName: boolean = false;
+  selectedDescription = 'Click on The Service to see the description';
 
   constructor(
     private route: ActivatedRoute,
@@ -73,7 +73,7 @@ export class MappingComponent {
     // Get the port mappings based on the ID
     this.selectedPortMapping = this.portMapping[this.id];
 
-    // Get the  serv=er name from the port mapping
+    // Get the  server name from the port mapping
     this.serverName = this.selectedPortMapping.sourceServer;
 
     this.selectedTargetServer = this.servers[0].name;
@@ -102,36 +102,40 @@ export class MappingComponent {
         this.fullServiceResponse = data;
         this.sourceServiceName = this.sourceServices[index].name;
         this.sourceServiceSelected = index;
+        console.log(this.fullServiceResponse);
       });
+  }
+
+  updateDescription(index: number) {
+    this.selectedDescription = this.fullServiceResponse[index].description;
   }
 
   splitAndAddComman(port: string): string {
     if (port.includes(',')) {
       return port;
     } else if (port.includes('(')) {
-      const parts = port.split("(");
+      const parts = port.split('(');
       return parts[0].trim();
     } else if (port.includes('to')) {
       return port.replace('to', '-').replaceAll(' ', '');
     }
-    
-    const parts = port.split(" ");
+
+    const parts = port.split(' ');
     if (parts.length == 2) {
       return parts.join(', ');
     } else {
       return port;
     }
-
   }
 
   // Updates
   updateService(index: number) {
-
     let checkeAdded = false;
     // check if the service is already mapped
     this.selectedPortMapping.mappedPorts.forEach((mappedPort) => {
       if (
-        mappedPort.targetService === this.fullServiceResponse[index].toPort &&
+        mappedPort.targetService ===
+          this.fullServiceResponse[index].targetService &&
         mappedPort.sourceService === this.sourceServiceName &&
         mappedPort.product === this.fullServiceResponse[index].product &&
         mappedPort.protocol === this.fullServiceResponse[index].protocol &&
@@ -146,14 +150,16 @@ export class MappingComponent {
       return;
     }
     // Add the service to the mapped ports in the mapping component
-    const checkedPort = this.splitAndAddComman(this.fullServiceResponse[index].port);
+    const checkedPort = this.splitAndAddComman(
+      this.fullServiceResponse[index].port
+    );
     let mappedPorts: MappedPorts = {
       sourceServerId: this.id,
       sourceServerName: this.serverName,
       targetServerId: this.selectedPortMapping.id,
       targetServerName: this.selectedTargetServer,
       sourceService: this.sourceServiceName,
-      targetService: this.fullServiceResponse[index].toPort,
+      targetService: this.fullServiceResponse[index].targetService,
       description: this.fullServiceResponse[index].description,
       product: this.fullServiceResponse[index].product,
       port: checkedPort,
@@ -229,5 +235,4 @@ export class MappingComponent {
       new Set(servers)
     ).length;
   }
-
 }
