@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, OnChanges, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, OnChanges, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import mermaid from 'mermaid';
@@ -36,6 +36,8 @@ export class DiagramComponent implements OnInit, OnChanges, AfterViewInit, OnDes
   diagramData: DiagramData = { connections: [], servers: [] };
   mermaidSyntax: string = '';
   isLoading: boolean = false;
+
+  constructor(private cdr: ChangeDetectorRef) {}
   
   // Display options
   layoutDirection: 'LR' | 'TD' | 'RL' | 'BT' = 'LR';
@@ -165,14 +167,25 @@ export class DiagramComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     const protocolGroups = new Map<string, { ports: Set<string>, services: Set<string> }>();
 
     tempPorts.forEach((port: MappedPorts) => {
-      if (!protocolGroups.has(port.protocol)) {
-        protocolGroups.set(port.protocol, {
+      // Normalize protocol to TCP/UDP only
+      let normalizedProtocol = port.protocol.toUpperCase();
+      if (!['TCP', 'UDP'].includes(normalizedProtocol)) {
+        // Map common protocols to TCP/UDP
+        if (['HTTP', 'HTTPS', 'FTP', 'SSH', 'TELNET'].includes(normalizedProtocol)) {
+          normalizedProtocol = 'TCP';
+        } else {
+          normalizedProtocol = 'TCP'; // Default fallback
+        }
+      }
+      
+      if (!protocolGroups.has(normalizedProtocol)) {
+        protocolGroups.set(normalizedProtocol, {
           ports: new Set<string>(),
           services: new Set<string>()
         });
       }
 
-      const group = protocolGroups.get(port.protocol)!;
+      const group = protocolGroups.get(normalizedProtocol)!;
       
       // Handle port ranges and multiple ports
       const portStrings = this.parsePortString(port.port);
@@ -219,7 +232,7 @@ export class DiagramComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     // Generate node definitions with clean names
     const nodeMap = new Map<string, string>();
     this.diagramData.servers.forEach((server, index) => {
-      const nodeId = this.createNodeId(server) + index;
+      const nodeId = this.createNodeId(server);
       nodeMap.set(server, nodeId);
       syntax += `    ${nodeId}["${this.sanitizeNodeName(server)}"]\n`;
     });
@@ -318,7 +331,7 @@ export class DiagramComponent implements OnInit, OnChanges, AfterViewInit, OnDes
   private createNodeId(name: string): string {
     return name
       .replace(/[^a-zA-Z0-9]/g, '_')
-      .substring(0, 15);
+      .substring(0, 15) + '_' + Math.random().toString(36).substr(2, 3);
   }
 
   // Generate Mermaid styling
@@ -343,7 +356,9 @@ export class DiagramComponent implements OnInit, OnChanges, AfterViewInit, OnDes
 
   // Generate and render the diagram
   async generateDiagram(): Promise<void> {
-    if (!this.mermaidContainer?.nativeElement) {
+    // Store reference to avoid ViewChild timing issues
+    const container = this.mermaidContainer?.nativeElement;
+    if (!container) {
       console.error('Mermaid container not available');
       return;
     }
@@ -354,38 +369,47 @@ export class DiagramComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     console.log('Generated Mermaid syntax:', this.mermaidSyntax);
     
     try {
-      // Clear previous diagram
-      this.mermaidContainer.nativeElement.innerHTML = '';
+      // Clear previous diagram using stored reference
+      container.innerHTML = '';
       
       // Create a unique ID for this diagram
       const diagramId = `mermaid-diagram-${Date.now()}`;
       
       // Generate new diagram with better error handling
       const { svg } = await mermaid.render(diagramId, this.mermaidSyntax);
-      this.mermaidContainer.nativeElement.innerHTML = svg;
       
-      console.log('Diagram rendered successfully');
+      // Check container is still available after async operation
+      if (this.mermaidContainer?.nativeElement) {
+        this.mermaidContainer.nativeElement.innerHTML = svg;
+        console.log('Diagram rendered successfully');
+        // Trigger change detection
+        this.cdr.detectChanges();
+      } else {
+        console.error('Container became unavailable during rendering');
+      }
       
     } catch (error) {
       console.error('Error generating Mermaid diagram:', error);
       console.error('Mermaid syntax that caused error:', this.mermaidSyntax);
       
-      // Show a more helpful error message
-      this.mermaidContainer.nativeElement.innerHTML = `
-        <div class="has-text-danger p-4" style="border: 2px dashed #ef4444; border-radius: 8px; background-color: #fef2f2;">
-          <h5 class="title is-6 has-text-danger">Diagram Generation Error</h5>
-          <p>Unable to generate the network diagram. This might be due to:</p>
-          <ul>
-            <li>Invalid server names or port data</li>
-            <li>Complex port mapping configurations</li>
-            <li>Mermaid syntax issues</li>
-          </ul>
-          <details class="mt-2">
-            <summary>Technical Details</summary>
-            <pre style="font-size: 0.75rem; margin-top: 0.5rem;">${error}</pre>
-          </details>
-        </div>
-      `;
+      // Show error message only if container is still available
+      if (this.mermaidContainer?.nativeElement) {
+        this.mermaidContainer.nativeElement.innerHTML = `
+          <div class="has-text-danger p-4" style="border: 2px dashed #ef4444; border-radius: 8px; background-color: #fef2f2;">
+            <h5 class="title is-6 has-text-danger">Diagram Generation Error</h5>
+            <p>Unable to generate the network diagram. This might be due to:</p>
+            <ul>
+              <li>Invalid server names or port data</li>
+              <li>Complex port mapping configurations</li>
+              <li>Mermaid syntax issues</li>
+            </ul>
+            <details class="mt-2">
+              <summary>Technical Details</summary>
+              <pre style="font-size: 0.75rem; margin-top: 0.5rem;">${error}</pre>
+            </details>
+          </div>
+        `;
+      }
     } finally {
       this.isLoading = false;
     }
