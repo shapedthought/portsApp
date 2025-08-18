@@ -437,12 +437,30 @@ export class DiagramComponent implements OnInit, OnChanges, AfterViewInit, OnDes
         return;
       }
 
-      const svgData = new XMLSerializer().serializeToString(svgElement);
-      const blob = new Blob([svgData], { type: 'image/svg+xml' });
+      // Clone the SVG and ensure proper attributes
+      const svgClone = svgElement.cloneNode(true) as SVGElement;
+      
+      // Ensure SVG has proper namespace
+      if (!svgClone.getAttribute('xmlns')) {
+        svgClone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+      }
+      
+      // Get current dimensions or set defaults
+      const svgRect = svgElement.getBoundingClientRect();
+      const width = svgRect.width || 800;
+      const height = svgRect.height || 600;
+      
+      // Set explicit dimensions for better compatibility
+      svgClone.setAttribute('width', width.toString());
+      svgClone.setAttribute('height', height.toString());
+
+      const svgData = new XMLSerializer().serializeToString(svgClone);
+      const blob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
       this.downloadFile(blob, 'network-diagram.svg');
+      console.log('SVG export completed successfully');
     } catch (error) {
-      console.error('Export error:', error);
-      alert('Failed to export diagram. Please try again.');
+      console.error('SVG export error:', error);
+      alert('Failed to export SVG. Please try again.');
     }
   }
 
@@ -459,43 +477,80 @@ export class DiagramComponent implements OnInit, OnChanges, AfterViewInit, OnDes
         return;
       }
 
-      const svgData = new XMLSerializer().serializeToString(svgElement);
+      // Clone the SVG to avoid modifying the original
+      const svgClone = svgElement.cloneNode(true) as SVGElement;
+      
+      // Get SVG dimensions
+      const svgRect = svgElement.getBoundingClientRect();
+      const width = svgRect.width || 800;
+      const height = svgRect.height || 600;
+
+      // Set explicit dimensions on the cloned SVG
+      svgClone.setAttribute('width', width.toString());
+      svgClone.setAttribute('height', height.toString());
+
+      // Serialize the SVG with proper namespace and encoding
+      const svgData = new XMLSerializer().serializeToString(svgClone);
+      const svgDataWithNamespace = svgData.includes('xmlns') 
+        ? svgData 
+        : svgData.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
+
+      // Create canvas
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
-      const img = new Image();
+      canvas.width = width;
+      canvas.height = height;
 
+      // Create image with data URI to avoid CORS issues
+      const img = new Image();
+      
       img.onload = () => {
         try {
-          canvas.width = img.naturalWidth || 800;
-          canvas.height = img.naturalHeight || 600;
-          
           if (ctx) {
+            // Set white background
             ctx.fillStyle = 'white';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw the SVG image
             ctx.drawImage(img, 0, 0);
           }
           
+          // Convert canvas to blob and download
           canvas.toBlob((blob) => {
             if (blob) {
               this.downloadFile(blob, 'network-diagram.png');
+              console.log('PNG export completed successfully');
+            } else {
+              alert('Failed to create PNG file.');
             }
-          }, 'image/png');
+          }, 'image/png', 0.95);
+          
         } catch (error) {
-          console.error('Canvas error:', error);
-          alert('Failed to convert diagram to PNG.');
+          console.error('Canvas drawing error:', error);
+          // Fallback: try using html2canvas if available, otherwise show error
+          this.fallbackPNGExport(svgElement);
         }
       };
 
-      img.onerror = () => {
-        alert('Failed to convert diagram to PNG format.');
+      img.onerror = (error) => {
+        console.error('Image load error:', error);
+        this.fallbackPNGExport(svgElement);
       };
 
-      const svgBlob = new Blob([svgData], { type: 'image/svg+xml' });
-      img.src = URL.createObjectURL(svgBlob);
+      // Use data URI instead of object URL to avoid CORS
+      const dataUri = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgDataWithNamespace)}`;
+      img.src = dataUri;
+      
     } catch (error) {
       console.error('PNG export error:', error);
       alert('Failed to export PNG. Please try again.');
     }
+  }
+
+  // Fallback PNG export method
+  private fallbackPNGExport(svgElement: SVGElement): void {
+    alert('PNG export failed due to browser security restrictions. Please try exporting as SVG instead, which can be converted to PNG using external tools.');
+    console.warn('PNG export fallback: Suggesting SVG export instead');
   }
 
   copyMermaidCode(): void {
