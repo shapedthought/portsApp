@@ -99,25 +99,7 @@
 
 <!-- Diagram Display -->
 <div class="modern-card">
-  @if (isLoading) {
-  <div class="has-text-centered p-6">
-    <div class="loading-spinner mb-3" style="margin: 0 auto;"></div>
-    <p style="color: var(--text-muted);">Generating network diagram...</p>
-  </div>
-  } @else if (diagramStats.connections === 0) {
-  <div class="has-text-centered p-6" style="
-    background-color: var(--gray-50); 
-    border-radius: var(--radius); 
-    border: 2px dashed var(--gray-300);
-  ">
-    <i class="fas fa-project-diagram fa-4x mb-4" style="color: var(--gray-400);"></i>
-    <h4 class="title is-6" style="color: var(--text-muted);">No Port Mappings to Display</h4>
-    <p style="color: var(--text-muted); font-size: 0.875rem;">
-      Add some port mappings to generate a network diagram showing server connections and port flows.
-    </p>
-  </div>
-  } @else {
-  <!-- Diagram Container -->
+  <!-- Always render the container to prevent ViewChild issues -->
   <div class="diagram-container">
     <div 
       #mermaidContainer
@@ -133,11 +115,32 @@
         overflow: auto;
       "
     >
-      <!-- Mermaid diagram will be rendered here -->
+      <!-- Loading state -->
+      @if (isLoading) {
+      <div class="has-text-centered p-6">
+        <div class="loading-spinner mb-3" style="margin: 0 auto;"></div>
+        <p style="color: var(--text-muted);">Generating network diagram...</p>
+      </div>
+      } @else if (diagramStats.connections === 0) {
+      <!-- No data state -->
+      <div class="has-text-centered p-6" style="
+        background-color: var(--gray-50); 
+        border-radius: var(--radius); 
+        border: 2px dashed var(--gray-300);
+      ">
+        <i class="fas fa-project-diagram fa-4x mb-4" style="color: var(--gray-400);"></i>
+        <h4 class="title is-6" style="color: var(--text-muted);">No Port Mappings to Display</h4>
+        <p style="color: var(--text-muted); font-size: 0.875rem;">
+          Add some port mappings to generate a network diagram showing server connections and port flows.
+        </p>
+      </div>
+      }
+      <!-- Mermaid diagram will be rendered here when ready -->
     </div>
   </div>
 
-  <!-- Diagram Info -->
+  <!-- Diagram Info - only show when we have connections -->
+  @if (diagramStats.connections > 0 && !isLoading) {
   <div class="diagram-info mt-4 p-3" style="
     background-color: var(--gray-50); 
     border-radius: var(--radius); 

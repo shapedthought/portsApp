@@ -364,14 +364,13 @@ export class DiagramComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     }
     
     this.isLoading = true;
+    this.cdr.detectChanges(); // Update loading state immediately
+    
     this.mermaidSyntax = this.generateMermaidSyntax();
     
     console.log('Generated Mermaid syntax:', this.mermaidSyntax);
     
     try {
-      // Clear previous diagram using stored reference
-      container.innerHTML = '';
-      
       // Create a unique ID for this diagram
       const diagramId = `mermaid-diagram-${Date.now()}`;
       
@@ -380,10 +379,9 @@ export class DiagramComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       
       // Check container is still available after async operation
       if (this.mermaidContainer?.nativeElement) {
+        // Clear any existing content and add the new diagram
         this.mermaidContainer.nativeElement.innerHTML = svg;
         console.log('Diagram rendered successfully');
-        // Trigger change detection
-        this.cdr.detectChanges();
       } else {
         console.error('Container became unavailable during rendering');
       }
@@ -412,6 +410,7 @@ export class DiagramComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       }
     } finally {
       this.isLoading = false;
+      this.cdr.detectChanges(); // Update loading state
     }
   }
 
