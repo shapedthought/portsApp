@@ -9,3 +9,53 @@
   border: 1px solid #ddd; /* Optional: adds a border around the scrollable area */
   border-radius: 8px; /* Adds rounded corners to the scrollable area */
 }
+
+/* Filter styling */
+.filter-results {
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.active-filters {
+  border-top: 1px solid var(--gray-200);
+  padding-top: 0.75rem;
+}
+
+.buttons.has-addons .button {
+  transition: all 0.2s ease;
+}
+
+.buttons.has-addons .button:hover {
+  transform: translateY(-1px);
+}
+
+.buttons.has-addons .button.is-primary,
+.buttons.has-addons .button.is-success,
+.buttons.has-addons .button.is-info {
+  font-weight: 600;
+}
+
+/* Mobile responsive filters */
+@media (max-width: 768px) {
+  .filter-controls .column {
+    padding: 0.25rem;
+  }
+  
+  .filter-results {
+    font-size: 0.8125rem;
+    text-align: center;
+    margin-top: 0.5rem;
+  }
+  
+  .buttons.has-addons {
+    justify-content: center;
+  }
+  
+  .active-filters {
+    text-align: center;
+  }
+  
+  .active-filters .tag {
+    margin: 0.125rem;
+  }
+}

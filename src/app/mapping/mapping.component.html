@@ -137,6 +137,122 @@
     </div>
   </div>
 </div>
+<!-- Service Filtering Section -->
+<div class="modern-card">
+  <div class="flex items-center justify-between mb-4">
+    <h3 class="title is-5 mb-0" style="color: var(--text-primary);">
+      <i class="fas fa-filter mr-2" style="color: var(--secondary-color);"></i>
+      Filter Services
+    </h3>
+    <div class="filter-results" style="font-size: 0.875rem; color: var(--text-muted);">
+      Showing {{ filteredSourceServices.length }} source, {{ filteredTargetServices.length }} target services
+    </div>
+  </div>
+
+  <!-- Filter Controls -->
+  <div class="columns is-mobile">
+    <!-- Global Search -->
+    <div class="column is-4">
+      <div class="field">
+        <div class="control has-icons-left">
+          <input
+            class="input is-small"
+            type="text"
+            [(ngModel)]="searchTerm"
+            (input)="onSearchChange($event)"
+            placeholder="Search services..."
+            style="border-radius: var(--radius); border: 2px solid var(--gray-300);"
+          />
+          <span class="icon is-left is-small">
+            <i class="fas fa-search" style="color: var(--gray-400);"></i>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Protocol Filters -->
+    <div class="column is-3">
+      <div class="field">
+        <label class="label is-small" style="color: var(--text-secondary); margin-bottom: 0.25rem;">Protocol</label>
+        <div class="buttons has-addons is-small">
+          <button 
+            class="button" 
+            [ngClass]="protocolFilter === 'ALL' ? 'is-primary' : 'is-light'"
+            (click)="onProtocolFilterChange('ALL')"
+            style="border-radius: var(--radius-sm) 0 0 var(--radius-sm);"
+          >
+            All
+          </button>
+          <button 
+            class="button" 
+            [ngClass]="protocolFilter === 'TCP' ? 'is-success' : 'is-light'"
+            (click)="onProtocolFilterChange('TCP')"
+          >
+            TCP
+          </button>
+          <button 
+            class="button" 
+            [ngClass]="protocolFilter === 'UDP' ? 'is-info' : 'is-light'"
+            (click)="onProtocolFilterChange('UDP')"
+            style="border-radius: 0 var(--radius-sm) var(--radius-sm) 0;"
+          >
+            UDP
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category Filter -->
+    <div class="column is-3">
+      <div class="field">
+        <label class="label is-small" style="color: var(--text-secondary); margin-bottom: 0.25rem;">Category</label>
+        <div class="select is-fullwidth is-small">
+          <select 
+            [(ngModel)]="categoryFilter" 
+            (change)="onCategoryFilterChange($event)"
+            style="border-radius: var(--radius);"
+          >
+            <option value="">All Categories</option>
+            @for (category of availableCategories; track category) {
+            <option [value]="category">{{ category }}</option>
+            }
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Clear Filters -->
+    <div class="column is-2">
+      <div class="field" style="margin-top: 1.5rem;">
+        <button 
+          class="button is-light is-small is-fullwidth" 
+          (click)="clearAllFilters()"
+          [disabled]="!hasActiveFilters()"
+          style="border-radius: var(--radius);"
+        >
+          <span class="icon is-small">
+            <i class="fas fa-times"></i>
+          </span>
+          <span>Clear</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Active Filters Display -->
+  @if (hasActiveFilters()) {
+  <div class="active-filters mb-3">
+    <span style="font-size: 0.8125rem; color: var(--text-muted); margin-right: 0.5rem;">Active filters:</span>
+    @for (filter of getActiveFilters(); track filter.key) {
+    <span class="tag is-primary is-light is-small mr-1 mb-1" style="border-radius: var(--radius-sm);">
+      {{ filter.label }}
+      <button class="delete is-small ml-1" (click)="removeFilter(filter.key)"></button>
+    </span>
+    }
+  </div>
+  }
+</div>
+
 <!-- Source Services Section -->
 <div class="modern-card">
   <div class="flex items-center justify-between mb-4">
@@ -145,7 +261,7 @@
       Source Services for {{ selectedProduct }}
     </h3>
     <span class="tag is-light" style="border-radius: var(--radius-sm);">
-      {{ sourceServices.length }} services
+      {{ filteredSourceServices.length }} of {{ sourceServices.length }} services
     </span>
   </div>
   
@@ -164,7 +280,7 @@
         </tr>
       </thead>
       <tbody>
-        @for (item of sourceServices; track item.id; let index = $index) {
+        @for (item of filteredSourceServices; track item.id; let index = $index) {
         <tr
           [ngClass]="{ 'is-selected': index === sourceServiceSelected }"
           (click)="selectService(index)"
@@ -202,7 +318,7 @@
       Available Target Services
     </h3>
     <span class="tag is-info is-light" style="border-radius: var(--radius-sm);">
-      {{ fullServiceResponse.length }} services
+      {{ filteredTargetServices.length }} of {{ fullServiceResponse.length }} services
     </span>
   </div>
   
@@ -224,7 +340,7 @@
         </tr>
       </thead>
       <tbody>
-        @for (item of fullServiceResponse; track item.id; let index = $index) {
+        @for (item of filteredTargetServices; track item.id; let index = $index) {
         <tr 
           (click)="updateDescription(index)"
           style="cursor: pointer; transition: all 0.2s ease;"
