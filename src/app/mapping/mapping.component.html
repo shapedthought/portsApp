@@ -1,192 +1,533 @@
-<div class="columns">
-  <div class="column">
-    <label class="label">Server Name: {{ serverName }}</label>
-    <input
-      class="input"
-      type="text"
-      [(ngModel)]="serverName"
-      (blur)="updateName(serverName)"
-    />
-    @if (this.repeatServerName) {
-    <p class="help is-danger">No duplicate server names!</p>
-    }
-  </div>
-  <div class="column">
-    <label class="label">Product</label>
-    <div class="select is-fullwidth">
-      <select
-        [(ngModel)]="selectedProduct"
-        (change)="changeApp(selectedProduct)"
-      >
-        @for (item of products; track item.id) {
-
-        <option>{{ item.productName }}</option>
-        }
-      </select>
-    </div>
-  </div>
-  <div class="column">
-    <label class="label">Target Server: {{ selectedTargetServer }}</label>
-    <div class="select is-fullwidth">
-      <select [(ngModel)]="selectedTargetServer">
-        @for (item of servers; track item.id) {
-
-        <option>{{ item.name }}</option>
-        }
-      </select>
+<!-- Modern Header Section -->
+<div class="modern-card slide-up">
+  <div class="flex items-center mb-6">
+    <button 
+      class="button is-light mr-4" 
+      [routerLink]="['/']"
+      style="border-radius: var(--radius); border: 2px solid var(--gray-300);"
+    >
+      <span class="icon">
+        <i class="fas fa-arrow-left"></i>
+      </span>
+    </button>
+    <div>
+      <h1 class="title is-3 mb-2" style="color: var(--text-primary); font-weight: 600;">
+        <i class="fas fa-cogs mr-2" style="color: var(--primary-color);"></i>
+        Port Mapping Configuration
+      </h1>
+      <p class="subtitle is-6" style="color: var(--text-secondary); margin: 0;">
+        Configure network port mappings and service connections
+      </p>
     </div>
   </div>
 </div>
-<h3 class="subtitle is-3">Source Services for {{ selectedProduct }}</h3>
-<div class="columns">
-  <div class="column scrollable-table-container">
-    <table class="table is-fullwidth">
+
+<!-- Configuration Panel -->
+<div class="modern-card">
+  <h3 class="title is-5 mb-4" style="color: var(--text-primary);">
+    <i class="fas fa-sliders-h mr-2" style="color: var(--secondary-color);"></i>
+    Server Configuration
+  </h3>
+  
+  <div class="columns">
+    <!-- Server Name Field -->
+    <div class="column">
+      <div class="field">
+        <label class="label" style="color: var(--text-primary); font-weight: 600; margin-bottom: var(--spacing-sm);">
+          <i class="fas fa-server mr-2" style="color: var(--primary-color);"></i>
+          Server Name
+        </label>
+        <div class="control has-icons-left">
+          <input
+            class="input"
+            type="text"
+            [(ngModel)]="serverName"
+            (blur)="updateName(serverName)"
+            placeholder="Enter server name"
+            style="
+              border-radius: var(--radius);
+              border: 2px solid var(--gray-300);
+              transition: all 0.2s ease;
+              font-weight: 500;
+            "
+            onfocus="this.style.borderColor='var(--primary-color)'; this.style.boxShadow='0 0 0 3px rgba(99, 102, 241, 0.1)'"
+            onblur="this.style.borderColor='var(--gray-300)'; this.style.boxShadow='none'"
+          />
+          <span class="icon is-left" style="color: var(--gray-400);">
+            <i class="fas fa-server"></i>
+          </span>
+        </div>
+        @if (this.repeatServerName) {
+        <div class="mt-2 p-2" style="
+          background-color: #fef2f2; 
+          border: 1px solid #fecaca; 
+          border-radius: var(--radius-sm); 
+          color: #dc2626;
+          font-size: 0.875rem;
+        ">
+          <i class="fas fa-exclamation-triangle mr-1"></i>
+          No duplicate server names allowed!
+        </div>
+        }
+      </div>
+    </div>
+
+    <!-- Product Selection -->
+    <div class="column">
+      <div class="field">
+        <label class="label" style="color: var(--text-primary); font-weight: 600; margin-bottom: var(--spacing-sm);">
+          <i class="fas fa-cube mr-2" style="color: var(--info-color);"></i>
+          Product
+        </label>
+        <div class="control has-icons-left">
+          <div class="select is-fullwidth">
+            <select
+              [(ngModel)]="selectedProduct"
+              (change)="changeApp(selectedProduct)"
+              style="
+                border-radius: var(--radius);
+                border: 2px solid var(--gray-300);
+                transition: all 0.2s ease;
+                font-weight: 500;
+              "
+            >
+              @for (item of products; track item.id) {
+              <option>{{ item.productName }}</option>
+              }
+            </select>
+          </div>
+          <span class="icon is-left" style="color: var(--gray-400);">
+            <i class="fas fa-cube"></i>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Target Server Selection -->
+    <div class="column">
+      <div class="field">
+        <label class="label" style="color: var(--text-primary); font-weight: 600; margin-bottom: var(--spacing-sm);">
+          <i class="fas fa-bullseye mr-2" style="color: var(--warning-color);"></i>
+          Target Server
+        </label>
+        <div class="control has-icons-left">
+          <div class="select is-fullwidth">
+            <select 
+              [(ngModel)]="selectedTargetServer"
+              style="
+                border-radius: var(--radius);
+                border: 2px solid var(--gray-300);
+                transition: all 0.2s ease;
+                font-weight: 500;
+              "
+            >
+              @for (item of servers; track item.id) {
+              <option>{{ item.name }}</option>
+              }
+            </select>
+          </div>
+          <span class="icon is-left" style="color: var(--gray-400);">
+            <i class="fas fa-bullseye"></i>
+          </span>
+        </div>
+        <p class="help" style="color: var(--text-muted); font-size: 0.875rem; margin-top: var(--spacing-xs);">
+          <strong>Selected:</strong> {{ selectedTargetServer }}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Source Services Section -->
+<div class="modern-card">
+  <div class="flex items-center justify-between mb-4">
+    <h3 class="title is-5 mb-0" style="color: var(--text-primary);">
+      <i class="fas fa-list-ul mr-2" style="color: var(--success-color);"></i>
+      Source Services for {{ selectedProduct }}
+    </h3>
+    <span class="tag is-light" style="border-radius: var(--radius-sm);">
+      {{ sourceServices.length }} services
+    </span>
+  </div>
+  
+  <p class="text-muted mb-4" style="font-size: 0.875rem;">
+    Select a source service to view available target services and ports
+  </p>
+
+  <div class="scrollable-table-container" style="max-height: 300px; overflow-y: auto; border-radius: var(--radius); border: 1px solid var(--gray-200);">
+    <table class="table is-fullwidth is-hoverable" style="margin: 0;">
       <thead>
-        <tr>
-          <th>Source Service</th>
+        <tr style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); position: sticky; top: 0; z-index: 10;">
+          <th style="font-weight: 600; color: var(--text-primary); border: none; padding: var(--spacing-md);">
+            <i class="fas fa-service-stack mr-2" style="color: var(--success-color);"></i>
+            Source Service
+          </th>
         </tr>
       </thead>
       <tbody>
         @for (item of sourceServices; track item.id; let index = $index) {
         <tr
-          [ngClass]="{ 'is-bold': index === sourceServiceSelected }"
+          [ngClass]="{ 'is-selected': index === sourceServiceSelected }"
           (click)="selectService(index)"
+          style="
+            cursor: pointer; 
+            transition: all 0.2s ease;
+            font-weight: 500;
+          "
+          [style.background-color]="index === sourceServiceSelected ? 'rgba(99, 102, 241, 0.1)' : 'transparent'"
+          [style.border-left]="index === sourceServiceSelected ? '4px solid var(--primary-color)' : '4px solid transparent'"
         >
-          <td>{{ item.name }}</td>
+          <td style="border: none; padding: var(--spacing-md);">
+            <div class="flex items-center">
+              <div class="mr-3" style="
+                width: 6px; 
+                height: 6px; 
+                background-color: var(--success-color); 
+                border-radius: 50%;
+                opacity: 0.7;
+              "></div>
+              {{ item.name }}
+            </div>
+          </td>
         </tr>
         }
       </tbody>
     </table>
   </div>
 </div>
-<h3 class="subtitle is-3">Target Services</h3>
-<p>Click the target name to see the description in the box below.</p>
-<p>Total services: {{ fullServiceResponse.length }}</p>
-<div class="columns">
-  <div class="column mt-5 scrollable-table-container">
-    @if (sourceServiceName.length > 0 && serverName != 'Change me') {
-    <table class="table is-fullwidth">
-      <thead>
-        <tr>
-          <th>Section</th>
-          <th>Subsection</th>
-          <th>Target Service</th>
-          <th>Ports</th>
-          <th>Protocol</th>
+<!-- Target Services Section -->
+<div class="modern-card">
+  <div class="flex items-center justify-between mb-4">
+    <h3 class="title is-5 mb-0" style="color: var(--text-primary);">
+      <i class="fas fa-crosshairs mr-2" style="color: var(--info-color);"></i>
+      Available Target Services
+    </h3>
+    <span class="tag is-info is-light" style="border-radius: var(--radius-sm);">
+      {{ fullServiceResponse.length }} services
+    </span>
+  </div>
+  
+  <p class="text-muted mb-4" style="font-size: 0.875rem;">
+    Click on a target service to see its description below, then add it to your mapping configuration.
+  </p>
 
-          <th>Add</th>
+  @if (sourceServiceName.length > 0 && serverName != 'Change me') {
+  <div class="scrollable-table-container" style="max-height: 400px; overflow-y: auto; border-radius: var(--radius); border: 1px solid var(--gray-200);">
+    <table class="table is-fullwidth is-hoverable" style="margin: 0;">
+      <thead>
+        <tr style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); position: sticky; top: 0; z-index: 10;">
+          <th style="font-weight: 600; color: var(--text-primary); border: none;">Section</th>
+          <th style="font-weight: 600; color: var(--text-primary); border: none;">Subsection</th>
+          <th style="font-weight: 600; color: var(--text-primary); border: none;">Target Service</th>
+          <th style="font-weight: 600; color: var(--text-primary); border: none; text-align: center;">Ports</th>
+          <th style="font-weight: 600; color: var(--text-primary); border: none; text-align: center;">Protocol</th>
+          <th style="font-weight: 600; color: var(--text-primary); border: none; width: 100px;">Action</th>
         </tr>
       </thead>
       <tbody>
         @for (item of fullServiceResponse; track item.id; let index = $index) {
-        <tr (click)="updateDescription(index)">
-          <td>{{ item.subheading }}</td>
-          <td>
-            {{ item.subheadingL2 }}
-            @if(item.subheadingL3.length > 0) {
-            <br />{{ item.subheadingL3 }}
-            }
+        <tr 
+          (click)="updateDescription(index)"
+          style="cursor: pointer; transition: all 0.2s ease;"
+          onmouseover="this.style.backgroundColor='var(--gray-50)'"
+          onmouseout="this.style.backgroundColor='transparent'"
+        >
+          <td style="border: none; padding: var(--spacing-md); font-weight: 500;">
+            <span class="tag is-light" style="border-radius: var(--radius-sm); font-size: 0.75rem;">
+              {{ item.subheading }}
+            </span>
           </td>
-          <td>{{ item.targetService }}</td>
-          <td>{{ item.port }}</td>
-          <td>{{ item.protocol }}</td>
-          <td>
+          <td style="border: none; padding: var(--spacing-md);">
+            <div>
+              <div style="font-weight: 500; color: var(--text-primary);">{{ item.subheadingL2 }}</div>
+              @if(item.subheadingL3.length > 0) {
+              <div style="font-size: 0.875rem; color: var(--text-muted); margin-top: 2px;">{{ item.subheadingL3 }}</div>
+              }
+            </div>
+          </td>
+          <td style="border: none; padding: var(--spacing-md); font-weight: 500; color: var(--text-primary);">
+            {{ item.targetService }}
+          </td>
+          <td style="border: none; text-align: center; padding: var(--spacing-md);">
+            <code style="
+              background-color: var(--gray-100); 
+              padding: 2px 6px; 
+              border-radius: var(--radius-sm); 
+              font-size: 0.875rem;
+              color: var(--text-primary);
+            ">
+              {{ item.port }}
+            </code>
+          </td>
+          <td style="border: none; text-align: center; padding: var(--spacing-md);">
+            <span class="tag" 
+              [ngClass]="item.protocol === 'TCP' ? 'is-success' : 'is-info'"
+              style="border-radius: var(--radius-sm); font-weight: 500;">
+              {{ item.protocol }}
+            </span>
+          </td>
+          <td style="border: none; padding: var(--spacing-md);">
             <button
-              class="button is-primary"
-              (click)="updateService(index)"
+              class="button is-primary is-small"
+              (click)="updateService(index); $event.stopPropagation()"
               [disabled]="this.serverName.length < 3 || repeatServerName"
+              style="
+                border-radius: var(--radius-sm); 
+                font-weight: 500;
+                transition: all 0.2s ease;
+              "
+              title="Add this service mapping"
             >
-              Add
+              <span class="icon is-small">
+                <i class="fas fa-plus"></i>
+              </span>
+              <span>Add</span>
             </button>
           </td>
         </tr>
         }
       </tbody>
     </table>
-    } @else if (serverName == 'Change me') {
-    <h2>Please Change server name</h2>
+  </div>
+  } @else if (serverName == 'Change me') {
+  <div class="has-text-centered p-6" style="
+    background-color: var(--gray-50); 
+    border-radius: var(--radius); 
+    border: 2px dashed var(--gray-300);
+  ">
+    <i class="fas fa-edit fa-3x mb-3" style="color: var(--gray-400);"></i>
+    <h4 class="title is-6" style="color: var(--text-muted);">Update Server Name</h4>
+    <p style="color: var(--text-muted); font-size: 0.875rem;">
+      Please change the server name from the default value to continue with port mapping configuration.
+    </p>
+  </div>
+  } @else {
+  <div class="has-text-centered p-6" style="
+    background-color: var(--gray-50); 
+    border-radius: var(--radius); 
+    border: 2px dashed var(--gray-300);
+  ">
+    <i class="fas fa-hand-pointer fa-3x mb-3" style="color: var(--gray-400);"></i>
+    <h4 class="title is-6" style="color: var(--text-muted);">Select Source Service</h4>
+    <p style="color: var(--text-muted); font-size: 0.875rem;">
+      Choose a source service from the list above to see available target services and begin mapping ports.
+    </p>
+  </div>
+  }
+</div>
+
+<!-- Service Description -->
+@if (selectedDescription) {
+<div class="modern-card">
+  <h4 class="title is-6 mb-3" style="color: var(--text-primary);">
+    <i class="fas fa-info-circle mr-2" style="color: var(--info-color);"></i>
+    Service Description
+  </h4>
+  <div class="content" style="
+    background-color: var(--gray-50); 
+    padding: var(--spacing-lg); 
+    border-radius: var(--radius); 
+    border-left: 4px solid var(--info-color);
+  ">
+    <p style="color: var(--text-secondary); margin: 0; line-height: 1.6;">
+      {{ selectedDescription }}
+    </p>
+  </div>
+</div>
+}
+
+<!-- Current Mapped Services -->
+<div class="modern-card">
+  <div class="flex items-center justify-between mb-4">
+    <h3 class="title is-5 mb-0" style="color: var(--text-primary);">
+      <i class="fas fa-sitemap mr-2" style="color: var(--success-color);"></i>
+      Current Port Mappings
+    </h3>
+    @if (selectedPortMapping.mappedPorts.length > 0) {
+    <span class="tag is-success is-light" style="border-radius: var(--radius-sm);">
+      {{ selectedPortMapping.mappedPorts.length }} mappings
+    </span>
     } @else {
-    <h2>Please select a service</h2>
+    <span class="tag is-light" style="border-radius: var(--radius-sm);">
+      No mappings yet
+    </span>
     }
   </div>
-</div>
 
-<div class="columns">
-  <div class="column">
-    <div class="card">
-      <div class="card-content">
-        <h2 class="title is-4">Description</h2>
-        <p class="content">{{ selectedDescription }}</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="columns">
-  <div class="column">
-    @if (selectedPortMapping.mappedPorts.length > 0) {
-    <h2>Mapped Services</h2>
-
-    <table class="table is-fullwidth">
+  @if (selectedPortMapping.mappedPorts.length > 0) {
+  <div class="scrollable-table-container" style="border-radius: var(--radius); overflow: hidden; border: 1px solid var(--gray-200);">
+    <table class="table is-fullwidth" style="margin: 0;">
       <thead>
-        <tr>
-          <th>Product</th>
-          <th>Source Server</th>
-          <th>Target Server</th>
-          <th>Source Service</th>
-          <th>Target Service</th>
-          <th>Ports</th>
-          <th>Protocol</th>
-          <th>Remove</th>
+        <tr style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);">
+          <th style="font-weight: 600; color: var(--text-primary); border: none;">Product</th>
+          <th style="font-weight: 600; color: var(--text-primary); border: none;">Source Server</th>
+          <th style="font-weight: 600; color: var(--text-primary); border: none;">Target Server</th>
+          <th style="font-weight: 600; color: var(--text-primary); border: none;">Source Service</th>
+          <th style="font-weight: 600; color: var(--text-primary); border: none;">Target Service</th>
+          <th style="font-weight: 600; color: var(--text-primary); border: none; text-align: center;">Ports</th>
+          <th style="font-weight: 600; color: var(--text-primary); border: none; text-align: center;">Protocol</th>
+          <th style="font-weight: 600; color: var(--text-primary); border: none; width: 100px;">Actions</th>
         </tr>
       </thead>
       <tbody>
-        @for (item of selectedPortMapping.mappedPorts; track item; let index =
-        $index) {
-        <tr>
-          <td>{{ item.product }}</td>
-          <td>{{ selectedPortMapping.sourceServer }}</td>
-          <td>
+        @for (item of selectedPortMapping.mappedPorts; track item; let index = $index) {
+        <tr style="transition: all 0.2s ease;" onmouseover="this.style.backgroundColor='var(--gray-50)'" onmouseout="this.style.backgroundColor='transparent'">
+          <td style="border: none; padding: var(--spacing-md);">
+            <span class="tag is-light" style="border-radius: var(--radius-sm); font-size: 0.75rem;">
+              {{ item.product }}
+            </span>
+          </td>
+          <td style="border: none; padding: var(--spacing-md); font-weight: 500;">
+            <div class="flex items-center">
+              <div class="mr-2" style="
+                width: 6px; 
+                height: 6px; 
+                background-color: var(--primary-color); 
+                border-radius: 50%;
+              "></div>
+              {{ selectedPortMapping.sourceServer }}
+            </div>
+          </td>
+          <td style="border: none; padding: var(--spacing-md);">
             <div class="select is-fullwidth">
               <select
                 [(ngModel)]="item.targetServerName"
                 (change)="updateTargetPortmapping()"
+                style="
+                  border-radius: var(--radius-sm);
+                  border: 1px solid var(--gray-300);
+                  font-size: 0.875rem;
+                  font-weight: 500;
+                "
               >
                 @for (server of servers; track server) {
-
                 <option>{{ server.name }}</option>
                 }
               </select>
             </div>
           </td>
-          <td>{{ item.sourceService }}</td>
-          <td>{{ item.targetService }}</td>
-          <td>{{ item.port }}</td>
-          <td>{{ item.protocol }}</td>
-          <td>
-            <button class="button is-danger" (click)="removeService(index)">
-              Remove
+          <td style="border: none; padding: var(--spacing-md); font-weight: 500;">{{ item.sourceService }}</td>
+          <td style="border: none; padding: var(--spacing-md); color: var(--text-primary);">{{ item.targetService }}</td>
+          <td style="border: none; text-align: center; padding: var(--spacing-md);">
+            <code style="
+              background-color: var(--gray-100); 
+              padding: 2px 6px; 
+              border-radius: var(--radius-sm); 
+              font-size: 0.875rem;
+            ">
+              {{ item.port }}
+            </code>
+          </td>
+          <td style="border: none; text-align: center; padding: var(--spacing-md);">
+            <span class="tag" 
+              [ngClass]="item.protocol === 'TCP' ? 'is-success' : 'is-info'"
+              style="border-radius: var(--radius-sm); font-weight: 500;">
+              {{ item.protocol }}
+            </span>
+          </td>
+          <td style="border: none; padding: var(--spacing-md);">
+            <button 
+              class="button is-danger is-small" 
+              (click)="removeService(index)"
+              style="border-radius: var(--radius-sm); font-weight: 500;"
+              title="Remove this mapping"
+            >
+              <span class="icon is-small">
+                <i class="fas fa-trash"></i>
+              </span>
             </button>
           </td>
         </tr>
         }
       </tbody>
     </table>
+  </div>
+  } @else {
+  <div class="has-text-centered p-6" style="
+    background-color: var(--gray-50); 
+    border-radius: var(--radius); 
+    border: 2px dashed var(--gray-300);
+  ">
+    <i class="fas fa-sitemap fa-3x mb-3" style="color: var(--gray-400);"></i>
+    <h4 class="title is-6" style="color: var(--text-muted);">No Port Mappings</h4>
+    <p style="color: var(--text-muted); font-size: 0.875rem;">
+      Start adding port mappings by selecting services from the target services table above.
+    </p>
+  </div>
+  }
+</div>
+<!-- Action Buttons -->
+<div class="modern-card" style="border-top: 3px solid var(--primary-color);">
+  <div class="flex justify-between items-center">
+    <div class="flex items-center">
+      <div class="mr-4" style="
+        width: 12px; 
+        height: 12px; 
+        background-color: var(--success-color); 
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+      "></div>
+      <div>
+        <h6 class="title is-7 mb-1" style="color: var(--text-primary);">Ready to Save</h6>
+        <p style="color: var(--text-muted); font-size: 0.875rem; margin: 0;">
+          @if (selectedPortMapping.mappedPorts.length > 0) {
+          Configuration complete with {{ selectedPortMapping.mappedPorts.length }} port mapping(s)
+          } @else {
+          Add some port mappings before saving your configuration
+          }
+        </p>
+      </div>
+    </div>
 
-    }
+    <div class="buttons">
+      <button
+        class="button is-success"
+        [disabled]="selectedPortMapping.mappedPorts.length == 0 || repeatServerName"
+        (click)="saveMapping()"
+        style="
+          border-radius: var(--radius); 
+          font-weight: 600; 
+          padding: 0 var(--spacing-xl);
+          transition: all 0.2s ease;
+        "
+        onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='var(--shadow)'"
+        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'"
+      >
+        <span class="icon">
+          <i class="fas fa-save"></i>
+        </span>
+        <span>Save Configuration</span>
+      </button>
+      <button 
+        class="button is-light" 
+        [routerLink]="['/']"
+        style="
+          border-radius: var(--radius); 
+          font-weight: 500; 
+          border: 2px solid var(--gray-300);
+          transition: all 0.2s ease;
+        "
+        onmouseover="this.style.backgroundColor='var(--gray-100)'"
+        onmouseout="this.style.backgroundColor='white'"
+      >
+        <span class="icon">
+          <i class="fas fa-arrow-left"></i>
+        </span>
+        <span>Back to Dashboard</span>
+      </button>
+    </div>
   </div>
 </div>
-<div class="columns">
-  <div class="column">
-    <button
-      class="button is-primary mr-2"
-      [disabled]="
-        selectedPortMapping.mappedPorts.length == 0 || repeatServerName
-      "
-      (click)="saveMapping()"
-    >
-      Save
-    </button>
-    <button class="button is-warning" [routerLink]="['/']">Back</button>
-  </div>
-</div>
+
+<style>
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+</style>
