@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DataService } from '../data.service';
 import { PortMapping, MappedPorts } from '../services';
+import { DiagramComponent } from '../diagram/diagram.component';
 
 interface FlatMapping extends MappedPorts {
   sourceServer: string;
@@ -11,7 +12,7 @@ interface FlatMapping extends MappedPorts {
 
 @Component({
     selector: 'app-report',
-    imports: [RouterLink, CommonModule, FormsModule],
+    imports: [RouterLink, CommonModule, FormsModule, DiagramComponent],
     providers: [],
     templateUrl: './report.component.html',
     styleUrl: './report.component.css'
@@ -22,6 +23,9 @@ export class ReportComponent implements OnInit {
   searchTerm: string = '';
   selectedSourceServer: string = '';
   selectedProtocol: string = '';
+  
+  // View mode toggle
+  viewMode: 'table' | 'diagram' = 'table';
 
   constructor(
     private dataService: DataService
@@ -154,6 +158,11 @@ export class ReportComponent implements OnInit {
     a.download = filename;
     a.click();
     window.URL.revokeObjectURL(url);
+  }
+
+  // Toggle between table and diagram view
+  toggleView(mode: 'table' | 'diagram'): void {
+    this.viewMode = mode;
   }
 
 }

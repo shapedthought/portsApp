@@ -22,55 +22,88 @@
       </div>
     </div>
     
-    <!-- Report Statistics -->
-    <div class="flex gap-4">
-      <div class="has-text-centered" style="
-        background-color: var(--gray-50); 
-        padding: var(--spacing-md); 
-        border-radius: var(--radius); 
-        border: 1px solid var(--gray-200);
-        min-width: 100px;
-      ">
-        <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary-color);">
-          {{ getTotalMappings() }}
+    <!-- Report Statistics and View Toggle -->
+    <div class="flex justify-between items-center">
+      <div class="flex gap-4">
+        <div class="has-text-centered" style="
+          background-color: var(--gray-50); 
+          padding: var(--spacing-md); 
+          border-radius: var(--radius); 
+          border: 1px solid var(--gray-200);
+          min-width: 100px;
+        ">
+          <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary-color);">
+            {{ getTotalMappings() }}
+          </div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">
+            Total Mappings
+          </div>
         </div>
-        <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">
-          Total Mappings
+        <div class="has-text-centered" style="
+          background-color: var(--gray-50); 
+          padding: var(--spacing-md); 
+          border-radius: var(--radius); 
+          border: 1px solid var(--gray-200);
+          min-width: 100px;
+        ">
+          <div style="font-size: 1.5rem; font-weight: 700; color: var(--success-color);">
+            {{ portMapping.length }}
+          </div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">
+            Servers
+          </div>
+        </div>
+        <div class="has-text-centered" style="
+          background-color: var(--gray-50); 
+          padding: var(--spacing-md); 
+          border-radius: var(--radius); 
+          border: 1px solid var(--gray-200);
+          min-width: 100px;
+        ">
+          <div style="font-size: 1.5rem; font-weight: 700; color: var(--info-color);">
+            {{ getUniqueProtocols().length }}
+          </div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">
+            Protocols
+          </div>
         </div>
       </div>
-      <div class="has-text-centered" style="
-        background-color: var(--gray-50); 
-        padding: var(--spacing-md); 
-        border-radius: var(--radius); 
-        border: 1px solid var(--gray-200);
-        min-width: 100px;
-      ">
-        <div style="font-size: 1.5rem; font-weight: 700; color: var(--success-color);">
-          {{ portMapping.length }}
-        </div>
-        <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">
-          Servers
-        </div>
-      </div>
-      <div class="has-text-centered" style="
-        background-color: var(--gray-50); 
-        padding: var(--spacing-md); 
-        border-radius: var(--radius); 
-        border: 1px solid var(--gray-200);
-        min-width: 100px;
-      ">
-        <div style="font-size: 1.5rem; font-weight: 700; color: var(--info-color);">
-          {{ getUniqueProtocols().length }}
-        </div>
-        <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">
-          Protocols
-        </div>
+
+      <!-- View Mode Toggle -->
+      <div class="buttons has-addons">
+        <button 
+          class="button" 
+          [ngClass]="viewMode === 'table' ? 'is-primary' : 'is-light'"
+          (click)="toggleView('table')"
+          style="border-radius: var(--radius-sm) 0 0 var(--radius-sm);"
+        >
+          <span class="icon is-small">
+            <i class="fas fa-table"></i>
+          </span>
+          <span>Table View</span>
+        </button>
+        <button 
+          class="button" 
+          [ngClass]="viewMode === 'diagram' ? 'is-primary' : 'is-light'"
+          (click)="toggleView('diagram')"
+          style="border-radius: 0 var(--radius-sm) var(--radius-sm) 0;"
+        >
+          <span class="icon is-small">
+            <i class="fas fa-project-diagram"></i>
+          </span>
+          <span>Diagram View</span>
+        </button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Filters and Search Section -->
+<!-- Conditional Content Based on View Mode -->
+@if (viewMode === 'diagram') {
+<!-- Network Diagram View -->
+<app-diagram [portMappings]="portMapping"></app-diagram>
+} @else {
+<!-- Table View with Filters and Search -->
 <div class="modern-card">
   <div class="flex items-center justify-between mb-4">
     <h3 class="title is-5 mb-0" style="color: var(--text-primary);">
@@ -329,5 +362,6 @@
     </div>
   </div>
 </div>
+}
 }
 
