@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, OnChanges, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import mermaid from 'mermaid';
@@ -28,9 +28,9 @@ interface DiagramData {
   templateUrl: './diagram.component.html',
   styleUrl: './diagram.component.css'
 })
-export class DiagramComponent implements OnInit, AfterViewInit, OnDestroy {
+export class DiagramComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input() portMappings: PortMapping[] = [];
-  @ViewChild('mermaidContainer', { static: true }) mermaidContainer!: ElementRef;
+  @ViewChild('mermaidContainer', { static: false }) mermaidContainer!: ElementRef;
 
   // Diagram state
   diagramData: DiagramData = { connections: [], servers: [] };
@@ -68,8 +68,37 @@ export class DiagramComponent implements OnInit, AfterViewInit, OnDestroy {
     this.processPortMappings();
   }
 
+  ngOnChanges(): void {
+    // Re-process data when input changes
+    this.processPortMappings();
+    if (this.mermaidContainer?.nativeElement) {
+      this.generateDiagram();
+    }
+  }
+
   ngAfterViewInit(): void {
-    this.generateDiagram();
+    // Use a more robust container check
+    this.waitForContainer().then(() => {
+      this.generateDiagram();
+    }).catch(() => {
+      console.warn('Diagram container initialization failed');
+    });
+  }
+
+  private async waitForContainer(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      let attempts = 0;
+      const check = () => {
+        if (this.mermaidContainer?.nativeElement) {
+          resolve();
+        } else if (++attempts > 20) {
+          reject();
+        } else {
+          setTimeout(check, 50);
+        }
+      };
+      check();
+    });
   }
 
   ngOnDestroy(): void {
@@ -190,7 +219,7 @@ export class DiagramComponent implements OnInit, AfterViewInit, OnDestroy {
     // Generate node definitions with clean names
     const nodeMap = new Map<string, string>();
     this.diagramData.servers.forEach((server, index) => {
-      const nodeId = `N${index}`;
+      const nodeId = this.createNodeId(server) + index;
       nodeMap.set(server, nodeId);
       syntax += `    ${nodeId}["${this.sanitizeNodeName(server)}"]\n`;
     });
@@ -242,7 +271,11 @@ export class DiagramComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
 
-    return labels.join('<br/>') || 'Connection';
+    // Use line break for multi-protocol, avoid HTML entities in Mermaid
+    const result = labels.join(' | ') || 'Connection';
+    
+    // Remove any characters that might break Mermaid
+    return result.replace(/['"<>]/g, '');
   }
 
   // Compress port list for compact display
@@ -274,7 +307,18 @@ export class DiagramComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Sanitize server names for Mermaid
   private sanitizeNodeName(name: string): string {
-    return name.replace(/['"]/g, '').substring(0, 20) + (name.length > 20 ? '...' : '');
+    // Remove special characters that could break Mermaid syntax
+    return name
+      .replace(/['"()<>[\]{}|\\]/g, '')
+      .replace(/[^a-zA-Z0-9\s\-_.]/g, '')
+      .substring(0, 20) + (name.length > 20 ? '...' : '');
+  }
+
+  // Create safe node ID for Mermaid
+  private createNodeId(name: string): string {
+    return name
+      .replace(/[^a-zA-Z0-9]/g, '_')
+      .substring(0, 15);
   }
 
   // Generate Mermaid styling
@@ -299,23 +343,49 @@ export class DiagramComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Generate and render the diagram
   async generateDiagram(): Promise<void> {
-    if (!this.mermaidContainer) return;
+    if (!this.mermaidContainer?.nativeElement) {
+      console.error('Mermaid container not available');
+      return;
+    }
     
     this.isLoading = true;
     this.mermaidSyntax = this.generateMermaidSyntax();
+    
+    console.log('Generated Mermaid syntax:', this.mermaidSyntax);
     
     try {
       // Clear previous diagram
       this.mermaidContainer.nativeElement.innerHTML = '';
       
-      // Generate new diagram
-      const { svg } = await mermaid.render('mermaid-diagram', this.mermaidSyntax);
+      // Create a unique ID for this diagram
+      const diagramId = `mermaid-diagram-${Date.now()}`;
+      
+      // Generate new diagram with better error handling
+      const { svg } = await mermaid.render(diagramId, this.mermaidSyntax);
       this.mermaidContainer.nativeElement.innerHTML = svg;
+      
+      console.log('Diagram rendered successfully');
       
     } catch (error) {
       console.error('Error generating Mermaid diagram:', error);
-      this.mermaidContainer.nativeElement.innerHTML = 
-        '<p class="has-text-danger">Error generating diagram. Please check your data.</p>';
+      console.error('Mermaid syntax that caused error:', this.mermaidSyntax);
+      
+      // Show a more helpful error message
+      this.mermaidContainer.nativeElement.innerHTML = `
+        <div class="has-text-danger p-4" style="border: 2px dashed #ef4444; border-radius: 8px; background-color: #fef2f2;">
+          <h5 class="title is-6 has-text-danger">Diagram Generation Error</h5>
+          <p>Unable to generate the network diagram. This might be due to:</p>
+          <ul>
+            <li>Invalid server names or port data</li>
+            <li>Complex port mapping configurations</li>
+            <li>Mermaid syntax issues</li>
+          </ul>
+          <details class="mt-2">
+            <summary>Technical Details</summary>
+            <pre style="font-size: 0.75rem; margin-top: 0.5rem;">${error}</pre>
+          </details>
+        </div>
+      `;
     } finally {
       this.isLoading = false;
     }
@@ -332,37 +402,77 @@ export class DiagramComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Export functionality
   exportSVG(): void {
-    const svgElement = this.mermaidContainer.nativeElement.querySelector('svg');
-    if (!svgElement) return;
+    try {
+      if (!this.mermaidContainer?.nativeElement) {
+        alert('Diagram not ready for export. Please wait for diagram to load.');
+        return;
+      }
 
-    const svgData = new XMLSerializer().serializeToString(svgElement);
-    const blob = new Blob([svgData], { type: 'image/svg+xml' });
-    this.downloadFile(blob, 'network-diagram.svg');
+      const svgElement = this.mermaidContainer.nativeElement.querySelector('svg');
+      if (!svgElement) {
+        alert('No diagram found to export. Please generate a diagram first.');
+        return;
+      }
+
+      const svgData = new XMLSerializer().serializeToString(svgElement);
+      const blob = new Blob([svgData], { type: 'image/svg+xml' });
+      this.downloadFile(blob, 'network-diagram.svg');
+    } catch (error) {
+      console.error('Export error:', error);
+      alert('Failed to export diagram. Please try again.');
+    }
   }
 
   exportPNG(): void {
-    const svgElement = this.mermaidContainer.nativeElement.querySelector('svg');
-    if (!svgElement) return;
+    try {
+      if (!this.mermaidContainer?.nativeElement) {
+        alert('Diagram not ready for export. Please wait for diagram to load.');
+        return;
+      }
 
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const img = new Image();
+      const svgElement = this.mermaidContainer.nativeElement.querySelector('svg');
+      if (!svgElement) {
+        alert('No diagram found to export. Please generate a diagram first.');
+        return;
+      }
 
-    img.onload = () => {
-      canvas.width = img.width;
-      canvas.height = img.height;
-      ctx?.drawImage(img, 0, 0);
-      
-      canvas.toBlob((blob) => {
-        if (blob) {
-          this.downloadFile(blob, 'network-diagram.png');
+      const svgData = new XMLSerializer().serializeToString(svgElement);
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+
+      img.onload = () => {
+        try {
+          canvas.width = img.naturalWidth || 800;
+          canvas.height = img.naturalHeight || 600;
+          
+          if (ctx) {
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0);
+          }
+          
+          canvas.toBlob((blob) => {
+            if (blob) {
+              this.downloadFile(blob, 'network-diagram.png');
+            }
+          }, 'image/png');
+        } catch (error) {
+          console.error('Canvas error:', error);
+          alert('Failed to convert diagram to PNG.');
         }
-      }, 'image/png');
-    };
+      };
 
-    const svgData = new XMLSerializer().serializeToString(svgElement);
-    const svgBlob = new Blob([svgData], { type: 'image/svg+xml' });
-    img.src = URL.createObjectURL(svgBlob);
+      img.onerror = () => {
+        alert('Failed to convert diagram to PNG format.');
+      };
+
+      const svgBlob = new Blob([svgData], { type: 'image/svg+xml' });
+      img.src = URL.createObjectURL(svgBlob);
+    } catch (error) {
+      console.error('PNG export error:', error);
+      alert('Failed to export PNG. Please try again.');
+    }
   }
 
   copyMermaidCode(): void {
