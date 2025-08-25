@@ -9,6 +9,8 @@ export interface TargetServices {
 export interface Service {
   id?: number;
   name: string;
+  product: string;
+  subheading: string;
   targetServices: TargetServices[];
 }
 
@@ -42,9 +44,16 @@ export interface SourceService {
   sourceService: string;
 }
 
+export interface SourceServiceDetailed {
+  product: string;
+  sourceService: string;
+  subheading: string;
+}
+
 export interface TargetServiceRequest {
   productName: string;
   sourceService: string;
+  subheading: string;
 }
 
 export interface FullServiceRequest {

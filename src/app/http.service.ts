@@ -8,6 +8,7 @@ import {
   Service,
   TargetServiceRequest,
   TargetServices,
+  SourceServiceDetailed,
 } from './services';
 import { environment } from '../environments/environment';
 
@@ -49,16 +50,18 @@ export class HttpService {
     const targetServices: TargetServices[] = [];
 
     return this.http
-      .post<string[]>(`${this.portsServer}/source`, productName)
+      .post<SourceServiceDetailed[]>(
+        `${this.portsServer}/sourceDetails`,
+        productName
+      )
       .pipe(
         map((services) =>
-          services
-            .map((service, index) => ({
-              id: index + 1,
-              name: service,
-              targetServices: targetServices,
-            }))
-            .sort((a, b) => a.name.localeCompare(b.name))
+          services.map((service) => ({
+            name: service.sourceService, // Assign sourceService to name
+            product: productName.productName,
+            subheading: service.subheading,
+            targetServices: targetServices,
+          }))
         ),
         catchError(this.handleError)
       );
@@ -66,11 +69,13 @@ export class HttpService {
 
   getTarget(
     productName: string,
-    sourceService: string
+    sourceService: string,
+    subheading: string
   ): Observable<FullServiceResponse[]> {
     const targetServices: TargetServiceRequest = {
       productName: productName,
       sourceService: sourceService,
+      subheading: subheading,
     };
 
     return this.http
