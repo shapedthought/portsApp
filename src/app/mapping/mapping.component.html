@@ -707,10 +707,13 @@
       border-radius: var(--radius);
       overflow: hidden;
       border: 1px solid var(--gray-200);
+      max-height: 500px;
+      overflow-y: auto;
+      position: relative;
     "
   >
     <table class="table is-fullwidth" style="margin: 0">
-      <thead>
+      <thead style="position: sticky; top: 0; z-index: 10;">
         <tr
           style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)"
         >

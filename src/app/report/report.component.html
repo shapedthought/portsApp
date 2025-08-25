@@ -69,31 +69,49 @@
         </div>
       </div>
 
-      <!-- View Mode Toggle -->
-      <div class="buttons has-addons">
-        <button 
-          class="button" 
-          [ngClass]="viewMode === 'table' ? 'is-primary' : 'is-light'"
-          (click)="toggleView('table')"
-          style="border-radius: var(--radius-sm) 0 0 var(--radius-sm);"
-        >
-          <span class="icon is-small">
-            <i class="fas fa-table"></i>
-          </span>
-          <span>Table View</span>
-        </button>
-        <button 
-          class="button" 
-          [ngClass]="viewMode === 'diagram' ? 'is-primary' : 'is-light'"
-          (click)="toggleView('diagram')"
-          style="border-radius: 0 var(--radius-sm) var(--radius-sm) 0;"
-        >
-          <span class="icon is-small">
-            <i class="fas fa-project-diagram"></i>
-          </span>
-          <span>Diagram View</span>
-        </button>
-      </div>
+    </div>
+  </div>
+</div>
+
+<!-- View Mode Toggle Section -->
+<div class="modern-card slide-up">
+  <div class="flex items-center justify-between">
+    <div>
+      <h4 class="title is-6 mb-1" style="color: var(--text-primary);">
+        <i class="fas fa-eye mr-2" style="color: var(--secondary-color);"></i>
+        View Mode
+      </h4>
+      <p class="text-muted" style="font-size: 0.875rem; margin: 0;">
+        Choose how to display your port mapping data
+      </p>
+    </div>
+    
+    <!-- Tab-Style Toggle -->
+    <div class="tabs is-boxed is-small">
+      <ul style="margin: 0;">
+        <li [ngClass]="viewMode === 'table' ? 'is-active' : ''">
+          <a (click)="toggleView('table')" style="
+            transition: all 0.2s ease;
+            border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+          ">
+            <span class="icon is-small">
+              <i class="fas fa-table"></i>
+            </span>
+            <span>Table</span>
+          </a>
+        </li>
+        <li [ngClass]="viewMode === 'diagram' ? 'is-active' : ''">
+          <a (click)="toggleView('diagram')" style="
+            transition: all 0.2s ease;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+          ">
+            <span class="icon is-small">
+              <i class="fas fa-project-diagram"></i>
+            </span>
+            <span>Diagram</span>
+          </a>
+        </li>
+      </ul>
     </div>
   </div>
 </div>

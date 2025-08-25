@@ -8,12 +8,6 @@
 ">
   <div class="modern-container">
     <div class="navbar-brand">
-      <a class="navbar-item" style="color: white; font-weight: 600; font-size: 1.25rem;">
-        <i class="fas fa-network-wired mr-2" style="color: #a5b4fc;"></i>
-        <span class="is-hidden-mobile">PortsApp</span>
-        <span class="is-hidden-tablet">Ports</span>
-      </a>
-
       <!-- Mobile hamburger menu -->
       <a role="button" 
          class="navbar-burger" 
@@ -31,6 +25,19 @@
 
     <div id="navbar-menu" class="navbar-menu" [class.is-active]="isMobileMenuOpen">
       <div class="navbar-start">
+        <!-- Brand moved to navbar-start (left side) -->
+        <a routerLink="/" 
+           class="navbar-item" 
+           style="color: white; font-weight: 600; font-size: 1.25rem; transition: all 0.2s;" 
+           (click)="closeMobileMenu()"
+           onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
+           onmouseout="this.style.backgroundColor='transparent'">
+          <i class="fas fa-network-wired mr-2" style="color: #a5b4fc;"></i>
+          <span class="is-hidden-mobile">PortsApp</span>
+          <span class="is-hidden-tablet">Ports</span>
+        </a>
+        
+        <!-- Navigation items -->
         <a routerLink="/" 
            class="navbar-item" 
            style="color: white; transition: all 0.2s;" 
