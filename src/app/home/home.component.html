@@ -1,28 +1,55 @@
-<div class="columns mt-2">
-  <div class="column">
-    <div class="buttons is-pulled-right">
+<!-- Modern Header Section -->
+<div class="modern-card slide-up">
+  <div class="flex justify-between items-center mb-6">
+    <div>
+      <h1 class="title is-3 mb-2" style="color: var(--text-primary); font-weight: 600;">
+        <i class="fas fa-server mr-2" style="color: var(--primary-color);"></i>
+        Server Port Management
+      </h1>
+      <p class="subtitle is-6" style="color: var(--text-secondary); margin: 0;">
+        Manage and configure network port mappings between your servers
+      </p>
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="buttons is-responsive">
       <button
-        class="button is-primary mr-2"
+        class="button is-info"
         [routerLink]="['/report']"
         [disabled]="checkMappedPortLength()"
+        style="border-radius: var(--radius); font-weight: 500;"
       >
-        Report
+        <span class="icon">
+          <i class="fas fa-chart-line"></i>
+        </span>
+        <span class="is-hidden-mobile">View Report</span>
+        <span class="is-hidden-tablet">Report</span>
       </button>
       <button
-        class="button is-primary mr-2"
+        class="button is-success"
         (click)="getExcelData()"
         [disabled]="checkMappedPortLength()"
+        style="border-radius: var(--radius); font-weight: 500;"
       >
-        Excel
+        <span class="icon">
+          <i class="fas fa-file-excel"></i>
+        </span>
+        <span class="is-hidden-mobile">Export Excel</span>
+        <span class="is-hidden-tablet">Excel</span>
       </button>
       <button
-        class="button is-primary mr-2"
+        class="button is-primary"
         [disabled]="checkMappedPortLength()"
         (click)="savePortMappings()"
+        style="border-radius: var(--radius); font-weight: 500;"
       >
-        Save
+        <span class="icon">
+          <i class="fas fa-download"></i>
+        </span>
+        <span class="is-hidden-mobile">Save Config</span>
+        <span class="is-hidden-tablet">Save</span>
       </button>
-      <div class="file is-primary mr-2">
+      <div class="file is-warning">
         <label class="file-label">
           <input
             class="file-input"
@@ -31,11 +58,12 @@
             accept="json"
             (change)="uploadPortMappings($event)"
           />
-          <span class="file-cta">
+          <span class="file-cta" style="border-radius: var(--radius); font-weight: 500;">
             <span class="file-icon">
               <i class="fas fa-upload"></i>
             </span>
-            <span class="file-label">Upload</span>
+            <span class="file-label is-hidden-mobile">Upload Config</span>
+            <span class="file-label is-hidden-tablet">Upload</span>
           </span>
         </label>
       </div>
@@ -43,19 +71,66 @@
   </div>
 </div>
 
-<div class="columns">
-  <!-- <button class="button is-small" (click)="this.showTable = !this.showTable">Cards</button> -->
-  <div class="column mr-3">
-    <h3 class="is-bold">Click table to select server</h3>
-    <table class="table is-fullwidth">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Outbound</th>
-          <th>Inbound</th>
-          <th>Targets</th>
-          <th>Edit</th>
-          <th>Delete</th>
+<!-- Servers Overview Section - Now at Top -->
+<div class="modern-card slide-up">
+  <div class="flex justify-between items-center mb-4">
+    <h3 class="title is-5 mb-0" style="color: var(--text-primary);">
+      <i class="fas fa-list mr-2" style="color: var(--secondary-color);"></i>
+      Servers Overview
+    </h3>
+    <div class="flex items-center gap-3">
+      <span class="tag is-light" style="border-radius: var(--radius-sm);">
+        {{ portsMapped.length }} servers configured
+      </span>
+      <div class="buttons are-small">
+        <button class="button is-primary is-small" (click)="openModal()" style="border-radius: var(--radius); font-weight: 500;">
+          <span class="icon is-small">
+            <i class="fas fa-plus"></i>
+          </span>
+          <span>Add Server</span>
+        </button>
+        <button class="button is-danger is-light is-small" (click)="cleaAllMappedPorts()" style="border-radius: var(--radius); font-weight: 500;">
+          <span class="icon is-small">
+            <i class="fas fa-trash-alt"></i>
+          </span>
+          <span>Clear All</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <p class="text-muted mb-4" style="font-size: 0.875rem;">
+    Click on a server to view its detailed port configuration below
+  </p>
+
+  <!-- Enhanced Server Table with Better Spacing -->
+  <div class="table-container" style="
+    border-radius: var(--radius-lg); 
+    overflow: hidden; 
+    border: 1px solid var(--gray-200);
+    max-height: 400px;
+    overflow-y: auto;
+  ">
+    <table class="table is-fullwidth is-hoverable" style="margin: 0; table-layout: fixed;">
+      <thead style="position: sticky; top: 0; z-index: 10;">
+        <tr style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);">
+          <th style="font-weight: 600; color: var(--text-primary); border: none; width: 35%;">
+            <i class="fas fa-server mr-1" style="color: var(--primary-color);"></i>
+            Server Name
+          </th>
+          <th style="font-weight: 600; color: var(--text-primary); border: none; text-align: center; width: 15%;">
+            <i class="fas fa-arrow-up mr-1" style="color: var(--success-color);"></i>
+            Outbound
+          </th>
+          <th style="font-weight: 600; color: var(--text-primary); border: none; text-align: center; width: 15%;">
+            <i class="fas fa-arrow-down mr-1" style="color: var(--info-color);"></i>
+            Inbound
+          </th>
+          <th style="font-weight: 600; color: var(--text-primary); border: none; text-align: center; width: 15%;">
+            <i class="fas fa-bullseye mr-1" style="color: var(--warning-color);"></i>
+            Targets
+          </th>
+          <th style="font-weight: 600; color: var(--text-primary); border: none; text-align: center; width: 20%;">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -63,204 +138,443 @@
         <tr
           [ngClass]="{ 'is-selected': selectedCardIndex === index }"
           (click)="loadMappedPorts(index)"
+          style="cursor: pointer; transition: all 0.2s ease;"
+          [style.background-color]="selectedCardIndex === index ? 'rgba(99, 102, 241, 0.1)' : 'transparent'"
+          onmouseover="this.style.backgroundColor='var(--gray-50)'"
+          onmouseout="this.style.backgroundColor=this.getAttribute('data-original-bg')"
+          [attr.data-original-bg]="selectedCardIndex === index ? 'rgba(99, 102, 241, 0.1)' : 'transparent'"
         >
-          <td>{{ item.sourceServer }}</td>
-          <td>{{ item.totalMappedPorts }}</td>
-          <td>{{ item.totalMappedInboundPorts }}</td>
-          <td>{{ item.totalMappedServers }}</td>
-          <td>
-            <button class="button is-info" [routerLink]="['/mapping', index]">
-              <span class="icon-text">
-                <span class="icon">
+          <td style="border: none; padding: var(--spacing-md); font-weight: 500; width: 35%; max-width: 0;">
+            <div class="flex items-center">
+              <div class="mr-2" style="
+                width: 6px; 
+                height: 6px; 
+                background-color: var(--success-color); 
+                border-radius: 50%;
+                box-shadow: 0 0 4px rgba(16, 185, 129, 0.4);
+                flex-shrink: 0;
+              "></div>
+              <span style="
+                overflow: hidden; 
+                text-overflow: ellipsis; 
+                white-space: nowrap; 
+                line-height: 1.3;
+              " title="{{ item.sourceServer }}">{{ item.sourceServer }}</span>
+            </div>
+          </td>
+          <td style="border: none; text-align: center; padding: var(--spacing-md); width: 15%;">
+            <span class="tag is-success is-light" style="border-radius: var(--radius-sm); font-weight: 500;">
+              {{ item.totalMappedPorts }}
+            </span>
+          </td>
+          <td style="border: none; text-align: center; padding: var(--spacing-md); width: 15%;">
+            <span class="tag is-info is-light" style="border-radius: var(--radius-sm); font-weight: 500;">
+              {{ item.totalMappedInboundPorts }}
+            </span>
+          </td>
+          <td style="border: none; text-align: center; padding: var(--spacing-md); width: 15%;">
+            <span class="tag is-warning is-light" style="border-radius: var(--radius-sm); font-weight: 500;">
+              {{ item.totalMappedServers }}
+            </span>
+          </td>
+          <td style="border: none; padding: var(--spacing-md); text-align: center; width: 20%;">
+            <div class="buttons are-small is-centered" style="gap: 0.25rem;">
+              <button 
+                class="button is-info is-light is-small" 
+                [routerLink]="['/mapping', index]"
+                style="border-radius: var(--radius-sm);"
+                title="Edit Server Configuration"
+                (click)="$event.stopPropagation()"
+              >
+                <span class="icon is-small">
                   <i class="fas fa-edit"></i>
                 </span>
-              </span>
-            </button>
-          </td>
-          <td>
-            <button
-              class="button is-danger"
-              (click)="deleteServer(index); $event.stopPropagation()"
-              [disabled]="this.portsMapped.length <= 2"
-            >
-              <span class="icon-text">
-                <span class="icon">
+                <span class="is-hidden-touch">Edit</span>
+              </button>
+              <button
+                class="button is-danger is-light is-small"
+                (click)="deleteServer(index); $event.stopPropagation()"
+                [disabled]="this.portsMapped.length <= 2"
+                style="border-radius: var(--radius-sm);"
+                title="Delete Server"
+              >
+                <span class="icon is-small">
                   <i class="fas fa-trash"></i>
                 </span>
-              </span>
-            </button>
+                <span class="is-hidden-touch">Delete</span>
+              </button>
+            </div>
           </td>
         </tr>
         }
       </tbody>
     </table>
-    <button class="button is-primary is-small mr-2" (click)="openModal()">
-      Add Server
-    </button>
-    <button class="button is-danger is-small" (click)="cleaAllMappedPorts()">
-      Clear All
-    </button>
-  </div>
-
-  <!-- <div class="column mr-3">
-    <button class="button is-small" (click)="this.showTable = !this.showTable">Table</button>
-    @for (item of portsMapped; track item.id; let index = $index) {
-    <div
-      class="card"
-      [ngClass]="{ 'is-selected': selectedCardIndex === index }"
-      (click)="loadMappedPorts(index)"
-    >
-      <div class="card-content">
-        <div class="content">
-          <h3>Server Name: {{ item.sourceServer }}</h3>
-          <h5>Total Outbound ports: {{ item.totalMappedPorts }}</h5>
-          <h5>Total Inbound ports: {{ item.totalMappedInboundPorts }}</h5>
-          <h5>Target Server qty: {{ item.totalMappedServers }}</h5>
-          <button
-            class="button is-primary mr-2"
-            [routerLink]="['/mapping', index]"
-          >
-            Edit
-          </button>
-          <button
-            class="button is-danger"
-            (click)="deleteServer(index)"
-            [disabled]="this.portsMapped.length <= 2"
-          >
-            Delete
-          </button>
-        </div>
-      </div>
-    </div>
-    }
-  </div> -->
-  <div class="column">
-    @if (showMappedPorts.length > 0) {
-    <h4 class="title">Source Server: {{ sourceServer }}</h4>
-    <h4 class="is-size-4">Outbound ports</h4>
-    <div class="table is-fullwidth">
-      <thead>
-        <tr>
-          <th>Target Server</th>
-          <th>Ports</th>
-          <th>Protocol</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (item of showMappedPorts; track item.index) {
-        <tr>
-          <td>{{ item.serverName }}</td>
-          <td>{{ item.port }}</td>
-          <td>{{ item.protocol }}</td>
-        </tr>
-        }
-      </tbody>
-      @if (codeStringTcp.length > 0) {
-      <p>TCP Ports: {{ codeStringTcp }}</p>
-      } 
-      @if (codeStringUdp.length > 0) {
-      <p>UDP Ports: {{ codeStringUdp }}</p>
-      } 
-    </div>
-    } @else {
-    <h4 class="title is-4">{{ sourceServer }}: No outbound ports mapped</h4>
-    } @if (showMappedInboundPorts.length > 0) {
-    <h4 class="is-size-4">Inbound ports</h4>
-    <div class="table is-fullwidth">
-      <thead>
-        <tr>
-          <th>Source Server</th>
-          <th>Ports</th>
-          <th>Protocol</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (item of showMappedInboundPorts; track item.index) {
-        <tr>
-          <td>{{ item.serverName }}</td>
-          <td>{{ item.port }}</td>
-          <td>{{ item.protocol }}</td>
-        </tr>
-        }
-      </tbody>
-    </div>
-    @if (codeStringInboundTcp.length > 0) {
-    <p>TCP Ports: {{ codeStringInboundTcp }}</p>
-    }
-    @if (codeStringInboundUdp.length > 0) {
-    <p>UDP Ports: {{ codeStringInboundUdp }}</p>
-    }
-    } @else {
-    <h4 class="title is-4">{{ sourceServer }}: No inbound ports mapped</h4>
-    }
   </div>
 </div>
-<!-- Button to open the modal -->
 
-<!-- Modal structure -->
-<div class="modal" [ngClass]="{ 'is-active': isModalActive }">
-  <div class="modal-background" (click)="closeModal()"></div>
-  <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">Server Name</p>
-      <button class="delete" aria-label="close" (click)="closeModal()"></button>
+<!-- Active Configuration Details - Now Below Overview -->
+@if (sourceServer && selectedCardIndex !== null) {
+<div class="modern-card slide-up">
+  <div class="flex items-center mb-4">
+    <div class="mr-4" style="
+      width: 12px; 
+      height: 12px; 
+      background-color: var(--primary-color); 
+      border-radius: 50%;
+      box-shadow: 0 0 8px rgba(99, 102, 241, 0.4);
+    "></div>
+    <h3 class="title is-5 mb-0" style="color: var(--text-primary);">
+      <i class="fas fa-cog mr-2" style="color: var(--primary-color);"></i>
+      Configuration for {{ sourceServer }}
+    </h3>
+    <span class="tag is-primary is-light ml-auto" style="border-radius: var(--radius-sm);">
+      Active Selection
+    </span>
+  </div>
+
+      <!-- Outbound Ports Section -->
+      @if (showMappedPorts.length > 0) {
+      <div class="mb-6">
+        <h4 class="title is-6 mb-3" style="color: var(--text-primary);">
+          <i class="fas fa-arrow-up mr-2" style="color: var(--success-color);"></i>
+          Outbound Connections
+        </h4>
+        
+        <div class="table-container" style="border-radius: var(--radius); overflow: hidden; border: 1px solid var(--gray-200);">
+          <table class="table is-fullwidth" style="margin: 0;">
+            <thead>
+              <tr style="background-color: var(--gray-50);">
+                <th style="font-weight: 600; border: none;">Target Server</th>
+                <th style="font-weight: 600; border: none;">Ports</th>
+                <th style="font-weight: 600; border: none;">Protocol</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of showMappedPorts; track item.index) {
+              <tr style="border-bottom: 1px solid var(--gray-100);">
+                <td style="border: none; font-weight: 500;">{{ item.serverName }}</td>
+                <td style="border: none;">
+                  <code style="background-color: var(--gray-100); padding: 2px 6px; border-radius: var(--radius-sm); font-size: 0.875rem;">
+                    {{ item.port }}
+                  </code>
+                </td>
+                <td style="border: none;">
+                  <span class="tag" 
+                    [ngClass]="item.protocol === 'TCP' ? 'is-success' : 'is-info'"
+                    style="border-radius: var(--radius-sm); font-weight: 500;">
+                    {{ item.protocol }}
+                  </span>
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        @if (codeStringTcp.length > 0 || codeStringUdp.length > 0) {
+        <div class="mt-3 p-3" style="background-color: var(--gray-50); border-radius: var(--radius); border: 1px solid var(--gray-200);">
+          <p class="title is-7 mb-2" style="color: var(--text-secondary);">Port Summary:</p>
+          @if (codeStringTcp.length > 0) {
+          <p class="mb-1"><strong>TCP:</strong> <code style="background-color: white; padding: 2px 4px; border-radius: var(--radius-sm);">{{ codeStringTcp }}</code></p>
+          }
+          @if (codeStringUdp.length > 0) {
+          <p class="mb-0"><strong>UDP:</strong> <code style="background-color: white; padding: 2px 4px; border-radius: var(--radius-sm);">{{ codeStringUdp }}</code></p>
+          }
+        </div>
+        }
+      </div>
+      } @else {
+      <div class="has-text-centered p-6" style="background-color: var(--gray-50); border-radius: var(--radius); border: 2px dashed var(--gray-300);">
+        <i class="fas fa-arrow-up fa-3x mb-3" style="color: var(--gray-400);"></i>
+        <h5 class="title is-6" style="color: var(--text-muted);">No Outbound Ports</h5>
+        <p style="color: var(--text-muted); font-size: 0.875rem;">{{ sourceServer }} has no outbound port mappings configured</p>
+      </div>
+      }
+
+      <!-- Inbound Ports Section -->
+      @if (showMappedInboundPorts.length > 0) {
+      <div class="mt-6">
+        <h4 class="title is-6 mb-3" style="color: var(--text-primary);">
+          <i class="fas fa-arrow-down mr-2" style="color: var(--info-color);"></i>
+          Inbound Connections
+        </h4>
+        
+        <div class="table-container" style="border-radius: var(--radius); overflow: hidden; border: 1px solid var(--gray-200);">
+          <table class="table is-fullwidth" style="margin: 0;">
+            <thead>
+              <tr style="background-color: var(--gray-50);">
+                <th style="font-weight: 600; border: none;">Source Server</th>
+                <th style="font-weight: 600; border: none;">Ports</th>
+                <th style="font-weight: 600; border: none;">Protocol</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of showMappedInboundPorts; track item.index) {
+              <tr style="border-bottom: 1px solid var(--gray-100);">
+                <td style="border: none; font-weight: 500;">{{ item.serverName }}</td>
+                <td style="border: none;">
+                  <code style="background-color: var(--gray-100); padding: 2px 6px; border-radius: var(--radius-sm); font-size: 0.875rem;">
+                    {{ item.port }}
+                  </code>
+                </td>
+                <td style="border: none;">
+                  <span class="tag" 
+                    [ngClass]="item.protocol === 'TCP' ? 'is-success' : 'is-info'"
+                    style="border-radius: var(--radius-sm); font-weight: 500;">
+                    {{ item.protocol }}
+                  </span>
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        @if (codeStringInboundTcp.length > 0 || codeStringInboundUdp.length > 0) {
+        <div class="mt-3 p-3" style="background-color: var(--gray-50); border-radius: var(--radius); border: 1px solid var(--gray-200);">
+          <p class="title is-7 mb-2" style="color: var(--text-secondary);">Port Summary:</p>
+          @if (codeStringInboundTcp.length > 0) {
+          <p class="mb-1"><strong>TCP:</strong> <code style="background-color: white; padding: 2px 4px; border-radius: var(--radius-sm);">{{ codeStringInboundTcp }}</code></p>
+          }
+          @if (codeStringInboundUdp.length > 0) {
+          <p class="mb-0"><strong>UDP:</strong> <code style="background-color: white; padding: 2px 4px; border-radius: var(--radius-sm);">{{ codeStringInboundUdp }}</code></p>
+          }
+        </div>
+        }
+      </div>
+      } @else {
+      <div class="has-text-centered p-6 mt-6" style="background-color: var(--gray-50); border-radius: var(--radius); border: 2px dashed var(--gray-300);">
+        <i class="fas fa-arrow-down fa-3x mb-3" style="color: var(--gray-400);"></i>
+        <h5 class="title is-6" style="color: var(--text-muted);">No Inbound Ports</h5>
+        <p style="color: var(--text-muted); font-size: 0.875rem;">{{ sourceServer }} has no inbound port mappings configured</p>
+      </div>
+      }
+    </div>
+} @else {
+<div class="modern-card slide-up">
+  <div class="has-text-centered p-6">
+    <i class="fas fa-mouse-pointer fa-4x mb-4" style="color: var(--gray-300);"></i>
+    <h4 class="title is-5 mb-3" style="color: var(--text-muted);">Select a Server</h4>
+    <p style="color: var(--text-muted); max-width: 400px; margin: 0 auto;">
+      Click on any server from the overview table above to view its detailed port configuration, connection mappings, and network topology.
+    </p>
+    <div class="mt-4">
+      <span class="tag is-light" style="border-radius: var(--radius-sm);">
+        💡 Tip: Use the Edit button to modify server configurations
+      </span>
+    </div>
+  </div>
+</div>
+}
+<!-- Modern Modal for Adding Server -->
+<div class="modal" [ngClass]="{ 'is-active': isModalActive }" style="z-index: 1000;">
+  <div class="modal-background" (click)="closeModal()" style="background-color: rgba(0, 0, 0, 0.6);"></div>
+  <div class="modal-card" style="
+    border-radius: var(--radius-xl); 
+    box-shadow: var(--shadow-xl); 
+    border: none; 
+    max-width: 500px; 
+    margin: 0 auto;
+    animation: slideUp 0.3s ease-out;
+  ">
+    <header class="modal-card-head" style="
+      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); 
+      border-bottom: none; 
+      color: white;
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    ">
+      <div class="flex items-center">
+        <i class="fas fa-server mr-3" style="color: #a5b4fc;"></i>
+        <p class="modal-card-title" style="color: white; font-weight: 600; margin: 0;">Add New Server</p>
+      </div>
+      <button class="delete" aria-label="close" (click)="closeModal()" style="
+        background-color: rgba(255, 255, 255, 0.2); 
+        border: none;
+        transition: all 0.2s ease;
+      "
+      onmouseover="this.style.backgroundColor='rgba(255, 255, 255, 0.3)'"
+      onmouseout="this.style.backgroundColor='rgba(255, 255, 255, 0.2)'"></button>
     </header>
-    <section class="modal-card-body">
+    
+    <section class="modal-card-body" style="padding: var(--spacing-xl); background-color: white;">
       <div class="field">
-        <label class="label">Server Name</label>
-        <div class="control">
+        <label class="label" style="color: var(--text-primary); font-weight: 600; margin-bottom: var(--spacing-sm);">
+          <i class="fas fa-tag mr-2" style="color: var(--primary-color);"></i>
+          Server Name
+        </label>
+        <div class="control has-icons-left">
           <input
             class="input"
             type="text"
             [(ngModel)]="serverName"
-            placeholder="Enter server name"
+            placeholder="Enter server name (4-20 characters)"
             (change)="checkServerName(serverName)"
+            style="
+              border-radius: var(--radius);
+              border: 2px solid var(--gray-300);
+              padding: var(--spacing-md);
+              font-size: 1rem;
+              transition: all 0.2s ease;
+            "
+            onfocus="this.style.borderColor='var(--primary-color)'; this.style.boxShadow='0 0 0 3px rgba(99, 102, 241, 0.1)'"
+            onblur="this.style.borderColor='var(--gray-300)'; this.style.boxShadow='none'"
           />
-          @if (this.repeatServerName) {
-          <p class="help is-danger">No duplicate server names!</p>
-          } @else if (serverName.length < 4 || serverName.length > 20) {
-          <p class="help is-danger">
-            Server name must be between 4 and 20 characters
-          </p>
-          }
+          <span class="icon is-left" style="color: var(--gray-400);">
+            <i class="fas fa-server"></i>
+          </span>
         </div>
+        
+        @if (this.repeatServerName) {
+        <div class="mt-2 p-3" style="
+          background-color: #fef2f2; 
+          border: 1px solid #fecaca; 
+          border-radius: var(--radius); 
+          color: #dc2626;
+        ">
+          <div class="flex items-center">
+            <i class="fas fa-exclamation-triangle mr-2"></i>
+            <span style="font-weight: 500;">Server name already exists! Please choose a different name.</span>
+          </div>
+        </div>
+        } @else if (serverName.length < 4 || serverName.length > 20) {
+        <div class="mt-2 p-3" style="
+          background-color: #fffbeb; 
+          border: 1px solid #fed7aa; 
+          border-radius: var(--radius); 
+          color: #d97706;
+        ">
+          <div class="flex items-center">
+            <i class="fas fa-info-circle mr-2"></i>
+            <span>Server name must be between 4 and 20 characters</span>
+          </div>
+        </div>
+        } @else if (serverName.length >= 4) {
+        <div class="mt-2 p-3" style="
+          background-color: #f0fdf4; 
+          border: 1px solid #bbf7d0; 
+          border-radius: var(--radius); 
+          color: #16a34a;
+        ">
+          <div class="flex items-center">
+            <i class="fas fa-check-circle mr-2"></i>
+            <span>Server name looks good!</span>
+          </div>
+        </div>
+        }
       </div>
     </section>
-    <footer class="modal-card-foot">
-      <button
-        class="button is-success mr-2"
-        (click)="submitModal()"
-        [disabled]="
-          serverName.length < 4 ||
-          serverName.length > 20 ||
-          this.repeatServerName
-        "
-      >
-        Submit
-      </button>
-      <button class="button" (click)="closeModal()">Cancel</button>
+    
+    <footer class="modal-card-foot" style="
+      background-color: var(--gray-50); 
+      border-top: 1px solid var(--gray-200); 
+      border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+      padding: var(--spacing-lg);
+    ">
+      <div class="buttons is-right" style="margin: 0;">
+        <button
+          class="button is-success"
+          (click)="submitModal()"
+          [disabled]="
+            serverName.length < 4 ||
+            serverName.length > 20 ||
+            this.repeatServerName
+          "
+          style="
+            border-radius: var(--radius); 
+            font-weight: 600; 
+            padding: 0 var(--spacing-xl);
+            background-color: var(--success-color);
+            border: none;
+            transition: all 0.2s ease;
+          "
+          onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='var(--shadow)'"
+          onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'"
+        >
+          <span class="icon">
+            <i class="fas fa-plus"></i>
+          </span>
+          <span>Add Server</span>
+        </button>
+        <button 
+          class="button" 
+          (click)="closeModal()"
+          style="
+            border-radius: var(--radius); 
+            font-weight: 500; 
+            background-color: white;
+            border: 2px solid var(--gray-300);
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+          "
+          onmouseover="this.style.backgroundColor='var(--gray-50)'"
+          onmouseout="this.style.backgroundColor='white'"
+        >
+          Cancel
+        </button>
+      </div>
     </footer>
   </div>
 </div>
 
-<footer class="footer mt-4">
-  <div class="content has-text-centered">
-    <p>
-      If you would like to view the code for this project, contribute, raise an
-      issue or have any recommendations, please visit the following links:
-    </p>
-    <p>
-      <strong>Ports App Front End Project Git: </strong>
-      <a href="https://github.com/shapedthought/portsApp"
-        >https://github.com/shapedthought/portsApp</a
-      >
-    </p>
-    <p>
-      <strong>Ports App Backend End Project Git: </strong>
-      <a href="https://github.com/shapedthought/ports_server"
-        >https://github.com/shapedthought/ports_server</a
-      >
-    </p>
-    <p>Version: 0.2.0</p>
+<!-- Modern Footer -->
+<footer style="
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); 
+  border-top: 1px solid var(--gray-200); 
+  margin-top: var(--spacing-2xl); 
+  padding: var(--spacing-2xl) 0;
+">
+  <div class="modern-container">
+    <div class="modern-card" style="margin-bottom: 0; border: none; background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px);">
+      <div class="has-text-centered">
+        <div class="mb-4">
+          <i class="fas fa-code fa-2x mb-3" style="color: var(--primary-color);"></i>
+          <h4 class="title is-6 mb-2" style="color: var(--text-primary);">Open Source Project</h4>
+          <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
+            PortsApp is an open-source network port management tool. Contribute, report issues, or check out the source code on GitHub.
+          </p>
+        </div>
+        
+        <div class="columns is-mobile">
+          <div class="column">
+            <div class="box" style="background-color: rgba(255, 255, 255, 0.5); border: 1px solid var(--gray-200); border-radius: var(--radius-lg);">
+              <h6 class="title is-7 mb-2" style="color: var(--text-primary);">
+                <i class="fab fa-angular mr-1" style="color: #dd0031;"></i>
+                Frontend
+              </h6>
+              <a href="https://github.com/shapedthought/portsApp" target="_blank" rel="noopener" 
+                 style="color: var(--primary-color); text-decoration: none; font-weight: 500; font-size: 0.875rem;">
+                <i class="fab fa-github mr-1"></i>
+                shapedthought/portsApp
+              </a>
+            </div>
+          </div>
+          <div class="column">
+            <div class="box" style="background-color: rgba(255, 255, 255, 0.5); border: 1px solid var(--gray-200); border-radius: var(--radius-lg);">
+              <h6 class="title is-7 mb-2" style="color: var(--text-primary);">
+                <i class="fas fa-server mr-1" style="color: var(--success-color);"></i>
+                Backend
+              </h6>
+              <a href="https://github.com/shapedthought/ports_server" target="_blank" rel="noopener"
+                 style="color: var(--primary-color); text-decoration: none; font-weight: 500; font-size: 0.875rem;">
+                <i class="fab fa-github mr-1"></i>
+                shapedthought/ports_server
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="flex items-center justify-center gap-4 mt-4" style="font-size: 0.875rem; color: var(--text-muted);">
+          <span>
+            <i class="fas fa-tag mr-1"></i>
+            Version 0.3.0
+          </span>
+          <span>•</span>
+          <span>
+            <i class="fas fa-heart mr-1" style="color: #ef4444;"></i>
+            Made with Angular & PrimeNG
+          </span>
+        </div>
+      </div>
+    </div>
   </div>
 </footer>

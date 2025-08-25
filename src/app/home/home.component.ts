@@ -143,34 +143,121 @@ export class HomeComponent {
   }
 
   getExcelData(): void {
-    this.httpService.generateExcelData(this.portsMapped).subscribe((data) => {
-      const urlUpdated = `${this.portsServer}${
-        data.file_url.split('.com/')[1]
-      }`;
-      window.open(urlUpdated);
+    const originalText = 'Export Excel';
+    const button = event?.target as HTMLElement;
+    if (button) {
+      button.innerHTML =
+        '<span class="loading-spinner mr-2"></span><span>Generating...</span>';
+    }
+
+    this.httpService.generateExcelData(this.portsMapped).subscribe({
+      next: (data) => {
+        let urlUpdated = '';
+        if (this.portsServer.includes('localhost')) {
+          urlUpdated = `${this.portsServer}${data.file_url}`;
+        } else {
+          urlUpdated = `${this.portsServer}${data.file_url.split('.com/')[1]}`;
+        }
+        window.open(urlUpdated);
+
+        if (button) {
+          button.innerHTML =
+            '<span class="icon"><i class="fas fa-check"></i></span><span>Downloaded!</span>';
+          setTimeout(() => {
+            button.innerHTML =
+              '<span class="icon"><i class="fas fa-file-excel"></i></span><span>Export Excel</span>';
+          }, 2000);
+        }
+      },
+      error: (error) => {
+        console.error('Error generating Excel:', error);
+        if (button) {
+          button.innerHTML =
+            '<span class="icon"><i class="fas fa-exclamation-triangle"></i></span><span>Error</span>';
+          setTimeout(() => {
+            button.innerHTML =
+              '<span class="icon"><i class="fas fa-file-excel"></i></span><span>Export Excel</span>';
+          }, 2000);
+        }
+      },
     });
   }
 
   savePortMappings(): void {
-    const dataStr = JSON.stringify(this.portsMapped, null, 2);
-    const blob = new Blob([dataStr], { type: 'application/json' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `port-mappings-${uuidv4()}.json`;
-    a.click();
-    window.URL.revokeObjectURL(url);
+    const button = event?.target as HTMLElement;
+    if (button) {
+      button.innerHTML =
+        '<span class="loading-spinner mr-2"></span><span>Saving...</span>';
+    }
+
+    setTimeout(() => {
+      const dataStr = JSON.stringify(this.portsMapped, null, 2);
+      const blob = new Blob([dataStr], { type: 'application/json' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `port-mappings-${uuidv4()}.json`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+
+      if (button) {
+        button.innerHTML =
+          '<span class="icon"><i class="fas fa-check"></i></span><span>Saved!</span>';
+        setTimeout(() => {
+          button.innerHTML =
+            '<span class="icon"><i class="fas fa-download"></i></span><span>Save Config</span>';
+        }, 2000);
+      }
+    }, 500); // Small delay to show loading state
   }
 
   uploadPortMappings(event: Event): void {
     const input = event.target as HTMLInputElement;
+    const fileLabel = input
+      .closest('.file')
+      ?.querySelector('.file-label') as HTMLElement;
+
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
+
+      // Show loading state
+      if (fileLabel) {
+        fileLabel.innerHTML =
+          '<span class="file-icon"><div class="loading-spinner"></div></span><span class="file-label">Uploading...</span>';
+      }
+
       const reader = new FileReader();
       reader.onload = (e) => {
-        const result = e.target?.result as string;
-        this.portsMapped = JSON.parse(result);
-        this.dataService.uploadPortMapping(this.portsMapped);
+        try {
+          const result = e.target?.result as string;
+          this.portsMapped = JSON.parse(result);
+          this.dataService.uploadPortMapping(this.portsMapped);
+
+          // Show success state
+          if (fileLabel) {
+            fileLabel.innerHTML =
+              '<span class="file-icon"><i class="fas fa-check"></i></span><span class="file-label">Uploaded!</span>';
+            setTimeout(() => {
+              fileLabel.innerHTML =
+                '<span class="file-icon"><i class="fas fa-upload"></i></span><span class="file-label">Upload Config</span>';
+            }, 2000);
+          }
+
+          // Reset file input
+          input.value = '';
+        } catch (error) {
+          console.error('Error parsing JSON:', error);
+
+          // Show error state
+          if (fileLabel) {
+            fileLabel.innerHTML =
+              '<span class="file-icon"><i class="fas fa-exclamation-triangle"></i></span><span class="file-label">Error!</span>';
+            setTimeout(() => {
+              fileLabel.innerHTML =
+                '<span class="file-icon"><i class="fas fa-upload"></i></span><span class="file-label">Upload Config</span>';
+            }, 2000);
+          }
+        }
       };
       reader.readAsText(file);
     }

@@ -1,39 +1,385 @@
-<div class="columns">
-    <div class="column">
-        <table class="table is-fullwidth">
-            <thead>
-                <tr>
-                    <th>Source Server</th>
-                    <th>Target Server</th>
-                    <th>Product</th>
-                    <th>Source Service</th>
-                    <th>Target Service</th>
-                    <th>Ports</th>
-                    <th>Protocol</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for(item of portMapping; track item; let index = $index) {
-                    @for (target of item.mappedPorts; track target; let index = $index) {
-                    <tr>
-                        <td>{{item.sourceServer}}</td>
-                        <td>{{target.targetServerName}}</td>
-                        <td>{{target.product}}</td>
-                        <td>{{target.sourceService}}</td>
-                        <td>{{target.targetService}}</td>
-                        <td>{{target.port}}</td>
-                        <td>{{target.protocol}}</td>
-                        
-                    </tr>
-                }
-                }
-            </tbody>
-        </table>
-</div>
-</div>
-<div class="columns">
-    <div class="column">
-        <button class="button is-primary" [routerLink]="['/']" >Back</button>   
+<!-- Modern Header Section -->
+<div class="modern-card slide-up">
+  <div class="flex items-center justify-between mb-6">
+    <div class="flex items-center">
+      <button 
+        class="button is-light mr-4" 
+        [routerLink]="['/']"
+        style="border-radius: var(--radius); border: 2px solid var(--gray-300);"
+      >
+        <span class="icon">
+          <i class="fas fa-arrow-left"></i>
+        </span>
+      </button>
+      <div>
+        <h1 class="title is-3 mb-2" style="color: var(--text-primary); font-weight: 600;">
+          <i class="fas fa-chart-line mr-2" style="color: var(--primary-color);"></i>
+          Port Mapping Report
+        </h1>
+        <p class="subtitle is-6" style="color: var(--text-secondary); margin: 0;">
+          Complete overview of all configured network port mappings
+        </p>
+      </div>
     </div>
+    
+    <!-- Report Statistics and View Toggle -->
+    <div class="flex justify-between items-center">
+      <div class="flex gap-4">
+        <div class="has-text-centered" style="
+          background-color: var(--gray-50); 
+          padding: var(--spacing-md); 
+          border-radius: var(--radius); 
+          border: 1px solid var(--gray-200);
+          min-width: 100px;
+        ">
+          <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary-color);">
+            {{ getTotalMappings() }}
+          </div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">
+            Total Mappings
+          </div>
+        </div>
+        <div class="has-text-centered" style="
+          background-color: var(--gray-50); 
+          padding: var(--spacing-md); 
+          border-radius: var(--radius); 
+          border: 1px solid var(--gray-200);
+          min-width: 100px;
+        ">
+          <div style="font-size: 1.5rem; font-weight: 700; color: var(--success-color);">
+            {{ portMapping.length }}
+          </div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">
+            Servers
+          </div>
+        </div>
+        <div class="has-text-centered" style="
+          background-color: var(--gray-50); 
+          padding: var(--spacing-md); 
+          border-radius: var(--radius); 
+          border: 1px solid var(--gray-200);
+          min-width: 100px;
+        ">
+          <div style="font-size: 1.5rem; font-weight: 700; color: var(--info-color);">
+            {{ getUniqueProtocols().length }}
+          </div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">
+            Protocols
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </div>
+
+<!-- View Mode Toggle Section -->
+<div class="modern-card slide-up">
+  <div class="flex items-center justify-between">
+    <div>
+      <h4 class="title is-6 mb-1" style="color: var(--text-primary);">
+        <i class="fas fa-eye mr-2" style="color: var(--secondary-color);"></i>
+        View Mode
+      </h4>
+      <p class="text-muted" style="font-size: 0.875rem; margin: 0;">
+        Choose how to display your port mapping data
+      </p>
+    </div>
+    
+    <!-- Tab-Style Toggle -->
+    <div class="tabs is-boxed is-small">
+      <ul style="margin: 0;">
+        <li [ngClass]="viewMode === 'table' ? 'is-active' : ''">
+          <a (click)="toggleView('table')" style="
+            transition: all 0.2s ease;
+            border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+          ">
+            <span class="icon is-small">
+              <i class="fas fa-table"></i>
+            </span>
+            <span>Table</span>
+          </a>
+        </li>
+        <li [ngClass]="viewMode === 'diagram' ? 'is-active' : ''">
+          <a (click)="toggleView('diagram')" style="
+            transition: all 0.2s ease;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+          ">
+            <span class="icon is-small">
+              <i class="fas fa-project-diagram"></i>
+            </span>
+            <span>Diagram</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Conditional Content Based on View Mode -->
+@if (viewMode === 'diagram') {
+<!-- Network Diagram View -->
+<app-diagram [portMappings]="portMapping"></app-diagram>
+} @else {
+<!-- Table View with Filters and Search -->
+<div class="modern-card">
+  <div class="flex items-center justify-between mb-4">
+    <h3 class="title is-5 mb-0" style="color: var(--text-primary);">
+      <i class="fas fa-filter mr-2" style="color: var(--secondary-color);"></i>
+      Filter & Search
+    </h3>
+    <button 
+      class="button is-light is-small" 
+      (click)="clearFilters()"
+      style="border-radius: var(--radius-sm);"
+    >
+      <span class="icon is-small">
+        <i class="fas fa-times"></i>
+      </span>
+      <span>Clear Filters</span>
+    </button>
+  </div>
+
+  <div class="columns">
+    <div class="column">
+      <div class="field">
+        <label class="label is-small" style="color: var(--text-secondary);">Search</label>
+        <div class="control has-icons-left">
+          <input
+            class="input is-small"
+            type="text"
+            [(ngModel)]="searchTerm"
+            placeholder="Search servers, services, or ports..."
+            style="border-radius: var(--radius); border: 1px solid var(--gray-300);"
+          />
+          <span class="icon is-left is-small">
+            <i class="fas fa-search" style="color: var(--gray-400);"></i>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="column">
+      <div class="field">
+        <label class="label is-small" style="color: var(--text-secondary);">Source Server</label>
+        <div class="select is-fullwidth is-small">
+          <select [(ngModel)]="selectedSourceServer" style="border-radius: var(--radius);">
+            <option value="">All Servers</option>
+            @for (server of getUniqueSourceServers(); track server) {
+            <option [value]="server">{{ server }}</option>
+            }
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="column">
+      <div class="field">
+        <label class="label is-small" style="color: var(--text-secondary);">Protocol</label>
+        <div class="select is-fullwidth is-small">
+          <select [(ngModel)]="selectedProtocol" style="border-radius: var(--radius);">
+            <option value="">All Protocols</option>
+            @for (protocol of getUniqueProtocols(); track protocol) {
+            <option [value]="protocol">{{ protocol }}</option>
+            }
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main Report Table -->
+<div class="modern-card">
+  <div class="flex items-center justify-between mb-4">
+    <h3 class="title is-5 mb-0" style="color: var(--text-primary);">
+      <i class="fas fa-table mr-2" style="color: var(--success-color);"></i>
+      Port Mapping Details
+    </h3>
+    <div class="flex items-center gap-2">
+      <span class="tag is-light" style="border-radius: var(--radius-sm);">
+        {{ getFilteredMappings().length }} of {{ getTotalMappings() }} mappings
+      </span>
+      <button 
+        class="button is-info is-small" 
+        (click)="exportReport()"
+        style="border-radius: var(--radius-sm);"
+        title="Export filtered data"
+      >
+        <span class="icon is-small">
+          <i class="fas fa-download"></i>
+        </span>
+        <span>Export</span>
+      </button>
+    </div>
+  </div>
+
+  @if (getFilteredMappings().length > 0) {
+  <div class="table-container" style="
+    border-radius: var(--radius-lg); 
+    overflow: hidden; 
+    border: 1px solid var(--gray-200);
+    max-height: 600px;
+    overflow-y: auto;
+  ">
+    <table class="table is-fullwidth is-hoverable" style="margin: 0;">
+      <thead style="position: sticky; top: 0; z-index: 10;">
+        <tr style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);">
+          <th style="font-weight: 600; color: var(--text-primary); border: none; padding: var(--spacing-md);">
+            <i class="fas fa-server mr-1" style="color: var(--primary-color);"></i>
+            Source Server
+          </th>
+          <th style="font-weight: 600; color: var(--text-primary); border: none; padding: var(--spacing-md);">
+            <i class="fas fa-bullseye mr-1" style="color: var(--warning-color);"></i>
+            Target Server
+          </th>
+          <th style="font-weight: 600; color: var(--text-primary); border: none; padding: var(--spacing-md);">
+            <i class="fas fa-cube mr-1" style="color: var(--info-color);"></i>
+            Product
+          </th>
+          <th style="font-weight: 600; color: var(--text-primary); border: none; padding: var(--spacing-md);">
+            <i class="fas fa-cog mr-1" style="color: var(--success-color);"></i>
+            Source Service
+          </th>
+          <th style="font-weight: 600; color: var(--text-primary); border: none; padding: var(--spacing-md);">
+            <i class="fas fa-crosshairs mr-1" style="color: var(--secondary-color);"></i>
+            Target Service
+          </th>
+          <th style="font-weight: 600; color: var(--text-primary); border: none; padding: var(--spacing-md); text-align: center;">
+            <i class="fas fa-plug mr-1" style="color: var(--error-color);"></i>
+            Ports
+          </th>
+          <th style="font-weight: 600; color: var(--text-primary); border: none; padding: var(--spacing-md); text-align: center;">
+            <i class="fas fa-shield-alt mr-1" style="color: var(--primary-color);"></i>
+            Protocol
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        @for(item of getFilteredMappings(); track $index; let index = $index) {
+        <tr 
+          style="transition: all 0.2s ease; border-bottom: 1px solid var(--gray-100);"
+          [style.background-color]="index % 2 === 0 ? 'transparent' : 'rgba(248, 250, 252, 0.5)'"
+          onmouseover="this.style.backgroundColor='var(--gray-50)'"
+          onmouseout="this.style.backgroundColor=this.getAttribute('data-original-bg')"
+          [attr.data-original-bg]="index % 2 === 0 ? 'transparent' : 'rgba(248, 250, 252, 0.5)'"
+        >
+          <td style="border: none; padding: var(--spacing-md); font-weight: 500;">
+            <div class="flex items-center">
+              <div class="mr-3" style="
+                width: 8px; 
+                height: 8px; 
+                background-color: var(--primary-color); 
+                border-radius: 50%;
+              "></div>
+              {{ item.sourceServer }}
+            </div>
+          </td>
+          <td style="border: none; padding: var(--spacing-md); font-weight: 500;">
+            <div class="flex items-center">
+              <div class="mr-3" style="
+                width: 8px; 
+                height: 8px; 
+                background-color: var(--warning-color); 
+                border-radius: 50%;
+              "></div>
+              {{ item.targetServerName }}
+            </div>
+          </td>
+          <td style="border: none; padding: var(--spacing-md);">
+            <span class="tag is-light" style="border-radius: var(--radius-sm); font-size: 0.75rem;">
+              {{ item.product }}
+            </span>
+          </td>
+          <td style="border: none; padding: var(--spacing-md); color: var(--text-primary);">
+            {{ item.sourceService }}
+          </td>
+          <td style="border: none; padding: var(--spacing-md); color: var(--text-primary);">
+            {{ item.targetService }}
+          </td>
+          <td style="border: none; text-align: center; padding: var(--spacing-md);">
+            <code style="
+              background-color: var(--gray-100); 
+              padding: 4px 8px; 
+              border-radius: var(--radius-sm); 
+              font-size: 0.875rem;
+              font-weight: 600;
+              color: var(--text-primary);
+            ">
+              {{ item.port }}
+            </code>
+          </td>
+          <td style="border: none; text-align: center; padding: var(--spacing-md);">
+            <span class="tag" 
+              [ngClass]="item.protocol === 'TCP' ? 'is-success' : 'is-info'"
+              style="border-radius: var(--radius-sm); font-weight: 600;">
+              {{ item.protocol }}
+            </span>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  } @else {
+  <div class="has-text-centered p-6" style="
+    background-color: var(--gray-50); 
+    border-radius: var(--radius); 
+    border: 2px dashed var(--gray-300);
+  ">
+    <i class="fas fa-search fa-3x mb-3" style="color: var(--gray-400);"></i>
+    <h4 class="title is-6" style="color: var(--text-muted);">No Matching Results</h4>
+    <p style="color: var(--text-muted); font-size: 0.875rem;">
+      No port mappings match your current search and filter criteria. Try adjusting your filters or clearing them to see all mappings.
+    </p>
+  </div>
+  }
+</div>
+
+<!-- Summary Cards -->
+@if (portMapping.length > 0) {
+<div class="columns">
+  <div class="column">
+    <div class="modern-card">
+      <h4 class="title is-6 mb-3" style="color: var(--text-primary);">
+        <i class="fas fa-chart-pie mr-2" style="color: var(--primary-color);"></i>
+        Protocol Distribution
+      </h4>
+      <div class="flex gap-4">
+        @for (protocol of getUniqueProtocols(); track protocol) {
+        <div class="has-text-centered" style="flex: 1;">
+          <div style="
+            font-size: 1.25rem; 
+            font-weight: 700; 
+            color: var(--primary-color);
+          ">
+            {{ getProtocolCount(protocol) }}
+          </div>
+          <div style="font-size: 0.875rem; color: var(--text-muted);">
+            {{ protocol }} connections
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+  <div class="column">
+    <div class="modern-card">
+      <h4 class="title is-6 mb-3" style="color: var(--text-primary);">
+        <i class="fas fa-network-wired mr-2" style="color: var(--success-color);"></i>
+        Server Activity
+      </h4>
+      <div style="max-height: 120px; overflow-y: auto;">
+        @for (server of getUniqueSourceServers(); track server) {
+        <div class="flex justify-between items-center mb-2">
+          <span style="font-size: 0.875rem; color: var(--text-primary);">{{ server }}</span>
+          <span class="tag is-small is-light" style="border-radius: var(--radius-sm);">
+            {{ getServerMappingCount(server) }} mappings
+          </span>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+}
+}
 

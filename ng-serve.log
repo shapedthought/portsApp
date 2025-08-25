@@ -1,0 +1,1946 @@
+Warning: Running a server with --disable-host-check is a security risk. See https://medium.com/webpack/webpack-dev-server-middleware-security-issues-1489d950874a for more information.
+The "disableHostCheck" option will not be used because it is not supported by the "@angular-devkit/build-angular:application" builder.
+Component HMR has been enabled.
+If you encounter application reload issues, you can manually reload the page to bypass HMR and/or disable this feature with the `--no-hmr` command line option.
+Please consider reporting any issues you encounter here: https://github.com/angular/angular-cli/issues
+
+❯ Building...
+✔ Building...
+Initial chunk files | Names         |  Raw size
+styles.css          | styles        | 775.88 kB | 
+main.js             | main          | 203.29 kB | 
+polyfills.js        | polyfills     |  90.20 kB | 
+
+                    | Initial total |   1.07 MB
+
+Application bundle generation complete. [5.284 seconds]
+
+Watch mode enabled. Watching for file changes...
+NOTE: Raw file sizes do not reflect development server per-request transformations.
+  ➜  Local:   http://localhost:4201/
+  ➜  Network: http://169.254.0.21:4201/
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [3.900 seconds]
+
+✘ [ERROR] NG9: Property 'filteredSourceServices' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:148:17:
+      148 │       Showing {{ filteredSourceServices.length }} source, {{ filt...
+          ╵                  ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'filteredTargetServices' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:148:61:
+      148 │ ...ength }} source, {{ filteredTargetServices.length }} target se...
+          ╵                        ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'searchTerm' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:161:25:
+      161 │             [(ngModel)]="searchTerm"
+          ╵                          ~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'searchTerm' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:161:25:
+      161 │             [(ngModel)]="searchTerm"
+          ╵                          ~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'onSearchChange' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:162:21:
+      162 │             (input)="onSearchChange($event)"
+          ╵                      ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'protocolFilter' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:180:23:
+      180 │             [ngClass]="protocolFilter === 'ALL' ? 'is-primary' : ...
+          ╵                        ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'onProtocolFilterChange' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:181:21:
+      181 │             (click)="onProtocolFilterChange('ALL')"
+          ╵                      ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'protocolFilter' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:188:23:
+      188 │             [ngClass]="protocolFilter === 'TCP' ? 'is-success' : ...
+          ╵                        ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'onProtocolFilterChange' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:189:21:
+      189 │             (click)="onProtocolFilterChange('TCP')"
+          ╵                      ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'protocolFilter' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:195:23:
+      195 │             [ngClass]="protocolFilter === 'UDP' ? 'is-info' : 'is...
+          ╵                        ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'onProtocolFilterChange' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:196:21:
+      196 │             (click)="onProtocolFilterChange('UDP')"
+          ╵                      ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'categoryFilter' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:211:25:
+      211 │             [(ngModel)]="categoryFilter"
+          ╵                          ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'categoryFilter' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:211:25:
+      211 │             [(ngModel)]="categoryFilter"
+          ╵                          ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'onCategoryFilterChange' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:212:22:
+      212 │             (change)="onCategoryFilterChange($event)"
+          ╵                       ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'availableCategories' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:216:30:
+      216 │             @for (category of availableCategories; track category) {
+          ╵                               ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'clearAllFilters' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:229:19:
+      229 │           (click)="clearAllFilters()"
+          ╵                    ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'hasActiveFilters' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:230:23:
+      230 │           [disabled]="!hasActiveFilters()"
+          ╵                        ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'hasActiveFilters' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:243:7:
+      243 │   @if (hasActiveFilters()) {
+          ╵        ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'getActiveFilters' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:246:20:
+      246 │     @for (filter of getActiveFilters(); track filter.key) {
+          ╵                     ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'removeFilter' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:249:52:
+      249 │ ...elete is-small ml-1" (click)="removeFilter(filter.key)"></button>
+          ╵                                  ~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'filteredSourceServices' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:264:9:
+      264 │       {{ filteredSourceServices.length }} of {{ sourceServices.le...
+          ╵          ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [0.970 seconds]
+
+✘ [ERROR] NG9: Property 'filteredSourceServices' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:148:17:
+      148 │       Showing {{ filteredSourceServices.length }} source, {{ filt...
+          ╵                  ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'filteredTargetServices' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:148:61:
+      148 │ ...ength }} source, {{ filteredTargetServices.length }} target se...
+          ╵                        ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'searchTerm' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:161:25:
+      161 │             [(ngModel)]="searchTerm"
+          ╵                          ~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'searchTerm' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:161:25:
+      161 │             [(ngModel)]="searchTerm"
+          ╵                          ~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'onSearchChange' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:162:21:
+      162 │             (input)="onSearchChange($event)"
+          ╵                      ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'protocolFilter' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:180:23:
+      180 │             [ngClass]="protocolFilter === 'ALL' ? 'is-primary' : ...
+          ╵                        ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'onProtocolFilterChange' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:181:21:
+      181 │             (click)="onProtocolFilterChange('ALL')"
+          ╵                      ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'protocolFilter' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:188:23:
+      188 │             [ngClass]="protocolFilter === 'TCP' ? 'is-success' : ...
+          ╵                        ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'onProtocolFilterChange' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:189:21:
+      189 │             (click)="onProtocolFilterChange('TCP')"
+          ╵                      ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'protocolFilter' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:195:23:
+      195 │             [ngClass]="protocolFilter === 'UDP' ? 'is-info' : 'is...
+          ╵                        ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'onProtocolFilterChange' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:196:21:
+      196 │             (click)="onProtocolFilterChange('UDP')"
+          ╵                      ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'categoryFilter' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:211:25:
+      211 │             [(ngModel)]="categoryFilter"
+          ╵                          ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'categoryFilter' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:211:25:
+      211 │             [(ngModel)]="categoryFilter"
+          ╵                          ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'onCategoryFilterChange' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:212:22:
+      212 │             (change)="onCategoryFilterChange($event)"
+          ╵                       ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'availableCategories' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:216:30:
+      216 │             @for (category of availableCategories; track category) {
+          ╵                               ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'clearAllFilters' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:229:19:
+      229 │           (click)="clearAllFilters()"
+          ╵                    ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'hasActiveFilters' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:230:23:
+      230 │           [disabled]="!hasActiveFilters()"
+          ╵                        ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'hasActiveFilters' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:243:7:
+      243 │   @if (hasActiveFilters()) {
+          ╵        ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'getActiveFilters' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:246:20:
+      246 │     @for (filter of getActiveFilters(); track filter.key) {
+          ╵                     ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'removeFilter' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:249:52:
+      249 │ ...elete is-small ml-1" (click)="removeFilter(filter.key)"></button>
+          ╵                                  ~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'filteredSourceServices' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:264:9:
+      264 │       {{ filteredSourceServices.length }} of {{ sourceServices.le...
+          ╵          ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'filteredSourceServices' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:283:22:
+      283 │         @for (item of filteredSourceServices; track item.id; let ...
+          ╵                       ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [1.443 seconds]
+
+✘ [ERROR] NG9: Property 'filteredSourceServices' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:148:17:
+      148 │       Showing {{ filteredSourceServices.length }} source, {{ filt...
+          ╵                  ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'filteredTargetServices' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:148:61:
+      148 │ ...ength }} source, {{ filteredTargetServices.length }} target se...
+          ╵                        ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'searchTerm' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:161:25:
+      161 │             [(ngModel)]="searchTerm"
+          ╵                          ~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'searchTerm' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:161:25:
+      161 │             [(ngModel)]="searchTerm"
+          ╵                          ~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'onSearchChange' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:162:21:
+      162 │             (input)="onSearchChange($event)"
+          ╵                      ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'protocolFilter' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:180:23:
+      180 │             [ngClass]="protocolFilter === 'ALL' ? 'is-primary' : ...
+          ╵                        ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'onProtocolFilterChange' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:181:21:
+      181 │             (click)="onProtocolFilterChange('ALL')"
+          ╵                      ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'protocolFilter' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:188:23:
+      188 │             [ngClass]="protocolFilter === 'TCP' ? 'is-success' : ...
+          ╵                        ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'onProtocolFilterChange' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:189:21:
+      189 │             (click)="onProtocolFilterChange('TCP')"
+          ╵                      ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'protocolFilter' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:195:23:
+      195 │             [ngClass]="protocolFilter === 'UDP' ? 'is-info' : 'is...
+          ╵                        ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'onProtocolFilterChange' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:196:21:
+      196 │             (click)="onProtocolFilterChange('UDP')"
+          ╵                      ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'categoryFilter' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:211:25:
+      211 │             [(ngModel)]="categoryFilter"
+          ╵                          ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'categoryFilter' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:211:25:
+      211 │             [(ngModel)]="categoryFilter"
+          ╵                          ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'onCategoryFilterChange' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:212:22:
+      212 │             (change)="onCategoryFilterChange($event)"
+          ╵                       ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'availableCategories' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:216:30:
+      216 │             @for (category of availableCategories; track category) {
+          ╵                               ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'clearAllFilters' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:229:19:
+      229 │           (click)="clearAllFilters()"
+          ╵                    ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'hasActiveFilters' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:230:23:
+      230 │           [disabled]="!hasActiveFilters()"
+          ╵                        ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'hasActiveFilters' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:243:7:
+      243 │   @if (hasActiveFilters()) {
+          ╵        ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'getActiveFilters' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:246:20:
+      246 │     @for (filter of getActiveFilters(); track filter.key) {
+          ╵                     ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'removeFilter' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:249:52:
+      249 │ ...elete is-small ml-1" (click)="removeFilter(filter.key)"></button>
+          ╵                                  ~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'filteredSourceServices' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:264:9:
+      264 │       {{ filteredSourceServices.length }} of {{ sourceServices.le...
+          ╵          ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'filteredSourceServices' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:283:22:
+      283 │         @for (item of filteredSourceServices; track item.id; let ...
+          ╵                       ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'filteredTargetServices' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:321:9:
+      321 │       {{ filteredTargetServices.length }} of {{ fullServiceRespon...
+          ╵          ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [0.939 seconds]
+
+✘ [ERROR] NG9: Property 'filteredSourceServices' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:148:17:
+      148 │       Showing {{ filteredSourceServices.length }} source, {{ filt...
+          ╵                  ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'filteredTargetServices' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:148:61:
+      148 │ ...ength }} source, {{ filteredTargetServices.length }} target se...
+          ╵                        ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'searchTerm' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:161:25:
+      161 │             [(ngModel)]="searchTerm"
+          ╵                          ~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'searchTerm' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:161:25:
+      161 │             [(ngModel)]="searchTerm"
+          ╵                          ~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'onSearchChange' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:162:21:
+      162 │             (input)="onSearchChange($event)"
+          ╵                      ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'protocolFilter' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:180:23:
+      180 │             [ngClass]="protocolFilter === 'ALL' ? 'is-primary' : ...
+          ╵                        ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'onProtocolFilterChange' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:181:21:
+      181 │             (click)="onProtocolFilterChange('ALL')"
+          ╵                      ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'protocolFilter' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:188:23:
+      188 │             [ngClass]="protocolFilter === 'TCP' ? 'is-success' : ...
+          ╵                        ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'onProtocolFilterChange' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:189:21:
+      189 │             (click)="onProtocolFilterChange('TCP')"
+          ╵                      ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'protocolFilter' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:195:23:
+      195 │             [ngClass]="protocolFilter === 'UDP' ? 'is-info' : 'is...
+          ╵                        ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'onProtocolFilterChange' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:196:21:
+      196 │             (click)="onProtocolFilterChange('UDP')"
+          ╵                      ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'categoryFilter' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:211:25:
+      211 │             [(ngModel)]="categoryFilter"
+          ╵                          ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'categoryFilter' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:211:25:
+      211 │             [(ngModel)]="categoryFilter"
+          ╵                          ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'onCategoryFilterChange' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:212:22:
+      212 │             (change)="onCategoryFilterChange($event)"
+          ╵                       ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'availableCategories' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:216:30:
+      216 │             @for (category of availableCategories; track category) {
+          ╵                               ~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'clearAllFilters' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:229:19:
+      229 │           (click)="clearAllFilters()"
+          ╵                    ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'hasActiveFilters' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:230:23:
+      230 │           [disabled]="!hasActiveFilters()"
+          ╵                        ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'hasActiveFilters' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:243:7:
+      243 │   @if (hasActiveFilters()) {
+          ╵        ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'getActiveFilters' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:246:20:
+      246 │     @for (filter of getActiveFilters(); track filter.key) {
+          ╵                     ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'removeFilter' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:249:52:
+      249 │ ...elete is-small ml-1" (click)="removeFilter(filter.key)"></button>
+          ╵                                  ~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'filteredSourceServices' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:264:9:
+      264 │       {{ filteredSourceServices.length }} of {{ sourceServices.le...
+          ╵          ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'filteredSourceServices' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:283:22:
+      283 │         @for (item of filteredSourceServices; track item.id; let ...
+          ╵                       ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'filteredTargetServices' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:321:9:
+      321 │       {{ filteredTargetServices.length }} of {{ fullServiceRespon...
+          ╵          ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'filteredTargetServices' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:343:22:
+      343 │         @for (item of filteredTargetServices; track item.id; let ...
+          ╵                       ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [0.880 seconds]
+
+✘ [ERROR] NG9: Property 'onSearchChange' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:162:21:
+      162 │             (input)="onSearchChange($event)"
+          ╵                      ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'onProtocolFilterChange' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:181:21:
+      181 │             (click)="onProtocolFilterChange('ALL')"
+          ╵                      ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'onProtocolFilterChange' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:189:21:
+      189 │             (click)="onProtocolFilterChange('TCP')"
+          ╵                      ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'onProtocolFilterChange' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:196:21:
+      196 │             (click)="onProtocolFilterChange('UDP')"
+          ╵                      ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'onCategoryFilterChange' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:212:22:
+      212 │             (change)="onCategoryFilterChange($event)"
+          ╵                       ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'clearAllFilters' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:229:19:
+      229 │           (click)="clearAllFilters()"
+          ╵                    ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'hasActiveFilters' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:230:23:
+      230 │           [disabled]="!hasActiveFilters()"
+          ╵                        ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'hasActiveFilters' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:243:7:
+      243 │   @if (hasActiveFilters()) {
+          ╵        ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'getActiveFilters' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:246:20:
+      246 │     @for (filter of getActiveFilters(); track filter.key) {
+          ╵                     ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'removeFilter' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:249:52:
+      249 │ ...elete is-small ml-1" (click)="removeFilter(filter.key)"></button>
+          ╵                                  ~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [1.191 seconds]
+
+✘ [ERROR] NG9: Property 'onSearchChange' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:162:21:
+      162 │             (input)="onSearchChange($event)"
+          ╵                      ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'onProtocolFilterChange' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:181:21:
+      181 │             (click)="onProtocolFilterChange('ALL')"
+          ╵                      ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'onProtocolFilterChange' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:189:21:
+      189 │             (click)="onProtocolFilterChange('TCP')"
+          ╵                      ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'onProtocolFilterChange' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:196:21:
+      196 │             (click)="onProtocolFilterChange('UDP')"
+          ╵                      ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'onCategoryFilterChange' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:212:22:
+      212 │             (change)="onCategoryFilterChange($event)"
+          ╵                       ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'clearAllFilters' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:229:19:
+      229 │           (click)="clearAllFilters()"
+          ╵                    ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'hasActiveFilters' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:230:23:
+      230 │           [disabled]="!hasActiveFilters()"
+          ╵                        ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'hasActiveFilters' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:243:7:
+      243 │   @if (hasActiveFilters()) {
+          ╵        ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'getActiveFilters' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:246:20:
+      246 │     @for (filter of getActiveFilters(); track filter.key) {
+          ╵                     ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'removeFilter' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:249:52:
+      249 │ ...elete is-small ml-1" (click)="removeFilter(filter.key)"></button>
+          ╵                                  ~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'loadFilterState' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.ts:108:9:
+      108 │     this.loadFilterState();
+          ╵          ~~~~~~~~~~~~~~~
+
+
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [0.848 seconds]
+
+✘ [ERROR] NG9: Property 'onSearchChange' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:162:21:
+      162 │             (input)="onSearchChange($event)"
+          ╵                      ~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'onProtocolFilterChange' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:181:21:
+      181 │             (click)="onProtocolFilterChange('ALL')"
+          ╵                      ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'onProtocolFilterChange' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:189:21:
+      189 │             (click)="onProtocolFilterChange('TCP')"
+          ╵                      ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'onProtocolFilterChange' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:196:21:
+      196 │             (click)="onProtocolFilterChange('UDP')"
+          ╵                      ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'onCategoryFilterChange' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:212:22:
+      212 │             (change)="onCategoryFilterChange($event)"
+          ╵                       ~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'clearAllFilters' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:229:19:
+      229 │           (click)="clearAllFilters()"
+          ╵                    ~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'hasActiveFilters' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:230:23:
+      230 │           [disabled]="!hasActiveFilters()"
+          ╵                        ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'hasActiveFilters' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:243:7:
+      243 │   @if (hasActiveFilters()) {
+          ╵        ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'getActiveFilters' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:246:20:
+      246 │     @for (filter of getActiveFilters(); track filter.key) {
+          ╵                     ~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] NG9: Property 'removeFilter' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.html:249:52:
+      249 │ ...elete is-small ml-1" (click)="removeFilter(filter.key)"></button>
+          ╵                                  ~~~~~~~~~~~~
+
+  Error occurs in the template of component MappingComponent.
+
+    src/app/mapping/mapping.component.ts:22:15:
+      22 │   templateUrl: './mapping.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'loadFilterState' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.ts:108:9:
+      108 │     this.loadFilterState();
+          ╵          ~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2551: Property 'updateAvailableCategories' does not exist on type 'MappingComponent'. Did you mean 'availableCategories'? [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.ts:119:13:
+      119 │         this.updateAvailableCategories();
+          ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  'availableCategories' is declared here.
+
+    src/app/mapping/mapping.component.ts:65:2:
+      65 │   availableCategories: string[] = [];
+         ╵   ~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'applyFilters' does not exist on type 'MappingComponent'. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.ts:120:13:
+      120 │         this.applyFilters();
+          ╵              ~~~~~~~~~~~~
+
+
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [1.074 seconds]
+
+▲ [WARNING] Duplicate member "getSourceData" in class body [duplicate-class-member]
+
+    src/app/mapping/mapping.component.ts:666:4:
+      666 │     getSourceData() {
+          ╵     ~~~~~~~~~~~~~
+
+  The original member "getSourceData" is here:
+
+    src/app/mapping/mapping.component.ts:499:4:
+      499 │     getSourceData() {
+          ╵     ~~~~~~~~~~~~~
+
+
+▲ [WARNING] Duplicate member "changeApp" in class body [duplicate-class-member]
+
+    src/app/mapping/mapping.component.ts:674:4:
+      674 │     changeApp(selectedProduct) {
+          ╵     ~~~~~~~~~
+
+  The original member "changeApp" is here:
+
+    src/app/mapping/mapping.component.ts:489:4:
+      489 │     changeApp(selectedProduct) {
+          ╵     ~~~~~~~~~
+
+
+✘ [ERROR] TS2393: Duplicate function implementation. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.ts:202:2:
+      202 │   changeApp(selectedProduct: string) {
+          ╵   ~~~~~~~~~
+
+
+✘ [ERROR] TS2393: Duplicate function implementation. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.ts:214:10:
+      214 │   private getSourceData() {
+          ╵           ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2393: Duplicate function implementation. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.ts:416:10:
+      416 │   private getSourceData() {
+          ╵           ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2393: Duplicate function implementation. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.ts:425:2:
+      425 │   changeApp(selectedProduct: string) {
+          ╵   ~~~~~~~~~
+
+
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [0.568 seconds]
+
+▲ [WARNING] Duplicate member "getSourceData" in class body [duplicate-class-member]
+
+    src/app/mapping/mapping.component.ts:667:4:
+      667 │     getSourceData() {
+          ╵     ~~~~~~~~~~~~~
+
+  The original member "getSourceData" is here:
+
+    src/app/mapping/mapping.component.ts:499:4:
+      499 │     getSourceData() {
+          ╵     ~~~~~~~~~~~~~
+
+
+▲ [WARNING] Duplicate member "changeApp" in class body [duplicate-class-member]
+
+    src/app/mapping/mapping.component.ts:675:4:
+      675 │     changeApp(selectedProduct) {
+          ╵     ~~~~~~~~~
+
+  The original member "changeApp" is here:
+
+    src/app/mapping/mapping.component.ts:489:4:
+      489 │     changeApp(selectedProduct) {
+          ╵     ~~~~~~~~~
+
+
+✘ [ERROR] TS2393: Duplicate function implementation. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.ts:202:2:
+      202 │   changeApp(selectedProduct: string) {
+          ╵   ~~~~~~~~~
+
+
+✘ [ERROR] TS2393: Duplicate function implementation. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.ts:214:10:
+      214 │   private getSourceData() {
+          ╵           ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2393: Duplicate function implementation. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.ts:417:10:
+      417 │   private getSourceData() {
+          ╵           ~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2393: Duplicate function implementation. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.ts:426:2:
+      426 │   changeApp(selectedProduct: string) {
+          ╵   ~~~~~~~~~
+
+
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [0.738 seconds]
+
+▲ [WARNING] Duplicate member "changeApp" in class body [duplicate-class-member]
+
+    src/app/mapping/mapping.component.ts:668:4:
+      668 │     changeApp(selectedProduct) {
+          ╵     ~~~~~~~~~
+
+  The original member "changeApp" is here:
+
+    src/app/mapping/mapping.component.ts:489:4:
+      489 │     changeApp(selectedProduct) {
+          ╵     ~~~~~~~~~
+
+
+✘ [ERROR] TS2393: Duplicate function implementation. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.ts:202:2:
+      202 │   changeApp(selectedProduct: string) {
+          ╵   ~~~~~~~~~
+
+
+✘ [ERROR] TS2393: Duplicate function implementation. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.ts:419:2:
+      419 │   changeApp(selectedProduct: string) {
+          ╵   ~~~~~~~~~
+
+
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [0.846 seconds]
+
+▲ [WARNING] Duplicate member "changeApp" in class body [duplicate-class-member]
+
+    src/app/mapping/mapping.component.ts:670:4:
+      670 │     changeApp(selectedProduct) {
+          ╵     ~~~~~~~~~
+
+  The original member "changeApp" is here:
+
+    src/app/mapping/mapping.component.ts:489:4:
+      489 │     changeApp(selectedProduct) {
+          ╵     ~~~~~~~~~
+
+
+✘ [ERROR] TS2393: Duplicate function implementation. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.ts:202:2:
+      202 │   changeApp(selectedProduct: string) {
+          ╵   ~~~~~~~~~
+
+
+✘ [ERROR] TS2393: Duplicate function implementation. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.ts:421:2:
+      421 │   changeApp(selectedProduct: string) {
+          ╵   ~~~~~~~~~
+
+
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [0.709 seconds]
+
+▲ [WARNING] Duplicate member "changeApp" in class body [duplicate-class-member]
+
+    src/app/mapping/mapping.component.ts:669:4:
+      669 │     changeApp(selectedProduct) {
+          ╵     ~~~~~~~~~
+
+  The original member "changeApp" is here:
+
+    src/app/mapping/mapping.component.ts:489:4:
+      489 │     changeApp(selectedProduct) {
+          ╵     ~~~~~~~~~
+
+
+✘ [ERROR] TS2393: Duplicate function implementation. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.ts:202:2:
+      202 │   changeApp(selectedProduct: string) {
+          ╵   ~~~~~~~~~
+
+
+✘ [ERROR] TS2393: Duplicate function implementation. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.ts:421:2:
+      421 │   changeApp(selectedProduct: string) {
+          ╵   ~~~~~~~~~
+
+
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Application bundle generation failed. [1.127 seconds]
+
+▲ [WARNING] Duplicate member "changeApp" in class body [duplicate-class-member]
+
+    src/app/mapping/mapping.component.ts:669:4:
+      669 │     changeApp(selectedProduct) {
+          ╵     ~~~~~~~~~
+
+  The original member "changeApp" is here:
+
+    src/app/mapping/mapping.component.ts:489:4:
+      489 │     changeApp(selectedProduct) {
+          ╵     ~~~~~~~~~
+
+
+✘ [ERROR] TS2393: Duplicate function implementation. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.ts:202:2:
+      202 │   changeApp(selectedProduct: string) {
+          ╵   ~~~~~~~~~
+
+
+✘ [ERROR] TS2393: Duplicate function implementation. [plugin angular-compiler]
+
+    src/app/mapping/mapping.component.ts:421:2:
+      421 │   changeApp(selectedProduct: string) {
+          ╵   ~~~~~~~~~
+
+
+❯ Changes detected. Rebuilding...
+fatal error: Killed
+all goroutines are asleep - deadlock!
+
+goroutine 1 [chan receive]:
+github.com/evanw/esbuild/internal/helpers.(*ThreadSafeWaitGroup).Wait(...)
+	github.com/evanw/esbuild/internal/helpers/waitgroup.go:36
+main.runService.func2()
+	github.com/evanw/esbuild/cmd/esbuild/service.go:114 +0x51
+main.runService(0x1)
+	github.com/evanw/esbuild/cmd/esbuild/service.go:160 +0x50c
+main.main()
+	github.com/evanw/esbuild/cmd/esbuild/main.go:241 +0x9d9
+
+goroutine 19 [chan receive]:
+main.runService.func1()
+	github.com/evanw/esbuild/cmd/esbuild/service.go:98 +0x45
+created by main.runService in goroutine 1
+	github.com/evanw/esbuild/cmd/esbuild/service.go:97 +0x1db
+
+goroutine 20 [chan receive]:
+main.(*serviceType).sendRequest(0xc00011e2d0, {0x986a20, 0xc00143c030})
+	github.com/evanw/esbuild/cmd/esbuild/service.go:192 +0x12b
+main.runService.func3()
+	github.com/evanw/esbuild/cmd/esbuild/service.go:125 +0x3e
+created by main.runService in goroutine 1
+	github.com/evanw/esbuild/cmd/esbuild/service.go:122 +0x30d
+
+goroutine 1811 [semacquire, 29 minutes]:
+sync.runtime_Semacquire(0xc000a3e0c0?)
+	runtime/sema.go:71 +0x25
+sync.(*WaitGroup).Wait(0xc00007a8a0?)
+	sync/waitgroup.go:118 +0x48
+github.com/evanw/esbuild/internal/bundler.ScanBundle(_, {_, _, _, _, _, _}, {_, _}, 0xc00007a8a0, ...)
+	github.com/evanw/esbuild/internal/bundler/bundler.go:1395 +0x98a
+github.com/evanw/esbuild/pkg/api.rebuildImpl({0xc00007a8a0, {0xc000010738, 0x1, 0x1}, {0x0, 0x0, 0x0}, {0x0, 0x1, 0x0, ...}, ...}, ...)
+	github.com/evanw/esbuild/pkg/api/api_impl.go:1479 +0x2e5
+github.com/evanw/esbuild/pkg/api.(*internalContext).rebuild(_)
+	github.com/evanw/esbuild/pkg/api/api_impl.go:998 +0x29c
+github.com/evanw/esbuild/pkg/api.(*internalContext).Rebuild(0xc0018fea08?)
+	github.com/evanw/esbuild/pkg/api/api_impl.go:1059 +0x3d
+main.(*serviceType).handleIncomingPacket.func5()
+	github.com/evanw/esbuild/cmd/esbuild/service.go:293 +0xba
+created by main.(*serviceType).handleIncomingPacket in goroutine 1
+	github.com/evanw/esbuild/cmd/esbuild/service.go:290 +0x11d0
+
+goroutine 1804 [chan receive, 29 minutes]:
+main.(*serviceType).sendRequest(0xc00011e2d0, {0x986a20, 0xc001079c20})
+	github.com/evanw/esbuild/cmd/esbuild/service.go:192 +0x12b
+main.(*serviceType).convertPlugins.func2.2()
+	github.com/evanw/esbuild/cmd/esbuild/service.go:954 +0x117
+github.com/evanw/esbuild/pkg/api.(*pluginImpl).onStart-fm.(*pluginImpl).onStart.func1()
+	github.com/evanw/esbuild/pkg/api/api_impl.go:1847 +0x35
+github.com/evanw/esbuild/internal/bundler.ScanBundle.func1({{0xa0ee7c, 0x12}, {0xc0000106c0, 0x1, 0x1}, {0xc0001f7560, 0x1, 0x1}, {0xc0001f75c0, 0x1, ...}}, ...)
+	github.com/evanw/esbuild/internal/bundler/bundler.go:1312 +0x5e
+created by github.com/evanw/esbuild/internal/bundler.ScanBundle in goroutine 1811
+	github.com/evanw/esbuild/internal/bundler/bundler.go:1311 +0xfff
+
+goroutine 1806 [chan send, 29 minutes]:
+github.com/evanw/esbuild/internal/bundler.ScanBundle.func2()
+	github.com/evanw/esbuild/internal/bundler/bundler.go:1346 +0x2c5
+created by github.com/evanw/esbuild/internal/bundler.ScanBundle in goroutine 1811
+	github.com/evanw/esbuild/internal/bundler/bundler.go:1344 +0x97d

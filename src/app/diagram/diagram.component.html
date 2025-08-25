@@ -1,0 +1,198 @@
+<!-- Diagram Controls -->
+<div class="modern-card mb-4">
+  <div class="flex items-center justify-between mb-4">
+    <h3 class="title is-5 mb-0" style="color: var(--text-primary);">
+      <i class="fas fa-project-diagram mr-2" style="color: var(--primary-color);"></i>
+      Network Diagram
+    </h3>
+    <div class="diagram-stats" style="font-size: 0.875rem; color: var(--text-muted);">
+      {{ diagramStats.servers }} servers • {{ diagramStats.connections }} connections • {{ diagramStats.totalPorts }} ports
+    </div>
+  </div>
+
+  <!-- Control Panel -->
+  <div class="columns is-mobile">
+    <!-- Layout Direction -->
+    <div class="column is-3">
+      <div class="field">
+        <label class="label is-small" style="color: var(--text-secondary);">Layout</label>
+        <div class="select is-fullwidth is-small">
+          <select [(ngModel)]="layoutDirection" (change)="onLayoutChange()">
+            <option value="LR">Left to Right</option>
+            <option value="TD">Top to Bottom</option>
+            <option value="RL">Right to Left</option>
+            <option value="BT">Bottom to Top</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Display Options -->
+    <div class="column is-4">
+      <div class="field">
+        <label class="label is-small" style="color: var(--text-secondary);">Display</label>
+        <div class="field is-grouped">
+          <div class="control">
+            <label class="checkbox is-small">
+              <input type="checkbox" [(ngModel)]="showProtocols" (change)="onDisplayOptionChange()">
+              <span style="margin-left: 0.25rem; font-size: 0.875rem;">Protocols</span>
+            </label>
+          </div>
+          <div class="control">
+            <label class="checkbox is-small">
+              <input type="checkbox" [(ngModel)]="showPortNumbers" (change)="onDisplayOptionChange()">
+              <span style="margin-left: 0.25rem; font-size: 0.875rem;">Port Numbers</span>
+            </label>
+          </div>
+          <div class="control">
+            <label class="checkbox is-small">
+              <input type="checkbox" [(ngModel)]="compactMode" (change)="onDisplayOptionChange()">
+              <span style="margin-left: 0.25rem; font-size: 0.875rem;">Compact</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Export Buttons -->
+    <div class="column is-5">
+      <div class="field" style="margin-top: 1.5rem;">
+        <div class="buttons is-small">
+          <button 
+            class="button is-info is-small" 
+            (click)="exportSVG()"
+            [disabled]="isLoading || diagramStats.connections === 0"
+            title="Download as SVG (best for editing in draw.io)"
+          >
+            <span class="icon is-small">
+              <i class="fas fa-download"></i>
+            </span>
+            <span>SVG</span>
+          </button>
+          <button 
+            class="button is-success is-small" 
+            (click)="exportPNG()"
+            [disabled]="isLoading || diagramStats.connections === 0"
+            title="Download as PNG image"
+          >
+            <span class="icon is-small">
+              <i class="fas fa-image"></i>
+            </span>
+            <span>PNG</span>
+          </button>
+          <button 
+            class="button is-warning is-small" 
+            (click)="copyMermaidCode()"
+            [disabled]="isLoading || diagramStats.connections === 0"
+            title="Copy Mermaid code to clipboard"
+          >
+            <span class="icon is-small">
+              <i class="fas fa-code"></i>
+            </span>
+            <span>Copy Code</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Diagram Display -->
+<div class="modern-card">
+  <!-- Always render the container to prevent ViewChild issues -->
+  <div class="diagram-container">
+    <div 
+      #mermaidContainer
+      class="mermaid-diagram"
+      style="
+        width: 100%;
+        min-height: 400px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: var(--bg-primary);
+        border-radius: var(--radius);
+        overflow: auto;
+      "
+    >
+      <!-- Loading state -->
+      @if (isLoading) {
+      <div class="has-text-centered p-6">
+        <div class="loading-spinner mb-3" style="margin: 0 auto;"></div>
+        <p style="color: var(--text-muted);">Generating network diagram...</p>
+      </div>
+      } @else if (diagramStats.connections === 0) {
+      <!-- No data state -->
+      <div class="has-text-centered p-6" style="
+        background-color: var(--gray-50); 
+        border-radius: var(--radius); 
+        border: 2px dashed var(--gray-300);
+      ">
+        <i class="fas fa-project-diagram fa-4x mb-4" style="color: var(--gray-400);"></i>
+        <h4 class="title is-6" style="color: var(--text-muted);">No Port Mappings to Display</h4>
+        <p style="color: var(--text-muted); font-size: 0.875rem;">
+          Add some port mappings to generate a network diagram showing server connections and port flows.
+        </p>
+      </div>
+      }
+      <!-- Mermaid diagram will be rendered here when ready -->
+    </div>
+  </div>
+
+  <!-- Diagram Info - only show when we have connections -->
+  @if (diagramStats.connections > 0 && !isLoading) {
+  <div class="diagram-info mt-4 p-3" style="
+    background-color: var(--gray-50); 
+    border-radius: var(--radius); 
+    border-left: 4px solid var(--info-color);
+  ">
+    <div class="columns is-mobile is-vcentered">
+      <div class="column">
+        <p class="title is-7 mb-1" style="color: var(--text-primary);">
+          <i class="fas fa-info-circle mr-1" style="color: var(--info-color);"></i>
+          Diagram Legend
+        </p>
+        <div style="font-size: 0.8125rem; color: var(--text-secondary);">
+          <span class="mr-3">
+            <strong>→</strong> Light traffic
+          </span>
+          <span class="mr-3">
+            <strong>⇒</strong> Heavy traffic
+          </span>
+          <span class="mr-3">
+            <strong style="color: #3b82f6;">Blue</strong> TCP
+          </span>
+          <span class="mr-3">
+            <strong style="color: #10b981;">Green</strong> UDP
+          </span>
+          <span>
+            <strong style="color: #8b5cf6;">Purple</strong> Mixed
+          </span>
+        </div>
+      </div>
+      <div class="column is-narrow">
+        <div class="has-text-right" style="font-size: 0.8125rem; color: var(--text-muted);">
+          Click and drag to pan • Mouse wheel to zoom
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+</div>
+
+<!-- Mermaid Code Preview (for debugging - can be removed in production) -->
+@if (mermaidSyntax && !isLoading && diagramStats.connections > 0) {
+<details class="modern-card mt-4">
+  <summary class="title is-6" style="cursor: pointer; color: var(--text-secondary);">
+    <i class="fas fa-code mr-2"></i>
+    View Mermaid Code
+  </summary>
+  <pre class="mt-3 p-3" style="
+    background-color: var(--gray-50); 
+    border-radius: var(--radius-sm); 
+    font-size: 0.8125rem; 
+    overflow-x: auto;
+    border: 1px solid var(--gray-200);
+  "><code>{{ mermaidSyntax }}</code></pre>
+</details>
+}

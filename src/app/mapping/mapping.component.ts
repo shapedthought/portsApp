@@ -54,6 +54,19 @@ export class MappingComponent {
   repeatServerName: boolean = false;
   selectedDescription = 'Click on The Service to see the description';
 
+  // Filter Properties
+  searchTerm: string = '';
+  protocolFilter: 'ALL' | 'TCP' | 'UDP' = 'ALL';
+  categoryFilter: string = '';
+
+  // Computed Properties
+  filteredSourceServices: Service[] = [];
+  filteredTargetServices: FullServiceResponse[] = [];
+  availableCategories: string[] = [];
+
+  // Debounce timer
+  private searchTimeout: any;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -92,16 +105,23 @@ export class MappingComponent {
 
     this.getApps();
     this.getSourceData();
+    this.loadFilterState();
   }
 
   selectService(index: number) {
     this.httpService
-      .getTarget(this.selectedProduct, this.sourceServices[index].name)
+      .getTarget(
+        this.selectedProduct,
+        this.sourceServices[index].name,
+        this.sourceServices[index].subheading
+      )
       .subscribe((data) => {
         this.targetServices = [];
         this.fullServiceResponse = data;
         this.sourceServiceName = this.sourceServices[index].name;
         this.sourceServiceSelected = index;
+        this.updateAvailableCategories();
+        this.applyFilters();
         console.log(this.fullServiceResponse);
       });
   }
@@ -186,6 +206,8 @@ export class MappingComponent {
   changeApp(selectedProduct: string) {
     this.fullServiceResponse = [];
     this.sourceServiceName = '';
+    this.availableCategories = [];
+    this.clearAllFilters(); // Reset filters when changing apps
     this.getSourceData();
   }
 
@@ -199,6 +221,7 @@ export class MappingComponent {
     const selectedProduct: Product = { productName: this.selectedProduct };
     this.httpService.getSource(selectedProduct).subscribe((data) => {
       this.sourceServices = data;
+      this.applyFilters(); // Apply filters after loading data
     });
   }
 
@@ -234,5 +257,181 @@ export class MappingComponent {
     this.selectedPortMapping.totalMappedServers = Array.from(
       new Set(servers)
     ).length;
+  }
+
+  // === FILTERING METHODS ===
+
+  // Apply all filters to both source and target services
+  applyFilters(): void {
+    this.filteredSourceServices = this.filterSourceServices();
+    this.filteredTargetServices = this.filterTargetServices();
+    this.saveFilterState();
+  }
+
+  // Filter source services based on search term
+  filterSourceServices(): Service[] {
+    if (!this.sourceServices) return [];
+
+    return this.sourceServices.filter((service) => {
+      const matchesSearch =
+        this.searchTerm === '' ||
+        service.subheading
+          .toLowerCase()
+          .includes(this.searchTerm.toLowerCase()) ||
+        service.name.toLowerCase().includes(this.searchTerm.toLowerCase());
+      return matchesSearch;
+    });
+  }
+
+  // Filter target services based on all filter criteria
+  filterTargetServices(): FullServiceResponse[] {
+    if (!this.fullServiceResponse) return [];
+
+    return this.fullServiceResponse.filter((service) => {
+      // Search filter - check multiple fields
+      const searchLower = this.searchTerm.toLowerCase();
+      const matchesSearch =
+        this.searchTerm === '' ||
+        service.targetService.toLowerCase().includes(searchLower) ||
+        service.subheading.toLowerCase().includes(searchLower) ||
+        service.subheadingL2.toLowerCase().includes(searchLower) ||
+        service.subheadingL3.toLowerCase().includes(searchLower) ||
+        service.description.toLowerCase().includes(searchLower) ||
+        service.port.toString().toLowerCase().includes(searchLower);
+
+      // Protocol filter
+      const matchesProtocol =
+        this.protocolFilter === 'ALL' ||
+        service.protocol === this.protocolFilter;
+
+      // Category filter
+      const matchesCategory =
+        this.categoryFilter === '' ||
+        service.subheading === this.categoryFilter;
+
+      return matchesSearch && matchesProtocol && matchesCategory;
+    });
+  }
+
+  // Update available categories from current target services
+  updateAvailableCategories(): void {
+    if (!this.fullServiceResponse) {
+      this.availableCategories = [];
+      return;
+    }
+
+    const categories = new Set(
+      this.fullServiceResponse.map((s) => s.subheading)
+    );
+    this.availableCategories = Array.from(categories).sort();
+  }
+
+  // Event handlers for filter changes
+  onSearchChange(event: any): void {
+    const term = event.target.value;
+    this.searchTerm = term;
+
+    // Debounce search to avoid excessive filtering
+    if (this.searchTimeout) {
+      clearTimeout(this.searchTimeout);
+    }
+
+    this.searchTimeout = setTimeout(() => {
+      this.applyFilters();
+    }, 300);
+  }
+
+  onProtocolFilterChange(protocol: 'ALL' | 'TCP' | 'UDP'): void {
+    this.protocolFilter = protocol;
+    this.applyFilters();
+  }
+
+  onCategoryFilterChange(event: any): void {
+    this.categoryFilter = event.target.value;
+    this.applyFilters();
+  }
+
+  // Clear all filters
+  clearAllFilters(): void {
+    this.searchTerm = '';
+    this.protocolFilter = 'ALL';
+    this.categoryFilter = '';
+    this.applyFilters();
+  }
+
+  // Check if any filters are active
+  hasActiveFilters(): boolean {
+    return (
+      this.searchTerm !== '' ||
+      this.protocolFilter !== 'ALL' ||
+      this.categoryFilter !== ''
+    );
+  }
+
+  // Get active filters for display
+  getActiveFilters(): { key: string; label: string }[] {
+    const filters: { key: string; label: string }[] = [];
+
+    if (this.searchTerm !== '') {
+      filters.push({ key: 'search', label: `Search: "${this.searchTerm}"` });
+    }
+
+    if (this.protocolFilter !== 'ALL') {
+      filters.push({
+        key: 'protocol',
+        label: `Protocol: ${this.protocolFilter}`,
+      });
+    }
+
+    if (this.categoryFilter !== '') {
+      filters.push({
+        key: 'category',
+        label: `Category: ${this.categoryFilter}`,
+      });
+    }
+
+    return filters;
+  }
+
+  // Remove specific filter
+  removeFilter(filterKey: string): void {
+    switch (filterKey) {
+      case 'search':
+        this.searchTerm = '';
+        break;
+      case 'protocol':
+        this.protocolFilter = 'ALL';
+        break;
+      case 'category':
+        this.categoryFilter = '';
+        break;
+    }
+    this.applyFilters();
+  }
+
+  // Filter state persistence
+  private readonly FILTER_STORAGE_KEY = 'portsapp-mapping-filters';
+
+  saveFilterState(): void {
+    const filterState = {
+      searchTerm: this.searchTerm,
+      protocolFilter: this.protocolFilter,
+      categoryFilter: this.categoryFilter,
+    };
+    localStorage.setItem(this.FILTER_STORAGE_KEY, JSON.stringify(filterState));
+  }
+
+  loadFilterState(): void {
+    try {
+      const saved = localStorage.getItem(this.FILTER_STORAGE_KEY);
+      if (saved) {
+        const filterState = JSON.parse(saved);
+        this.searchTerm = filterState.searchTerm || '';
+        this.protocolFilter = filterState.protocolFilter || 'ALL';
+        this.categoryFilter = filterState.categoryFilter || '';
+      }
+    } catch (error) {
+      console.warn('Could not load filter state:', error);
+    }
   }
 }

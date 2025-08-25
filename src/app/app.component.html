@@ -1,10 +1,86 @@
 
-<main class="main">
-  <div class="container">
+<!-- Modern Navigation Header -->
+<nav class="navbar is-light" role="navigation" aria-label="main navigation" style="
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  border: none;
+  min-height: 4rem;
+">
+  <div class="modern-container">
+    <div class="navbar-brand">
+      <!-- Mobile hamburger menu -->
+      <a role="button" 
+         class="navbar-burger" 
+         aria-label="menu" 
+         aria-expanded="false" 
+         data-target="navbar-menu"
+         (click)="toggleMobileMenu()"
+         [class.is-active]="isMobileMenuOpen"
+         style="color: white;">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
 
-  <router-outlet></router-outlet>
+    <div id="navbar-menu" class="navbar-menu" [class.is-active]="isMobileMenuOpen">
+      <div class="navbar-start">
+        <!-- Brand moved to navbar-start (left side) -->
+        <a routerLink="/" 
+           class="navbar-item" 
+           style="color: white; font-weight: 600; font-size: 1.25rem; transition: all 0.2s;" 
+           (click)="closeMobileMenu()"
+           onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
+           onmouseout="this.style.backgroundColor='transparent'">
+          <i class="fas fa-network-wired mr-2" style="color: #a5b4fc;"></i>
+          <span class="is-hidden-mobile">PortsApp</span>
+          <span class="is-hidden-tablet">Ports</span>
+        </a>
+        
+        <!-- Navigation items -->
+        <a routerLink="/" 
+           class="navbar-item" 
+           style="color: white; transition: all 0.2s;" 
+           routerLinkActive="is-active" 
+           [routerLinkActiveOptions]="{exact: true}"
+           (click)="closeMobileMenu()"
+           onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
+           onmouseout="this.style.backgroundColor='transparent'">
+          <i class="fas fa-home mr-2"></i>
+          Dashboard
+        </a>
+        <a routerLink="/report" 
+           class="navbar-item" 
+           style="color: white; transition: all 0.2s;"
+           routerLinkActive="is-active"
+           (click)="closeMobileMenu()"
+           onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
+           onmouseout="this.style.backgroundColor='transparent'">
+          <i class="fas fa-chart-bar mr-2"></i>
+          Report
+        </a>
+      </div>
 
-</div>
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <span style="color: #a5b4fc; font-size: 0.875rem;">
+            <i class="fas fa-code mr-1"></i>
+            <span class="is-hidden-mobile">v0.3.0</span>
+            <span class="is-hidden-tablet">v0.3</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Modern Main Content Area -->
+<main class="main" style="background-color: var(--bg-secondary); min-height: calc(100vh - 4rem);">
+  <div class="modern-container" style="padding-top: var(--spacing-xl); padding-bottom: var(--spacing-xl);">
+    <div class="fade-in">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
 </main>
 
 
