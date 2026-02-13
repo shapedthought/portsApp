@@ -8,6 +8,9 @@
 .mermaid-diagram {
   width: 100%;
   min-height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border: 1px solid var(--gray-200);
   border-radius: var(--radius);
   background-color: var(--bg-primary);
@@ -43,6 +46,17 @@
   border: 1px solid var(--gray-200);
 }
 
+/* Checkbox label */
+.checkbox-label {
+  margin-left: 0.25rem;
+  font-size: 0.875rem;
+}
+
+/* Export buttons offset */
+.export-buttons {
+  margin-top: 1.5rem;
+}
+
 /* Export button styling */
 .buttons .button {
   transition: all 0.2s ease;
@@ -51,6 +65,35 @@
 .buttons .button:hover:not(:disabled) {
   transform: translateY(-1px);
   box-shadow: var(--shadow);
+}
+
+/* Loading spinner centered */
+.loading-spinner--centered {
+  margin: 0 auto;
+}
+
+/* Legend */
+.legend-text {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+}
+
+.legend-tcp { color: #3b82f6; }
+.legend-udp { color: #10b981; }
+.legend-mixed { color: #8b5cf6; }
+
+/* Code preview */
+.code-summary {
+  cursor: pointer;
+  color: var(--text-secondary);
+}
+
+.code-preview {
+  background-color: var(--gray-50);
+  border-radius: var(--radius-sm);
+  font-size: 0.8125rem;
+  overflow-x: auto;
+  border: 1px solid var(--gray-200);
 }
 
 /* Loading spinner override */
@@ -68,25 +111,25 @@
   .diagram-container {
     min-height: 300px;
   }
-  
+
   .mermaid-diagram {
     min-height: 300px;
   }
-  
+
   .diagram-info .columns {
     display: block !important;
   }
-  
+
   .diagram-info .column.is-narrow {
     margin-top: 0.5rem;
     text-align: left !important;
   }
-  
+
   .buttons {
     flex-wrap: wrap;
     justify-content: center;
   }
-  
+
   .buttons .button {
     margin: 0.125rem;
   }
@@ -97,11 +140,11 @@
   .modern-card:first-child {
     display: none;
   }
-  
+
   .diagram-info {
     display: none;
   }
-  
+
   .mermaid-diagram {
     border: none;
     box-shadow: none;

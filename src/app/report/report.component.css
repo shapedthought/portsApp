@@ -1,0 +1,49 @@
+/* Back button */
+.back-button {
+  border: 2px solid var(--gray-300);
+}
+
+/* Tab links */
+.tab-list {
+  margin: 0;
+}
+
+.tab-link {
+  transition: all 0.2s ease;
+}
+
+.tab-link--left {
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+}
+
+.tab-link--right {
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+/* Report table */
+.report-table {
+  margin: 0;
+}
+
+/* Alternating row colors */
+.report-row {
+  transition: all 0.2s ease;
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.report-row--alt {
+  background-color: rgba(248, 250, 252, 0.5);
+}
+
+/* Protocol count */
+.protocol-count {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+/* Server activity list */
+.server-activity-list {
+  max-height: 120px;
+  overflow-y: auto;
+}
