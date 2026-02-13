@@ -49,7 +49,7 @@
         </label>
         <div class="control has-icons-left">
           <input
-            class="input"
+            class="input input-focus-style"
             type="text"
             [(ngModel)]="serverName"
             (blur)="updateName(serverName)"
@@ -60,8 +60,6 @@
               transition: all 0.2s ease;
               font-weight: 500;
             "
-            onfocus="this.style.borderColor='var(--primary-color)'; this.style.boxShadow='0 0 0 3px rgba(99, 102, 241, 0.1)'"
-            onblur="this.style.borderColor='var(--gray-300)'; this.style.boxShadow='none'"
           />
           <span class="icon is-left" style="color: var(--gray-400)">
             <i class="fas fa-server"></i>
@@ -522,10 +520,9 @@
         @for (item of filteredTargetServices; track item.id; let index = $index)
         {
         <tr
+          class="table-row-hover"
           (click)="updateDescription(index)"
           style="cursor: pointer; transition: all 0.2s ease"
-          onmouseover="this.style.backgroundColor='var(--gray-50)'"
-          onmouseout="this.style.backgroundColor='transparent'"
         >
           <td
             style="border: none; padding: var(--spacing-md); font-weight: 500"
@@ -778,9 +775,8 @@
         @for (item of selectedPortMapping.mappedPorts; track item; let index =
         $index) {
         <tr
+          class="table-row-hover"
           style="transition: all 0.2s ease"
-          onmouseover="this.style.backgroundColor='var(--gray-50)'"
-          onmouseout="this.style.backgroundColor='transparent'"
         >
           <td style="border: none; padding: var(--spacing-md)">
             <span
@@ -929,7 +925,7 @@
 
     <div class="buttons">
       <button
-        class="button is-success"
+        class="button is-success btn-hover-lift"
         [disabled]="
           selectedPortMapping.mappedPorts.length == 0 || repeatServerName
         "
@@ -940,8 +936,6 @@
           padding: 0 var(--spacing-xl);
           transition: all 0.2s ease;
         "
-        onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='var(--shadow)'"
-        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'"
       >
         <span class="icon">
           <i class="fas fa-save"></i>
@@ -949,7 +943,7 @@
         <span>Save Configuration</span>
       </button>
       <button
-        class="button is-light"
+        class="button is-light btn-back-hover"
         [routerLink]="['/']"
         style="
           border-radius: var(--radius);
@@ -957,8 +951,6 @@
           border: 2px solid var(--gray-300);
           transition: all 0.2s ease;
         "
-        onmouseover="this.style.backgroundColor='var(--gray-100)'"
-        onmouseout="this.style.backgroundColor='white'"
       >
         <span class="icon">
           <i class="fas fa-arrow-left"></i>

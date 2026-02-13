@@ -34,6 +34,7 @@ export class HomeComponent {
 
   showMappedPorts: ShowMappedPorts[] = [];
   showMappedInboundPorts: ShowMappedPorts[] = [];
+  hasMappedPorts: boolean = false;
 
   submitModal() {
     this.dataService.addNewServer(this.serverName);
@@ -76,6 +77,7 @@ export class HomeComponent {
         this.dataService.deleteServer(index);
         this.portsMapped = this.dataService.getMappedPorts();
         this.portsDisplay = [];
+        this.updateHasMappedPorts();
       }
     });
   }
@@ -114,19 +116,15 @@ export class HomeComponent {
         this.dataService.deleteAll();
         this.portsMapped = this.dataService.getMappedPorts();
         this.portsDisplay = [];
+        this.updateHasMappedPorts();
       }
     });
   }
 
-  checkMappedPortLength(): boolean {
-    const mappedPortsTotal = this.portsMapped.flatMap(
-      (mappedPort) => mappedPort.mappedPorts
-    ).length;
-    if (mappedPortsTotal > 0) {
-      return false;
-    } else {
-      return true;
-    }
+  private updateHasMappedPorts(): void {
+    this.hasMappedPorts = this.portsMapped.some(
+      (pm) => pm.mappedPorts.length > 0
+    );
   }
 
   getExcelData(): void {
@@ -219,6 +217,7 @@ export class HomeComponent {
           const result = e.target?.result as string;
           this.portsMapped = JSON.parse(result);
           this.dataService.uploadPortMapping(this.portsMapped);
+          this.updateHasMappedPorts();
 
           // Show success state
           if (fileLabel) {
@@ -259,5 +258,6 @@ export class HomeComponent {
     this.dataService.loadPortMapping();
     this.portsMapped = this.dataService.getMappedPorts();
     this.sourceServer = this.portsMapped[0].sourceServer;
+    this.updateHasMappedPorts();
   }
 }

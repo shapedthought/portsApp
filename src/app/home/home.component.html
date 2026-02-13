@@ -16,7 +16,7 @@
       <button
         class="button is-info"
         [routerLink]="['/report']"
-        [disabled]="checkMappedPortLength()"
+        [disabled]="!hasMappedPorts"
         style="border-radius: var(--radius); font-weight: 500;"
       >
         <span class="icon">
@@ -28,7 +28,7 @@
       <button
         class="button is-success"
         (click)="getExcelData()"
-        [disabled]="checkMappedPortLength()"
+        [disabled]="!hasMappedPorts"
         style="border-radius: var(--radius); font-weight: 500;"
       >
         <span class="icon">
@@ -39,7 +39,7 @@
       </button>
       <button
         class="button is-primary"
-        [disabled]="checkMappedPortLength()"
+        [disabled]="!hasMappedPorts"
         (click)="savePortMappings()"
         style="border-radius: var(--radius); font-weight: 500;"
       >
@@ -136,13 +136,10 @@
       <tbody>
         @for (item of portsMapped; track item.id; let index = $index) {
         <tr
-          [ngClass]="{ 'is-selected': selectedCardIndex === index }"
+          class="server-row"
+          [ngClass]="{ 'is-selected server-row-selected': selectedCardIndex === index }"
           (click)="loadMappedPorts(index)"
           style="cursor: pointer; transition: all 0.2s ease;"
-          [style.background-color]="selectedCardIndex === index ? 'rgba(99, 102, 241, 0.1)' : 'transparent'"
-          onmouseover="this.style.backgroundColor='var(--gray-50)'"
-          onmouseout="this.style.backgroundColor=this.getAttribute('data-original-bg')"
-          [attr.data-original-bg]="selectedCardIndex === index ? 'rgba(99, 102, 241, 0.1)' : 'transparent'"
         >
           <td style="border: none; padding: var(--spacing-md); font-weight: 500; width: 35%; max-width: 0;">
             <div class="flex items-center">
@@ -387,13 +384,11 @@
         <i class="fas fa-server mr-3" style="color: #a5b4fc;"></i>
         <p class="modal-card-title" style="color: white; font-weight: 600; margin: 0;">Add New Server</p>
       </div>
-      <button class="delete" aria-label="close" (click)="closeModal()" style="
-        background-color: rgba(255, 255, 255, 0.2); 
+      <button class="delete modal-close-hover" aria-label="close" (click)="closeModal()" style="
+        background-color: rgba(255, 255, 255, 0.2);
         border: none;
         transition: all 0.2s ease;
-      "
-      onmouseover="this.style.backgroundColor='rgba(255, 255, 255, 0.3)'"
-      onmouseout="this.style.backgroundColor='rgba(255, 255, 255, 0.2)'"></button>
+      "></button>
     </header>
     
     <section class="modal-card-body" style="padding: var(--spacing-xl); background-color: white;">
@@ -404,7 +399,7 @@
         </label>
         <div class="control has-icons-left">
           <input
-            class="input"
+            class="input input-focus-style"
             type="text"
             [(ngModel)]="serverName"
             placeholder="Enter server name (4-20 characters)"
@@ -416,8 +411,6 @@
               font-size: 1rem;
               transition: all 0.2s ease;
             "
-            onfocus="this.style.borderColor='var(--primary-color)'; this.style.boxShadow='0 0 0 3px rgba(99, 102, 241, 0.1)'"
-            onblur="this.style.borderColor='var(--gray-300)'; this.style.boxShadow='none'"
           />
           <span class="icon is-left" style="color: var(--gray-400);">
             <i class="fas fa-server"></i>
@@ -472,7 +465,7 @@
     ">
       <div class="buttons is-right" style="margin: 0;">
         <button
-          class="button is-success"
+          class="button is-success btn-hover-lift"
           (click)="submitModal()"
           [disabled]="
             serverName.length < 4 ||
@@ -480,34 +473,30 @@
             repeatServerName
           "
           style="
-            border-radius: var(--radius); 
-            font-weight: 600; 
+            border-radius: var(--radius);
+            font-weight: 600;
             padding: 0 var(--spacing-xl);
             background-color: var(--success-color);
             border: none;
             transition: all 0.2s ease;
           "
-          onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='var(--shadow)'"
-          onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'"
         >
           <span class="icon">
             <i class="fas fa-plus"></i>
           </span>
           <span>Add Server</span>
         </button>
-        <button 
-          class="button" 
+        <button
+          class="button btn-cancel-hover"
           (click)="closeModal()"
           style="
-            border-radius: var(--radius); 
-            font-weight: 500; 
+            border-radius: var(--radius);
+            font-weight: 500;
             background-color: white;
             border: 2px solid var(--gray-300);
             color: var(--text-primary);
             transition: all 0.2s ease;
           "
-          onmouseover="this.style.backgroundColor='var(--gray-50)'"
-          onmouseout="this.style.backgroundColor='white'"
         >
           Cancel
         </button>

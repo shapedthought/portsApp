@@ -23,9 +23,17 @@ export class ReportComponent implements OnInit {
   searchTerm: string = '';
   selectedSourceServer: string = '';
   selectedProtocol: string = '';
-  
+
   // View mode toggle
   viewMode: 'table' | 'diagram' = 'table';
+
+  // Pre-computed properties
+  totalMappings = 0;
+  filteredMappings: FlatMapping[] = [];
+  uniqueSourceServers: string[] = [];
+  uniqueProtocols: string[] = [];
+  protocolCounts: Map<string, number> = new Map();
+  serverMappingCounts: Map<string, number> = new Map();
 
   constructor(
     private dataService: DataService
@@ -34,12 +42,38 @@ export class ReportComponent implements OnInit {
   ngOnInit(): void {
     this.dataService.loadPortMapping();
     this.portMapping = this.dataService.getMappedPorts();
+    this.recomputeStats();
   }
 
-  // Get flattened array of all mappings for display
-  getFlatMappings(): FlatMapping[] {
+  // Recompute all derived stats from current data + filters
+  recomputeStats(): void {
+    const allMappings = this.getFlatMappings();
+    this.totalMappings = allMappings.length;
+
+    // Unique servers (from raw data, not filtered)
+    this.uniqueSourceServers = [...new Set(this.portMapping.map(item => item.sourceServer))].sort();
+
+    // Unique protocols (from all mappings)
+    this.uniqueProtocols = [...new Set(allMappings.map(m => m.protocol))].sort();
+
+    // Protocol counts
+    this.protocolCounts = new Map();
+    for (const m of allMappings) {
+      this.protocolCounts.set(m.protocol, (this.protocolCounts.get(m.protocol) || 0) + 1);
+    }
+
+    // Server mapping counts
+    this.serverMappingCounts = new Map();
+    for (const m of allMappings) {
+      this.serverMappingCounts.set(m.sourceServer, (this.serverMappingCounts.get(m.sourceServer) || 0) + 1);
+    }
+
+    // Filtered mappings
+    this.filteredMappings = this.computeFilteredMappings(allMappings);
+  }
+
+  private getFlatMappings(): FlatMapping[] {
     const flatMappings: FlatMapping[] = [];
-    
     this.portMapping.forEach(item => {
       item.mappedPorts.forEach(target => {
         flatMappings.push({
@@ -48,18 +82,13 @@ export class ReportComponent implements OnInit {
         });
       });
     });
-    
     return flatMappings;
   }
 
-  // Get filtered mappings based on search and filters
-  getFilteredMappings(): FlatMapping[] {
-    let mappings = this.getFlatMappings();
-
-    // Apply search filter
+  private computeFilteredMappings(mappings: FlatMapping[]): FlatMapping[] {
     if (this.searchTerm.trim()) {
       const searchLower = this.searchTerm.toLowerCase();
-      mappings = mappings.filter(mapping => 
+      mappings = mappings.filter(mapping =>
         mapping.sourceServer.toLowerCase().includes(searchLower) ||
         mapping.targetServerName.toLowerCase().includes(searchLower) ||
         mapping.product.toLowerCase().includes(searchLower) ||
@@ -70,16 +99,14 @@ export class ReportComponent implements OnInit {
       );
     }
 
-    // Apply source server filter
     if (this.selectedSourceServer) {
-      mappings = mappings.filter(mapping => 
+      mappings = mappings.filter(mapping =>
         mapping.sourceServer === this.selectedSourceServer
       );
     }
 
-    // Apply protocol filter
     if (this.selectedProtocol) {
-      mappings = mappings.filter(mapping => 
+      mappings = mappings.filter(mapping =>
         mapping.protocol === this.selectedProtocol
       );
     }
@@ -87,46 +114,17 @@ export class ReportComponent implements OnInit {
     return mappings;
   }
 
-  // Get total number of mappings
-  getTotalMappings(): number {
-    return this.getFlatMappings().length;
-  }
-
-  // Get unique source servers
-  getUniqueSourceServers(): string[] {
-    const servers = new Set<string>();
-    this.portMapping.forEach(item => servers.add(item.sourceServer));
-    return Array.from(servers).sort();
-  }
-
-  // Get unique protocols
-  getUniqueProtocols(): string[] {
-    const protocols = new Set<string>();
-    this.getFlatMappings().forEach(mapping => protocols.add(mapping.protocol));
-    return Array.from(protocols).sort();
-  }
-
-  // Get count for specific protocol
-  getProtocolCount(protocol: string): number {
-    return this.getFlatMappings().filter(mapping => mapping.protocol === protocol).length;
-  }
-
-  // Get mapping count for specific server
-  getServerMappingCount(server: string): number {
-    return this.getFlatMappings().filter(mapping => mapping.sourceServer === server).length;
-  }
-
   // Clear all filters
   clearFilters(): void {
     this.searchTerm = '';
     this.selectedSourceServer = '';
     this.selectedProtocol = '';
+    this.recomputeStats();
   }
 
   // Export report data
   exportReport(): void {
-    const filteredData = this.getFilteredMappings();
-    const csvData = this.convertToCSV(filteredData);
+    const csvData = this.convertToCSV(this.filteredMappings);
     this.downloadCSV(csvData, 'port-mappings-report.csv');
   }
 

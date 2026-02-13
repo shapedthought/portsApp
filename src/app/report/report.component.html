@@ -33,7 +33,7 @@
           min-width: 100px;
         ">
           <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary-color);">
-            {{ getTotalMappings() }}
+            {{ totalMappings }}
           </div>
           <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">
             Total Mappings
@@ -61,7 +61,7 @@
           min-width: 100px;
         ">
           <div style="font-size: 1.5rem; font-weight: 700; color: var(--info-color);">
-            {{ getUniqueProtocols().length }}
+            {{ uniqueProtocols.length }}
           </div>
           <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">
             Protocols
@@ -149,6 +149,7 @@
             class="input is-small"
             type="text"
             [(ngModel)]="searchTerm"
+            (ngModelChange)="recomputeStats()"
             placeholder="Search servers, services, or ports..."
             style="border-radius: var(--radius); border: 1px solid var(--gray-300);"
           />
@@ -162,9 +163,9 @@
       <div class="field">
         <label class="label is-small" style="color: var(--text-secondary);">Source Server</label>
         <div class="select is-fullwidth is-small">
-          <select [(ngModel)]="selectedSourceServer" style="border-radius: var(--radius);">
+          <select [(ngModel)]="selectedSourceServer" (ngModelChange)="recomputeStats()" style="border-radius: var(--radius);">
             <option value="">All Servers</option>
-            @for (server of getUniqueSourceServers(); track server) {
+            @for (server of uniqueSourceServers; track server) {
             <option [value]="server">{{ server }}</option>
             }
           </select>
@@ -175,9 +176,9 @@
       <div class="field">
         <label class="label is-small" style="color: var(--text-secondary);">Protocol</label>
         <div class="select is-fullwidth is-small">
-          <select [(ngModel)]="selectedProtocol" style="border-radius: var(--radius);">
+          <select [(ngModel)]="selectedProtocol" (ngModelChange)="recomputeStats()" style="border-radius: var(--radius);">
             <option value="">All Protocols</option>
-            @for (protocol of getUniqueProtocols(); track protocol) {
+            @for (protocol of uniqueProtocols; track protocol) {
             <option [value]="protocol">{{ protocol }}</option>
             }
           </select>
@@ -196,7 +197,7 @@
     </h3>
     <div class="flex items-center gap-2">
       <span class="tag is-light" style="border-radius: var(--radius-sm);">
-        {{ getFilteredMappings().length }} of {{ getTotalMappings() }} mappings
+        {{ filteredMappings.length }} of {{ totalMappings }} mappings
       </span>
       <button 
         class="button is-info is-small" 
@@ -212,7 +213,7 @@
     </div>
   </div>
 
-  @if (getFilteredMappings().length > 0) {
+  @if (filteredMappings.length > 0) {
   <div class="table-container" style="
     border-radius: var(--radius-lg); 
     overflow: hidden; 
@@ -254,13 +255,11 @@
         </tr>
       </thead>
       <tbody>
-        @for(item of getFilteredMappings(); track $index; let index = $index) {
-        <tr 
+        @for(item of filteredMappings; track $index; let index = $index) {
+        <tr
+          class="report-row"
+          [ngClass]="{ 'report-row-alt': index % 2 !== 0 }"
           style="transition: all 0.2s ease; border-bottom: 1px solid var(--gray-100);"
-          [style.background-color]="index % 2 === 0 ? 'transparent' : 'rgba(248, 250, 252, 0.5)'"
-          onmouseover="this.style.backgroundColor='var(--gray-50)'"
-          onmouseout="this.style.backgroundColor=this.getAttribute('data-original-bg')"
-          [attr.data-original-bg]="index % 2 === 0 ? 'transparent' : 'rgba(248, 250, 252, 0.5)'"
         >
           <td style="border: none; padding: var(--spacing-md); font-weight: 500;">
             <div class="flex items-center">
@@ -344,14 +343,14 @@
         Protocol Distribution
       </h4>
       <div class="flex gap-4">
-        @for (protocol of getUniqueProtocols(); track protocol) {
+        @for (protocol of uniqueProtocols; track protocol) {
         <div class="has-text-centered" style="flex: 1;">
           <div style="
-            font-size: 1.25rem; 
-            font-weight: 700; 
+            font-size: 1.25rem;
+            font-weight: 700;
             color: var(--primary-color);
           ">
-            {{ getProtocolCount(protocol) }}
+            {{ protocolCounts.get(protocol) }}
           </div>
           <div style="font-size: 0.875rem; color: var(--text-muted);">
             {{ protocol }} connections
@@ -368,11 +367,11 @@
         Server Activity
       </h4>
       <div style="max-height: 120px; overflow-y: auto;">
-        @for (server of getUniqueSourceServers(); track server) {
+        @for (server of uniqueSourceServers; track server) {
         <div class="flex justify-between items-center mb-2">
           <span style="font-size: 0.875rem; color: var(--text-primary);">{{ server }}</span>
           <span class="tag is-small is-light" style="border-radius: var(--radius-sm);">
-            {{ getServerMappingCount(server) }} mappings
+            {{ serverMappingCounts.get(server) }} mappings
           </span>
         </div>
         }

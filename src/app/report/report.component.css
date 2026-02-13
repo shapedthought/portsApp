@@ -1,0 +1,7 @@
+.report-row-alt {
+  background-color: rgba(248, 250, 252, 0.5);
+}
+
+.report-row:hover {
+  background-color: var(--gray-50);
+}
