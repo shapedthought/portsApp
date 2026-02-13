@@ -205,6 +205,9 @@ export class HomeComponent {
             throw new Error('Expected an array of port mappings');
           }
           for (const item of parsed) {
+            if (item.id == null || typeof item.id !== 'number') {
+              throw new Error('Each item must have a numeric "id"');
+            }
             if (!item.sourceServer || typeof item.sourceServer !== 'string') {
               throw new Error('Each item must have a "sourceServer" string');
             }
