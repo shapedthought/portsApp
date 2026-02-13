@@ -9,26 +9,16 @@
 .file-cta--styled { font-weight: 500; }
 .select-hint { max-width: 400px; margin: 0 auto; }
 
-.modal-backdrop { background-color: rgba(0, 0, 0, 0.6); }
-.modal-card--styled {
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-xl);
-  border: none;
-  max-width: 500px;
-  margin: 0 auto;
-  animation: slideUp 0.3s ease-out;
-}
-.modal-header {
+:host ::ng-deep .server-dialog .p-dialog-header {
   background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-  border-bottom: none;
   color: white;
   border-radius: var(--radius-xl) var(--radius-xl) 0 0;
 }
-.modal-title { color: white; font-weight: 600; margin: 0; }
-.modal-close-btn { background-color: rgba(255, 255, 255, 0.2); border: none; transition: all 0.2s ease; }
-.modal-close-btn:hover { background-color: rgba(255, 255, 255, 0.3); }
-.modal-body { padding: var(--spacing-xl); background-color: white; }
-.modal-footer {
+:host ::ng-deep .server-dialog .p-dialog-title { color: white; font-weight: 600; }
+:host ::ng-deep .server-dialog .p-dialog-header-actions button { color: rgba(255, 255, 255, 0.8); }
+:host ::ng-deep .server-dialog .p-dialog-header-actions button:hover { color: white; }
+:host ::ng-deep .server-dialog .p-dialog-content { padding: var(--spacing-xl); }
+:host ::ng-deep .server-dialog .p-dialog-footer {
   background-color: var(--gray-50);
   border-top: 1px solid var(--gray-200);
   border-radius: 0 0 var(--radius-xl) var(--radius-xl);
