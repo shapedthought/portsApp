@@ -2,23 +2,19 @@
 <div class="modern-card slide-up">
   <div class="flex items-center mb-6">
     <button
-      class="button is-light mr-4"
+      class="button is-light mr-4 back-button"
       [routerLink]="['/']"
-      style="border-radius: var(--radius); border: 2px solid var(--gray-300)"
     >
       <span class="icon">
         <i class="fas fa-arrow-left"></i>
       </span>
     </button>
     <div>
-      <h1
-        class="title is-3 mb-2"
-        style="color: var(--text-primary); font-weight: 600"
-      >
-        <i class="fas fa-cogs mr-2" style="color: var(--primary-color)"></i>
+      <h1 class="title is-3 mb-2 section-title">
+        <i class="fas fa-cogs mr-2 icon-primary"></i>
         Port Mapping Configuration
       </h1>
-      <p class="subtitle is-6" style="color: var(--text-secondary); margin: 0">
+      <p class="subtitle is-6 section-subtitle">
         Configure network port mappings and service connections
       </p>
     </div>
@@ -27,8 +23,8 @@
 
 <!-- Configuration Panel -->
 <div class="modern-card">
-  <h3 class="title is-5 mb-4" style="color: var(--text-primary)">
-    <i class="fas fa-sliders-h mr-2" style="color: var(--secondary-color)"></i>
+  <h3 class="title is-5 mb-4 section-title">
+    <i class="fas fa-sliders-h mr-2 icon-secondary"></i>
     Server Configuration
   </h3>
 
@@ -36,48 +32,24 @@
     <!-- Server Name Field -->
     <div class="column">
       <div class="field">
-        <label
-          class="label"
-          style="
-            color: var(--text-primary);
-            font-weight: 600;
-            margin-bottom: var(--spacing-sm);
-          "
-        >
-          <i class="fas fa-server mr-2" style="color: var(--primary-color)"></i>
+        <label class="label field-label">
+          <i class="fas fa-server mr-2 icon-primary"></i>
           Server Name
         </label>
         <div class="control has-icons-left">
           <input
-            class="input"
+            class="input input-styled"
             type="text"
             [(ngModel)]="serverName"
             (blur)="updateName(serverName)"
             placeholder="Enter server name"
-            style="
-              border-radius: var(--radius);
-              border: 2px solid var(--gray-300);
-              transition: all 0.2s ease;
-              font-weight: 500;
-            "
-            onfocus="this.style.borderColor='var(--primary-color)'; this.style.boxShadow='0 0 0 3px rgba(99, 102, 241, 0.1)'"
-            onblur="this.style.borderColor='var(--gray-300)'; this.style.boxShadow='none'"
           />
-          <span class="icon is-left" style="color: var(--gray-400)">
+          <span class="icon is-left icon-muted">
             <i class="fas fa-server"></i>
           </span>
         </div>
         @if (repeatServerName) {
-        <div
-          class="mt-2 p-2"
-          style="
-            background-color: #fef2f2;
-            border: 1px solid #fecaca;
-            border-radius: var(--radius-sm);
-            color: #dc2626;
-            font-size: 0.875rem;
-          "
-        >
+        <div class="mt-2 p-2 validation-error text-sm">
           <i class="fas fa-exclamation-triangle mr-1"></i>
           No duplicate server names allowed!
         </div>
@@ -88,15 +60,8 @@
     <!-- Product Selection -->
     <div class="column">
       <div class="field">
-        <label
-          class="label"
-          style="
-            color: var(--text-primary);
-            font-weight: 600;
-            margin-bottom: var(--spacing-sm);
-          "
-        >
-          <i class="fas fa-cube mr-2" style="color: var(--info-color)"></i>
+        <label class="label field-label">
+          <i class="fas fa-cube mr-2 icon-info"></i>
           Product
         </label>
         <div class="control has-icons-left">
@@ -104,19 +69,14 @@
             <select
               [(ngModel)]="selectedProduct"
               (change)="changeApp(selectedProduct)"
-              style="
-                border-radius: var(--radius);
-                border: 2px solid var(--gray-300);
-                transition: all 0.2s ease;
-                font-weight: 500;
-              "
+              class="input-styled"
             >
               @for (item of products; track item.id) {
               <option>{{ item.productName }}</option>
               }
             </select>
           </div>
-          <span class="icon is-left" style="color: var(--gray-400)">
+          <span class="icon is-left icon-muted">
             <i class="fas fa-cube"></i>
           </span>
         </div>
@@ -126,48 +86,26 @@
     <!-- Target Server Selection -->
     <div class="column">
       <div class="field">
-        <label
-          class="label"
-          style="
-            color: var(--text-primary);
-            font-weight: 600;
-            margin-bottom: var(--spacing-sm);
-          "
-        >
-          <i
-            class="fas fa-bullseye mr-2"
-            style="color: var(--warning-color)"
-          ></i>
+        <label class="label field-label">
+          <i class="fas fa-bullseye mr-2 icon-warning"></i>
           Target Server
         </label>
         <div class="control has-icons-left">
           <div class="select is-fullwidth">
             <select
               [(ngModel)]="selectedTargetServer"
-              style="
-                border-radius: var(--radius);
-                border: 2px solid var(--gray-300);
-                transition: all 0.2s ease;
-                font-weight: 500;
-              "
+              class="input-styled"
             >
               @for (item of servers; track item.id) {
               <option>{{ item.name }}</option>
               }
             </select>
           </div>
-          <span class="icon is-left" style="color: var(--gray-400)">
+          <span class="icon is-left icon-muted">
             <i class="fas fa-bullseye"></i>
           </span>
         </div>
-        <p
-          class="help"
-          style="
-            color: var(--text-muted);
-            font-size: 0.875rem;
-            margin-top: var(--spacing-xs);
-          "
-        >
+        <p class="help target-help">
           <strong>Selected:</strong> {{ selectedTargetServer }}
         </p>
       </div>
@@ -177,14 +115,11 @@
 <!-- Service Filtering Section -->
 <div class="modern-card">
   <div class="flex items-center justify-between mb-4">
-    <h3 class="title is-5 mb-0" style="color: var(--text-primary)">
-      <i class="fas fa-filter mr-2" style="color: var(--secondary-color)"></i>
+    <h3 class="title is-5 mb-0 section-title">
+      <i class="fas fa-filter mr-2 icon-secondary"></i>
       Filter Services
     </h3>
-    <div
-      class="filter-results"
-      style="font-size: 0.875rem; color: var(--text-muted)"
-    >
+    <div class="filter-results text-sm text-muted">
       Showing {{ filteredSourceServices.length }} source,
       {{ filteredTargetServices.length }} target services
     </div>
@@ -195,25 +130,17 @@
     <!-- Global Search -->
     <div class="column is-4">
       <div class="field">
-        <label
-          class="label is-small"
-          style="color: var(--text-secondary); margin-bottom: 0.25rem"
-          >Filter</label
-        >
+        <label class="label is-small field-label--sm">Filter</label>
         <div class="control has-icons-left">
           <input
-            class="input is-small"
+            class="input is-small input-styled"
             type="text"
             [(ngModel)]="searchTerm"
             (input)="onSearchChange($event)"
             placeholder="Search services..."
-            style="
-              border-radius: var(--radius);
-              border: 2px solid var(--gray-300);
-            "
           />
           <span class="icon is-left is-small">
-            <i class="fas fa-search" style="color: var(--gray-400)"></i>
+            <i class="fas fa-search icon-muted"></i>
           </span>
         </div>
       </div>
@@ -222,17 +149,12 @@
     <!-- Protocol Filters -->
     <div class="column is-3">
       <div class="field">
-        <label
-          class="label is-small"
-          style="color: var(--text-secondary); margin-bottom: 0.25rem"
-          >Protocol</label
-        >
+        <label class="label is-small field-label--sm">Protocol</label>
         <div class="buttons has-addons is-small">
           <button
-            class="button"
+            class="button protocol-btn--left"
             [ngClass]="protocolFilter === 'ALL' ? 'is-primary' : 'is-light'"
             (click)="onProtocolFilterChange('ALL')"
-            style="border-radius: var(--radius-sm) 0 0 var(--radius-sm)"
           >
             All
           </button>
@@ -244,10 +166,9 @@
             TCP
           </button>
           <button
-            class="button"
+            class="button protocol-btn--right"
             [ngClass]="protocolFilter === 'UDP' ? 'is-info' : 'is-light'"
             (click)="onProtocolFilterChange('UDP')"
-            style="border-radius: 0 var(--radius-sm) var(--radius-sm) 0"
           >
             UDP
           </button>
@@ -258,16 +179,11 @@
     <!-- Category Filter -->
     <div class="column is-3">
       <div class="field">
-        <label
-          class="label is-small"
-          style="color: var(--text-secondary); margin-bottom: 0.25rem"
-          >Category</label
-        >
+        <label class="label is-small field-label--sm">Category</label>
         <div class="select is-fullwidth is-small">
           <select
             [(ngModel)]="categoryFilter"
             (change)="onCategoryFilterChange($event)"
-            style="border-radius: var(--radius)"
           >
             <option value="">All Categories</option>
             @for (category of availableCategories; track category) {
@@ -280,12 +196,11 @@
 
     <!-- Clear Filters -->
     <div class="column is-2">
-      <div class="field" style="margin-top: 1.5rem">
+      <div class="field clear-filters-field">
         <button
           class="button is-light is-small is-fullwidth"
           (click)="clearAllFilters()"
           [disabled]="!hasActiveFilters()"
-          style="border-radius: var(--radius)"
         >
           <span class="icon is-small">
             <i class="fas fa-times"></i>
@@ -299,19 +214,9 @@
   <!-- Active Filters Display -->
   @if (hasActiveFilters()) {
   <div class="active-filters mb-3">
-    <span
-      style="
-        font-size: 0.8125rem;
-        color: var(--text-muted);
-        margin-right: 0.5rem;
-      "
-      >Active filters:</span
-    >
+    <span class="active-filters-label">Active filters:</span>
     @for (filter of getActiveFilters(); track filter.key) {
-    <span
-      class="tag is-primary is-light is-small mr-1 mb-1"
-      style="border-radius: var(--radius-sm)"
-    >
+    <span class="tag is-primary is-light is-small mr-1 mb-1 tag-rounded">
       {{ filter.label }}
       <button
         class="delete is-small ml-1"
@@ -326,65 +231,30 @@
 <!-- Source Services Section -->
 <div class="modern-card">
   <div class="flex items-center justify-between mb-4">
-    <h3 class="title is-5 mb-0" style="color: var(--text-primary)">
-      <i class="fas fa-list-ul mr-2" style="color: var(--success-color)"></i>
+    <h3 class="title is-5 mb-0 section-title">
+      <i class="fas fa-list-ul mr-2 icon-success"></i>
       Source Services for {{ selectedProduct }}
     </h3>
-    <span class="tag is-light" style="border-radius: var(--radius-sm)">
+    <span class="tag is-light tag-rounded">
       {{ filteredSourceServices.length }} of
       {{ sourceServices.length }} services
     </span>
   </div>
 
-  <p class="text-muted mb-4" style="font-size: 0.875rem">
+  <p class="text-muted mb-4 text-sm">
     Select a source service to view available target services and ports
   </p>
 
-  <div
-    class="scrollable-table-container"
-    style="
-      max-height: 300px;
-      overflow-y: auto;
-      border-radius: var(--radius);
-      border: 1px solid var(--gray-200);
-    "
-  >
-    <table class="table is-fullwidth is-hoverable" style="margin: 0">
+  <div class="scrollable-table-container table-wrapper table-scroll--sm">
+    <table class="table is-fullwidth is-hoverable mapping-table">
       <thead>
-        <tr
-          style="
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            position: sticky;
-            top: 0;
-            z-index: 10;
-          "
-        >
-          <th
-            style="
-              font-weight: 600;
-              color: var(--text-primary);
-              border: none;
-              padding: var(--spacing-md);
-            "
-          >
-            <i
-              class="fas fa-service-stack mr-2"
-              style="color: var(--success-color)"
-            ></i>
+        <tr class="gradient-thead thead-sticky">
+          <th class="th-cell">
+            <i class="fas fa-service-stack mr-2 icon-success"></i>
             Subheading
           </th>
-          <th
-            style="
-              font-weight: 600;
-              color: var(--text-primary);
-              border: none;
-              padding: var(--spacing-md);
-            "
-          >
-            <i
-              class="fas fa-service-stack mr-2"
-              style="color: var(--success-color)"
-            ></i>
+          <th class="th-cell">
+            <i class="fas fa-service-stack mr-2 icon-success"></i>
             Source Service
           </th>
         </tr>
@@ -395,34 +265,21 @@
         <tr
           [ngClass]="{ 'is-selected': index === sourceServiceSelected }"
           (click)="selectService(index)"
-          style="cursor: pointer; transition: all 0.2s ease; font-weight: 500"
-          [style.background-color]="
-            index === sourceServiceSelected
-              ? 'rgba(99, 102, 241, 0.1)'
-              : 'transparent'
-          "
+          class="row-clickable td-bold"
+          [class.source-row--selected]="index === sourceServiceSelected"
           [style.border-left]="
             index === sourceServiceSelected
               ? '4px solid var(--primary-color)'
               : '4px solid transparent'
           "
         >
-          <td style="border: none; padding: var(--spacing-md)">
+          <td class="td-cell">
             <div class="flex items-center">
-              <div
-                class="mr-3"
-                style="
-                  width: 6px;
-                  height: 6px;
-                  background-color: var(--success-color);
-                  border-radius: 50%;
-                  opacity: 0.7;
-                "
-              ></div>
+              <div class="mr-3 status-dot status-dot--sm status-dot--success source-dot"></div>
               {{ item.subheading }}
             </div>
           </td>
-          <td style="border: none; padding: var(--spacing-md)">
+          <td class="td-cell">
             <div class="flex items-center">
               {{ item.name }}
             </div>
@@ -436,86 +293,32 @@
 <!-- Target Services Section -->
 <div class="modern-card">
   <div class="flex items-center justify-between mb-4">
-    <h3 class="title is-5 mb-0" style="color: var(--text-primary)">
-      <i class="fas fa-crosshairs mr-2" style="color: var(--info-color)"></i>
+    <h3 class="title is-5 mb-0 section-title">
+      <i class="fas fa-crosshairs mr-2 icon-info"></i>
       Available Target Services
     </h3>
-    <span class="tag is-info is-light" style="border-radius: var(--radius-sm)">
+    <span class="tag is-info is-light tag-rounded">
       {{ filteredTargetServices.length }} of
       {{ fullServiceResponse.length }} services
     </span>
   </div>
 
-  <p class="text-muted mb-4" style="font-size: 0.875rem">
+  <p class="text-muted mb-4 text-sm">
     Click on a target service to see its description below, then add it to your
     mapping configuration.
   </p>
 
   @if (sourceServiceName.length > 0 && serverName != 'Change me') {
-  <div
-    class="scrollable-table-container"
-    style="
-      max-height: 400px;
-      overflow-y: auto;
-      border-radius: var(--radius);
-      border: 1px solid var(--gray-200);
-    "
-  >
-    <table class="table is-fullwidth is-hoverable" style="margin: 0">
+  <div class="scrollable-table-container table-wrapper table-scroll">
+    <table class="table is-fullwidth is-hoverable mapping-table">
       <thead>
-        <tr
-          style="
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            position: sticky;
-            top: 0;
-            z-index: 10;
-          "
-        >
-          <th
-            style="font-weight: 600; color: var(--text-primary); border: none"
-          >
-            Section
-          </th>
-          <th
-            style="font-weight: 600; color: var(--text-primary); border: none"
-          >
-            Subsection
-          </th>
-          <th
-            style="font-weight: 600; color: var(--text-primary); border: none"
-          >
-            Target Service
-          </th>
-          <th
-            style="
-              font-weight: 600;
-              color: var(--text-primary);
-              border: none;
-              text-align: center;
-            "
-          >
-            Ports
-          </th>
-          <th
-            style="
-              font-weight: 600;
-              color: var(--text-primary);
-              border: none;
-              text-align: center;
-            "
-          >
-            Protocol
-          </th>
-          <th
-            style="
-              font-weight: 600;
-              color: var(--text-primary);
-              border: none;
-              width: 100px;
-            "
-          >
-            Action
-          </th>
+        <tr class="gradient-thead thead-sticky">
+          <th class="th-cell">Section</th>
+          <th class="th-cell">Subsection</th>
+          <th class="th-cell">Target Service</th>
+          <th class="th-cell td-center">Ports</th>
+          <th class="th-cell td-center">Protocol</th>
+          <th class="th-cell action-col">Action</th>
         </tr>
       </thead>
       <tbody>
@@ -523,84 +326,46 @@
         {
         <tr
           (click)="updateDescription(index)"
-          style="cursor: pointer; transition: all 0.2s ease"
-          onmouseover="this.style.backgroundColor='var(--gray-50)'"
-          onmouseout="this.style.backgroundColor='transparent'"
+          class="row-clickable"
         >
-          <td
-            style="border: none; padding: var(--spacing-md); font-weight: 500"
-          >
-            <span
-              class="tag is-light"
-              style="border-radius: var(--radius-sm); font-size: 0.75rem"
-            >
+          <td class="td-cell td-bold">
+            <span class="tag is-light tag-rounded text-xs">
               {{ item.subheading }}
             </span>
           </td>
-          <td style="border: none; padding: var(--spacing-md)">
+          <td class="td-cell">
             <div>
-              <div style="font-weight: 500; color: var(--text-primary)">
+              <div class="td-bold" style="color: var(--text-primary);">
                 {{ item.subheadingL2 }}
               </div>
               @if(item.subheadingL3.length > 0) {
-              <div
-                style="
-                  font-size: 0.875rem;
-                  color: var(--text-muted);
-                  margin-top: 2px;
-                "
-              >
+              <div class="subsection-detail">
                 {{ item.subheadingL3 }}
               </div>
               }
             </div>
           </td>
-          <td
-            style="
-              border: none;
-              padding: var(--spacing-md);
-              font-weight: 500;
-              color: var(--text-primary);
-            "
-          >
+          <td class="td-cell td-bold" style="color: var(--text-primary);">
             {{ item.targetService }}
           </td>
-          <td
-            style="border: none; text-align: center; padding: var(--spacing-md)"
-          >
-            <code
-              style="
-                background-color: var(--gray-100);
-                padding: 2px 6px;
-                border-radius: var(--radius-sm);
-                font-size: 0.875rem;
-                color: var(--text-primary);
-              "
-            >
+          <td class="td-cell td-center">
+            <code class="port-code">
               {{ item.port }}
             </code>
           </td>
-          <td
-            style="border: none; text-align: center; padding: var(--spacing-md)"
-          >
+          <td class="td-cell td-center">
             <span
-              class="tag"
+              class="tag tag-rounded td-bold"
               [ngClass]="item.protocol === 'TCP' ? 'is-success' : 'is-info'"
-              style="border-radius: var(--radius-sm); font-weight: 500"
             >
               {{ item.protocol }}
             </span>
           </td>
-          <td style="border: none; padding: var(--spacing-md)">
+          <td class="td-cell">
             <button
-              class="button is-primary is-small"
+              class="button is-primary is-small add-button"
               (click)="updateService(index); $event.stopPropagation()"
               [disabled]="serverName.length < 3 || repeatServerName"
-              style="
-                border-radius: var(--radius-sm);
-                font-weight: 500;
-                transition: all 0.2s ease;
-              "
               title="Add this service mapping"
             >
               <span class="icon is-small">
@@ -615,40 +380,19 @@
     </table>
   </div>
   } @else if (serverName == 'Change me') {
-  <div
-    class="has-text-centered p-6"
-    style="
-      background-color: var(--gray-50);
-      border-radius: var(--radius);
-      border: 2px dashed var(--gray-300);
-    "
-  >
-    <i class="fas fa-edit fa-3x mb-3" style="color: var(--gray-400)"></i>
-    <h4 class="title is-6" style="color: var(--text-muted)">
-      Update Server Name
-    </h4>
-    <p style="color: var(--text-muted); font-size: 0.875rem">
+  <div class="has-text-centered p-6 empty-state">
+    <i class="fas fa-edit fa-3x mb-3 icon-muted"></i>
+    <h4 class="title is-6 text-muted">Update Server Name</h4>
+    <p class="text-muted text-sm">
       Please change the server name from the default value to continue with port
       mapping configuration.
     </p>
   </div>
   } @else {
-  <div
-    class="has-text-centered p-6"
-    style="
-      background-color: var(--gray-50);
-      border-radius: var(--radius);
-      border: 2px dashed var(--gray-300);
-    "
-  >
-    <i
-      class="fas fa-hand-pointer fa-3x mb-3"
-      style="color: var(--gray-400)"
-    ></i>
-    <h4 class="title is-6" style="color: var(--text-muted)">
-      Select Source Service
-    </h4>
-    <p style="color: var(--text-muted); font-size: 0.875rem">
+  <div class="has-text-centered p-6 empty-state">
+    <i class="fas fa-hand-pointer fa-3x mb-3 icon-muted"></i>
+    <h4 class="title is-6 text-muted">Select Source Service</h4>
+    <p class="text-muted text-sm">
       Choose a source service from the list above to see available target
       services and begin mapping ports.
     </p>
@@ -659,20 +403,12 @@
 <!-- Service Description -->
 @if (selectedDescription) {
 <div class="modern-card">
-  <h4 class="title is-6 mb-3" style="color: var(--text-primary)">
-    <i class="fas fa-info-circle mr-2" style="color: var(--info-color)"></i>
+  <h4 class="title is-6 mb-3 section-title">
+    <i class="fas fa-info-circle mr-2 icon-info"></i>
     Service Description
   </h4>
-  <div
-    class="content"
-    style="
-      background-color: var(--gray-50);
-      padding: var(--spacing-lg);
-      border-radius: var(--radius);
-      border-left: 4px solid var(--info-color);
-    "
-  >
-    <p style="color: var(--text-secondary); margin: 0; line-height: 1.6">
+  <div class="content info-box description-box">
+    <p class="section-subtitle" style="line-height: 1.6;">
       {{ selectedDescription }}
     </p>
   </div>
@@ -682,141 +418,57 @@
 <!-- Current Mapped Services -->
 <div class="modern-card">
   <div class="flex items-center justify-between mb-4">
-    <h3 class="title is-5 mb-0" style="color: var(--text-primary)">
-      <i class="fas fa-sitemap mr-2" style="color: var(--success-color)"></i>
+    <h3 class="title is-5 mb-0 section-title">
+      <i class="fas fa-sitemap mr-2 icon-success"></i>
       Current Port Mappings
     </h3>
     @if (selectedPortMapping.mappedPorts.length > 0) {
-    <span
-      class="tag is-success is-light"
-      style="border-radius: var(--radius-sm)"
-    >
+    <span class="tag is-success is-light tag-rounded">
       {{ selectedPortMapping.mappedPorts.length }} mappings
     </span>
     } @else {
-    <span class="tag is-light" style="border-radius: var(--radius-sm)">
+    <span class="tag is-light tag-rounded">
       No mappings yet
     </span>
     }
   </div>
 
   @if (selectedPortMapping.mappedPorts.length > 0) {
-  <div
-    class="scrollable-table-container"
-    style="
-      border-radius: var(--radius);
-      overflow: hidden;
-      border: 1px solid var(--gray-200);
-      max-height: 500px;
-      overflow-y: auto;
-      position: relative;
-    "
-  >
-    <table class="table is-fullwidth" style="margin: 0">
-      <thead style="position: sticky; top: 0; z-index: 10;">
-        <tr
-          style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)"
-        >
-          <th
-            style="font-weight: 600; color: var(--text-primary); border: none"
-          >
-            Product
-          </th>
-          <th
-            style="font-weight: 600; color: var(--text-primary); border: none"
-          >
-            Source Server
-          </th>
-          <th
-            style="font-weight: 600; color: var(--text-primary); border: none"
-          >
-            Target Server
-          </th>
-          <th
-            style="font-weight: 600; color: var(--text-primary); border: none"
-          >
-            Source Service
-          </th>
-          <th
-            style="font-weight: 600; color: var(--text-primary); border: none"
-          >
-            Target Service
-          </th>
-          <th
-            style="
-              font-weight: 600;
-              color: var(--text-primary);
-              border: none;
-              text-align: center;
-            "
-          >
-            Ports
-          </th>
-          <th
-            style="
-              font-weight: 600;
-              color: var(--text-primary);
-              border: none;
-              text-align: center;
-            "
-          >
-            Protocol
-          </th>
-          <th
-            style="
-              font-weight: 600;
-              color: var(--text-primary);
-              border: none;
-              width: 100px;
-            "
-          >
-            Actions
-          </th>
+  <div class="scrollable-table-container table-wrapper table-scroll--lg">
+    <table class="table is-fullwidth mapping-table">
+      <thead class="thead-sticky">
+        <tr class="gradient-thead">
+          <th class="th-cell">Product</th>
+          <th class="th-cell">Source Server</th>
+          <th class="th-cell">Target Server</th>
+          <th class="th-cell">Source Service</th>
+          <th class="th-cell">Target Service</th>
+          <th class="th-cell td-center">Ports</th>
+          <th class="th-cell td-center">Protocol</th>
+          <th class="th-cell action-col">Actions</th>
         </tr>
       </thead>
       <tbody>
         @for (item of selectedPortMapping.mappedPorts; track item; let index =
         $index) {
-        <tr
-          style="transition: all 0.2s ease"
-          onmouseover="this.style.backgroundColor='var(--gray-50)'"
-          onmouseout="this.style.backgroundColor='transparent'"
-        >
-          <td style="border: none; padding: var(--spacing-md)">
-            <span
-              class="tag is-light"
-              style="border-radius: var(--radius-sm); font-size: 0.75rem"
-            >
+        <tr class="row-clickable">
+          <td class="td-cell">
+            <span class="tag is-light tag-rounded text-xs">
               {{ item.product }}
             </span>
           </td>
-          <td
-            style="border: none; padding: var(--spacing-md); font-weight: 500"
-          >
+          <td class="td-cell td-bold">
             <div class="flex items-center">
-              <div
-                class="mr-2"
-                style="
-                  width: 6px;
-                  height: 6px;
-                  background-color: var(--primary-color);
-                  border-radius: 50%;
-                "
-              ></div>
+              <div class="mr-2 status-dot status-dot--sm status-dot--primary"></div>
               {{ selectedPortMapping.sourceServer }}
             </div>
           </td>
-          <td style="border: none; padding: var(--spacing-md)">
+          <td class="td-cell">
             <div class="select is-fullwidth">
               <select
                 [(ngModel)]="item.targetServerName"
                 (change)="updateTargetPortmapping()"
-                style="
-                  border-radius: var(--radius-sm);
-                  border: 1px solid var(--gray-300);
-                  font-size: 0.875rem;
-                  font-weight: 500;
-                "
+                class="target-select"
               >
                 @for (server of servers; track server) {
                 <option>{{ server.name }}</option>
@@ -824,50 +476,29 @@
               </select>
             </div>
           </td>
-          <td
-            style="border: none; padding: var(--spacing-md); font-weight: 500"
-          >
+          <td class="td-cell td-bold">
             {{ item.sourceService }}
           </td>
-          <td
-            style="
-              border: none;
-              padding: var(--spacing-md);
-              color: var(--text-primary);
-            "
-          >
+          <td class="td-cell" style="color: var(--text-primary);">
             {{ item.targetService }}
           </td>
-          <td
-            style="border: none; text-align: center; padding: var(--spacing-md)"
-          >
-            <code
-              style="
-                background-color: var(--gray-100);
-                padding: 2px 6px;
-                border-radius: var(--radius-sm);
-                font-size: 0.875rem;
-              "
-            >
+          <td class="td-cell td-center">
+            <code class="port-code">
               {{ item.port }}
             </code>
           </td>
-          <td
-            style="border: none; text-align: center; padding: var(--spacing-md)"
-          >
+          <td class="td-cell td-center">
             <span
-              class="tag"
+              class="tag tag-rounded td-bold"
               [ngClass]="item.protocol === 'TCP' ? 'is-success' : 'is-info'"
-              style="border-radius: var(--radius-sm); font-weight: 500"
             >
               {{ item.protocol }}
             </span>
           </td>
-          <td style="border: none; padding: var(--spacing-md)">
+          <td class="td-cell">
             <button
               class="button is-danger is-small"
               (click)="removeService(index)"
-              style="border-radius: var(--radius-sm); font-weight: 500"
               title="Remove this mapping"
             >
               <span class="icon is-small">
@@ -881,19 +512,10 @@
     </table>
   </div>
   } @else {
-  <div
-    class="has-text-centered p-6"
-    style="
-      background-color: var(--gray-50);
-      border-radius: var(--radius);
-      border: 2px dashed var(--gray-300);
-    "
-  >
-    <i class="fas fa-sitemap fa-3x mb-3" style="color: var(--gray-400)"></i>
-    <h4 class="title is-6" style="color: var(--text-muted)">
-      No Port Mappings
-    </h4>
-    <p style="color: var(--text-muted); font-size: 0.875rem">
+  <div class="has-text-centered p-6 empty-state">
+    <i class="fas fa-sitemap fa-3x mb-3 icon-muted"></i>
+    <h4 class="title is-6 text-muted">No Port Mappings</h4>
+    <p class="text-muted text-sm">
       Start adding port mappings by selecting services from the target services
       table above.
     </p>
@@ -901,24 +523,15 @@
   }
 </div>
 <!-- Action Buttons -->
-<div class="modern-card" style="border-top: 3px solid var(--primary-color)">
+<div class="modern-card action-card">
   <div class="flex justify-between items-center">
     <div class="flex items-center">
-      <div
-        class="mr-4"
-        style="
-          width: 12px;
-          height: 12px;
-          background-color: var(--success-color);
-          border-radius: 50%;
-          animation: pulse 2s infinite;
-        "
-      ></div>
+      <div class="mr-4 status-dot status-dot--lg status-dot--success pulse-dot"></div>
       <div>
-        <h6 class="title is-7 mb-1" style="color: var(--text-primary)">
+        <h6 class="title is-7 mb-1 section-title">
           Ready to Save
         </h6>
-        <p style="color: var(--text-muted); font-size: 0.875rem; margin: 0">
+        <p class="text-muted text-sm" style="margin: 0;">
           @if (selectedPortMapping.mappedPorts.length > 0) { Configuration
           complete with {{ selectedPortMapping.mappedPorts.length }} port
           mapping(s) } @else { Add some port mappings before saving your
@@ -929,19 +542,11 @@
 
     <div class="buttons">
       <button
-        class="button is-success"
+        class="button is-success btn-bold hover-lift"
         [disabled]="
           selectedPortMapping.mappedPorts.length == 0 || repeatServerName
         "
         (click)="saveMapping()"
-        style="
-          border-radius: var(--radius);
-          font-weight: 600;
-          padding: 0 var(--spacing-xl);
-          transition: all 0.2s ease;
-        "
-        onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='var(--shadow)'"
-        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'"
       >
         <span class="icon">
           <i class="fas fa-save"></i>
@@ -949,16 +554,8 @@
         <span>Save Configuration</span>
       </button>
       <button
-        class="button is-light"
+        class="button is-light back-to-dashboard"
         [routerLink]="['/']"
-        style="
-          border-radius: var(--radius);
-          font-weight: 500;
-          border: 2px solid var(--gray-300);
-          transition: all 0.2s ease;
-        "
-        onmouseover="this.style.backgroundColor='var(--gray-100)'"
-        onmouseout="this.style.backgroundColor='white'"
       >
         <span class="icon">
           <i class="fas fa-arrow-left"></i>
@@ -968,17 +565,3 @@
     </div>
   </div>
 </div>
-
-<style>
-  @keyframes pulse {
-    0% {
-      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
-    }
-    70% {
-      box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
-    }
-    100% {
-      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
-    }
-  }
-</style>
