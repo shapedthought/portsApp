@@ -40,13 +40,16 @@ export class HomeComponent {
   isUploading: boolean = false;
 
   submitModal() {
-    this.dataService.addNewServer(this.serverName);
+    const newServerName = this.serverName;
+    this.dataService.addNewServer(newServerName);
     this.closeModal();
+    this.serverName = '';
+    this.repeatServerName = false;
     this.portsMapped = this.dataService.getMappedPorts();
     this.messageService.add({
       severity: 'success',
       summary: 'Server Added',
-      detail: `"${this.serverName}" has been added successfully.`
+      detail: `"${newServerName}" has been added successfully.`
     });
   }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -20,6 +20,8 @@ interface FlatMapping extends MappedPorts {
     styleUrl: './report.component.css'
 })
 export class ReportComponent implements OnInit {
+
+  @ViewChild('dt') dt!: Table;
 
   portMapping: PortMapping[] = [];
   flatMappings: FlatMapping[] = [];
@@ -78,9 +80,10 @@ export class ReportComponent implements OnInit {
     input.value = '';
   }
 
-  // Export report data
+  // Export report data (uses filtered data if filters are active)
   exportReport(): void {
-    const csvData = this.convertToCSV(this.flatMappings);
+    const dataToExport = this.dt?.filteredValue ?? this.flatMappings;
+    const csvData = this.convertToCSV(dataToExport);
     this.downloadCSV(csvData, 'port-mappings-report.csv');
   }
 
