@@ -34,6 +34,7 @@ export class HomeComponent {
 
   showMappedPorts: ShowMappedPorts[] = [];
   showMappedInboundPorts: ShowMappedPorts[] = [];
+  isDownloading: boolean = false;
 
   submitModal() {
     this.dataService.addNewServer(this.serverName);
@@ -130,12 +131,8 @@ export class HomeComponent {
   }
 
   getExcelData(): void {
-    const originalText = 'Export Excel';
-    const button = event?.target as HTMLElement;
-    if (button) {
-      button.innerHTML =
-        '<span class="loading-spinner mr-2"></span><span>Generating...</span>';
-    }
+    if (this.isDownloading) return;
+    this.isDownloading = true;
 
     this.httpService.generateExcelData(this.portsMapped).subscribe({
       next: (data) => {
@@ -146,26 +143,11 @@ export class HomeComponent {
           urlUpdated = `${this.portsServer}${data.file_url.split('.com/')[1]}`;
         }
         window.open(urlUpdated);
-
-        if (button) {
-          button.innerHTML =
-            '<span class="icon"><i class="fas fa-check"></i></span><span>Downloaded!</span>';
-          setTimeout(() => {
-            button.innerHTML =
-              '<span class="icon"><i class="fas fa-file-excel"></i></span><span>Export Excel</span>';
-          }, 2000);
-        }
+        this.isDownloading = false;
       },
       error: (error) => {
         console.error('Error generating Excel:', error);
-        if (button) {
-          button.innerHTML =
-            '<span class="icon"><i class="fas fa-exclamation-triangle"></i></span><span>Error</span>';
-          setTimeout(() => {
-            button.innerHTML =
-              '<span class="icon"><i class="fas fa-file-excel"></i></span><span>Export Excel</span>';
-          }, 2000);
-        }
+        this.isDownloading = false;
       },
     });
   }
@@ -217,7 +199,24 @@ export class HomeComponent {
       reader.onload = (e) => {
         try {
           const result = e.target?.result as string;
-          this.portsMapped = JSON.parse(result);
+          const parsed = JSON.parse(result);
+
+          if (!Array.isArray(parsed)) {
+            throw new Error('Expected an array of port mappings');
+          }
+          for (const item of parsed) {
+            if (item.id == null || typeof item.id !== 'number') {
+              throw new Error('Each item must have a numeric "id"');
+            }
+            if (!item.sourceServer || typeof item.sourceServer !== 'string') {
+              throw new Error('Each item must have a "sourceServer" string');
+            }
+            if (!Array.isArray(item.mappedPorts)) {
+              throw new Error('Each item must have a "mappedPorts" array');
+            }
+          }
+
+          this.portsMapped = parsed;
           this.dataService.uploadPortMapping(this.portsMapped);
 
           // Show success state

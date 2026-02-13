@@ -28,14 +28,18 @@
       <button
         class="button is-success"
         (click)="getExcelData()"
-        [disabled]="checkMappedPortLength()"
+        [disabled]="checkMappedPortLength() || isDownloading"
         style="border-radius: var(--radius); font-weight: 500;"
       >
         <span class="icon">
-          <i class="fas fa-file-excel"></i>
+          @if (isDownloading) {
+            <div class="loading-spinner"></div>
+          } @else {
+            <i class="fas fa-file-excel"></i>
+          }
         </span>
-        <span class="is-hidden-mobile">Export Excel</span>
-        <span class="is-hidden-tablet">Excel</span>
+        <span class="is-hidden-mobile">{{ isDownloading ? 'Generating...' : 'Export Excel' }}</span>
+        <span class="is-hidden-tablet">{{ isDownloading ? '...' : 'Excel' }}</span>
       </button>
       <button
         class="button is-primary"

@@ -9,6 +9,7 @@ import {
   Server,
   Service,
   TargetServices,
+  createDefaultPortMapping,
 } from '../services';
 import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -37,20 +38,7 @@ export class MappingComponent {
   targetServices: TargetServices[] = [];
   mappedServices: MappedServices[] = [];
   portMapping: PortMapping[] = [];
-  selectedPortMapping: PortMapping = {
-    id: 1,
-    sourceServer: '',
-    totalMappedPorts: 0,
-    totalMappedInboundPorts: 0,
-    totalMappedServers: 0,
-    mappedPorts: [],
-    allInboundPortsTcp: [],
-    allInboundPortsUdp: [],
-    allOutboundPortsTcp: [],
-    allOutboundPortsUdp: [],
-    mappedPortsByProtocol: [],
-    mappedPortsByProtocolInbound: [],
-  };
+  selectedPortMapping: PortMapping = createDefaultPortMapping(1, '');
   repeatServerName: boolean = false;
   selectedDescription = 'Click on The Service to see the description';
 
