@@ -27,8 +27,6 @@ export class HomeComponent {
   codeStringUdp = '';
   codeStringInboundTcp = '';
   codeStringInboundUdp = '';
-  showTable: boolean = true;
-
   portsMapped: PortMapping[] = [];
   portsDisplay: MappedPorts[] = [];
   inboundPortsDisplay: MappedPorts[] = [];
@@ -104,7 +102,7 @@ export class HomeComponent {
       : '';
   }
 
-  cleaAllMappedPorts(): void {
+  clearAllMappedPorts(): void {
     Swal.fire({
       title: 'Are you sure you want to delete all mappings?',
       text: 'This cannot be undone.',
@@ -119,17 +117,6 @@ export class HomeComponent {
       }
     });
   }
-
-  // checkForMappedPorts(index: number): boolean {
-  //   if (
-  //     this.portsMapped[index].mappedPorts.length > 0 ||
-  //     this.portsMapped.length > 2
-  //   ) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }
 
   checkMappedPortLength(): boolean {
     const mappedPortsTotal = this.portsMapped.flatMap(
@@ -205,7 +192,7 @@ export class HomeComponent {
           '<span class="icon"><i class="fas fa-check"></i></span><span>Saved!</span>';
         setTimeout(() => {
           button.innerHTML =
-            '<span class="icon"><i class="fas fa-download"></i></span><span>Save Config</span>';
+            '<span class="icon"><i class="fas fa-download"></i></span><span>Export JSON</span>';
         }, 2000);
       }
     }, 500); // Small delay to show loading state

@@ -368,8 +368,6 @@ export class DiagramComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     
     this.mermaidSyntax = this.generateMermaidSyntax();
     
-    console.log('Generated Mermaid syntax:', this.mermaidSyntax);
-    
     try {
       // Create a unique ID for this diagram
       const diagramId = `mermaid-diagram-${Date.now()}`;
@@ -381,7 +379,6 @@ export class DiagramComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       if (this.mermaidContainer?.nativeElement) {
         // Clear any existing content and add the new diagram
         this.mermaidContainer.nativeElement.innerHTML = svg;
-        console.log('Diagram rendered successfully');
       } else {
         console.error('Container became unavailable during rendering');
       }
@@ -457,7 +454,6 @@ export class DiagramComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       const svgData = new XMLSerializer().serializeToString(svgClone);
       const blob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
       this.downloadFile(blob, 'network-diagram.svg');
-      console.log('SVG export completed successfully');
     } catch (error) {
       console.error('SVG export error:', error);
       alert('Failed to export SVG. Please try again.');
@@ -519,7 +515,6 @@ export class DiagramComponent implements OnInit, OnChanges, AfterViewInit, OnDes
           canvas.toBlob((blob) => {
             if (blob) {
               this.downloadFile(blob, 'network-diagram.png');
-              console.log('PNG export completed successfully');
             } else {
               alert('Failed to create PNG file.');
             }
@@ -554,10 +549,7 @@ export class DiagramComponent implements OnInit, OnChanges, AfterViewInit, OnDes
   }
 
   copyMermaidCode(): void {
-    navigator.clipboard.writeText(this.mermaidSyntax).then(() => {
-      // Could add a success notification here
-      console.log('Mermaid code copied to clipboard');
-    });
+    navigator.clipboard.writeText(this.mermaidSyntax);
   }
 
   private downloadFile(blob: Blob, filename: string): void {

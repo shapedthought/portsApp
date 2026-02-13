@@ -46,8 +46,8 @@
         <span class="icon">
           <i class="fas fa-download"></i>
         </span>
-        <span class="is-hidden-mobile">Save Config</span>
-        <span class="is-hidden-tablet">Save</span>
+        <span class="is-hidden-mobile">Export JSON</span>
+        <span class="is-hidden-tablet">JSON</span>
       </button>
       <div class="file is-warning">
         <label class="file-label">
@@ -55,7 +55,7 @@
             class="file-input"
             type="file"
             name="resume"
-            accept="json"
+            accept=".json"
             (change)="uploadPortMappings($event)"
           />
           <span class="file-cta" style="border-radius: var(--radius); font-weight: 500;">
@@ -89,7 +89,7 @@
           </span>
           <span>Add Server</span>
         </button>
-        <button class="button is-danger is-light is-small" (click)="cleaAllMappedPorts()" style="border-radius: var(--radius); font-weight: 500;">
+        <button class="button is-danger is-light is-small" (click)="clearAllMappedPorts()" style="border-radius: var(--radius); font-weight: 500;">
           <span class="icon is-small">
             <i class="fas fa-trash-alt"></i>
           </span>
@@ -194,7 +194,7 @@
               <button
                 class="button is-danger is-light is-small"
                 (click)="deleteServer(index); $event.stopPropagation()"
-                [disabled]="this.portsMapped.length <= 2"
+                [disabled]="portsMapped.length <= 2"
                 style="border-radius: var(--radius-sm);"
                 title="Delete Server"
               >
@@ -424,7 +424,7 @@
           </span>
         </div>
         
-        @if (this.repeatServerName) {
+        @if (repeatServerName) {
         <div class="mt-2 p-3" style="
           background-color: #fef2f2; 
           border: 1px solid #fecaca; 
@@ -477,7 +477,7 @@
           [disabled]="
             serverName.length < 4 ||
             serverName.length > 20 ||
-            this.repeatServerName
+            repeatServerName
           "
           style="
             border-radius: var(--radius); 

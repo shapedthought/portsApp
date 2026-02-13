@@ -25,16 +25,6 @@ export interface MappedServices {
   protocol: string;
 }
 
-// export interface PortMapping {
-//     id: number;
-//     targetServer: string;
-//     service: string;
-//     ports: string;
-//     totalMappedPorts: number;
-//     totalMappedServers: number;
-//     protocol: string;
-// }
-
 export interface SourceServiceRequest {
   productName: string;
 }
