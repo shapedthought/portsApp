@@ -137,7 +137,7 @@
         @for (item of portsMapped; track item.id; let index = $index) {
         <tr
           class="server-row"
-          [ngClass]="{ 'is-selected server-row-selected': selectedCardIndex === index }"
+          [ngClass]="{ 'server-row-selected': selectedCardIndex === index }"
           (click)="loadMappedPorts(index)"
           style="cursor: pointer; transition: all 0.2s ease;"
         >
