@@ -110,3 +110,20 @@ export interface Server {
   id: number;
   name: string;
 }
+
+export function createDefaultPortMapping(id: number, name: string): PortMapping {
+  return {
+    id,
+    sourceServer: name,
+    totalMappedPorts: 0,
+    totalMappedInboundPorts: 0,
+    totalMappedServers: 0,
+    mappedPorts: [],
+    allInboundPortsTcp: [],
+    allInboundPortsUdp: [],
+    allOutboundPortsTcp: [],
+    allOutboundPortsUdp: [],
+    mappedPortsByProtocol: [],
+    mappedPortsByProtocolInbound: [],
+  };
+}

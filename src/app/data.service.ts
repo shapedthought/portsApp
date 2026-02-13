@@ -1,39 +1,13 @@
 import { Injectable } from '@angular/core';
-import { MappedPorts, PortMapping, Server } from './services';
+import { MappedPorts, PortMapping, Server, createDefaultPortMapping } from './services';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DataService {
   mappedPorts: PortMapping[] = [
-    {
-      id: 0,
-      sourceServer: 'Server 1',
-      totalMappedPorts: 0,
-      totalMappedInboundPorts: 0,
-      totalMappedServers: 0,
-      mappedPorts: [],
-      allInboundPortsTcp: [],
-      allInboundPortsUdp: [],
-      allOutboundPortsTcp: [],
-      allOutboundPortsUdp: [],
-      mappedPortsByProtocol: [],
-      mappedPortsByProtocolInbound: [],
-    },
-    {
-      id: 1,
-      sourceServer: 'Server 2',
-      totalMappedPorts: 0,
-      totalMappedInboundPorts: 0,
-      totalMappedServers: 0,
-      mappedPorts: [],
-      allInboundPortsTcp: [],
-      allInboundPortsUdp: [],
-      allOutboundPortsTcp: [],
-      allOutboundPortsUdp: [],
-      mappedPortsByProtocol: [],
-      mappedPortsByProtocolInbound: [],
-    },
+    createDefaultPortMapping(0, 'Server 1'),
+    createDefaultPortMapping(1, 'Server 2'),
   ];
   selectedService: string = 'VB365';
 
@@ -59,34 +33,8 @@ export class DataService {
   deleteAll(): void {
     localStorage.removeItem('portMapping');
     this.mappedPorts = [
-      {
-        id: 0,
-        sourceServer: 'Server 1',
-        totalMappedPorts: 0,
-        totalMappedInboundPorts: 0,
-        totalMappedServers: 0,
-        mappedPorts: [],
-        allInboundPortsTcp: [],
-        allInboundPortsUdp: [],
-        allOutboundPortsTcp: [],
-        allOutboundPortsUdp: [],
-        mappedPortsByProtocol: [],
-        mappedPortsByProtocolInbound: [],
-      },
-      {
-        id: 1,
-        sourceServer: 'Server 2',
-        totalMappedPorts: 0,
-        totalMappedInboundPorts: 0,
-        totalMappedServers: 0,
-        mappedPorts: [],
-        allInboundPortsTcp: [],
-        allInboundPortsUdp: [],
-        allOutboundPortsTcp: [],
-        allOutboundPortsUdp: [],
-        mappedPortsByProtocol: [],
-        mappedPortsByProtocolInbound: [],
-      },
+      createDefaultPortMapping(0, 'Server 1'),
+      createDefaultPortMapping(1, 'Server 2'),
     ];
   }
 
@@ -111,21 +59,8 @@ export class DataService {
 
   // Add a new server to the port mapping
   addNewServer(serverName: string): PortMapping[] {
-    let id = this.mappedPorts.length;
-    this.mappedPorts.push({
-      id: id,
-      sourceServer: serverName,
-      totalMappedPorts: 0,
-      totalMappedInboundPorts: 0,
-      totalMappedServers: 0,
-      mappedPorts: [],
-      allOutboundPortsTcp: [],
-      allOutboundPortsUdp: [],
-      allInboundPortsTcp: [],
-      allInboundPortsUdp: [],
-      mappedPortsByProtocol: [],
-      mappedPortsByProtocolInbound: [],
-    });
+    const id = this.mappedPorts.length;
+    this.mappedPorts.push(createDefaultPortMapping(id, serverName));
     this.savePortMapping(this.mappedPorts);
     return this.mappedPorts;
   }
