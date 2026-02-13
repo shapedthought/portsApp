@@ -122,7 +122,6 @@ export class MappingComponent {
         this.sourceServiceSelected = index;
         this.updateAvailableCategories();
         this.applyFilters();
-        console.log(this.fullServiceResponse);
       });
   }
 
@@ -130,7 +129,7 @@ export class MappingComponent {
     this.selectedDescription = this.fullServiceResponse[index].description;
   }
 
-  splitAndAddComman(port: string): string {
+  splitAndAddComma(port: string): string {
     if (port.includes(',')) {
       return port;
     } else if (port.includes('(')) {
@@ -170,7 +169,7 @@ export class MappingComponent {
       return;
     }
     // Add the service to the mapped ports in the mapping component
-    const checkedPort = this.splitAndAddComman(
+    const checkedPort = this.splitAndAddComma(
       this.fullServiceResponse[index].port
     );
     let mappedPorts: MappedPorts = {
