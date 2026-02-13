@@ -10,11 +10,6 @@
   border-radius: 8px;
 }
 
-/* Back button */
-.back-button {
-  border: 2px solid var(--gray-300);
-}
-
 /* Target server help text */
 .target-help {
   color: var(--text-muted);
