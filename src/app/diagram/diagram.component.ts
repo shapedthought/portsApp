@@ -1,5 +1,4 @@
 import { Component, Input, OnInit, OnDestroy, OnChanges, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import mermaid from 'mermaid';
@@ -25,7 +24,7 @@ interface DiagramData {
 
 @Component({
   selector: 'app-diagram',
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   templateUrl: './diagram.component.html',
   styleUrl: './diagram.component.css',
   encapsulation: ViewEncapsulation.None

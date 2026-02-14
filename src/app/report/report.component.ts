@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DataService } from '../data.service';
 import { PortMapping, MappedPorts } from '../services';
@@ -14,7 +13,7 @@ interface FlatMapping extends MappedPorts {
 
 @Component({
     selector: 'app-report',
-    imports: [RouterLink, CommonModule, FormsModule, DiagramComponent, TableModule, InputText],
+    imports: [RouterLink, FormsModule, DiagramComponent, TableModule, InputText],
     providers: [],
     templateUrl: './report.component.html',
     styleUrl: './report.component.css'

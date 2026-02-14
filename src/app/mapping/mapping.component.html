@@ -175,21 +175,24 @@
                   <div class="buttons has-addons is-small">
                     <button
                       class="button protocol-btn--left"
-                      [ngClass]="protocolFilter === 'ALL' ? 'is-primary' : 'is-light'"
+                      [class.is-primary]="protocolFilter === 'ALL'"
+                      [class.is-light]="protocolFilter !== 'ALL'"
                       (click)="onProtocolFilterChange('ALL')"
                     >
                       All
                     </button>
                     <button
                       class="button"
-                      [ngClass]="protocolFilter === 'TCP' ? 'is-success' : 'is-light'"
+                      [class.is-success]="protocolFilter === 'TCP'"
+                      [class.is-light]="protocolFilter !== 'TCP'"
                       (click)="onProtocolFilterChange('TCP')"
                     >
                       TCP
                     </button>
                     <button
                       class="button protocol-btn--right"
-                      [ngClass]="protocolFilter === 'UDP' ? 'is-info' : 'is-light'"
+                      [class.is-info]="protocolFilter === 'UDP'"
+                      [class.is-light]="protocolFilter !== 'UDP'"
                       (click)="onProtocolFilterChange('UDP')"
                     >
                       UDP
@@ -280,7 +283,7 @@
                     @for (item of filteredSourceServices; track item.id; let index = $index)
                     {
                     <tr
-                      [ngClass]="{ 'is-selected': index === sourceServiceSelected }"
+                      [class.is-selected]="index === sourceServiceSelected"
                       (click)="selectService(index)"
                       class="row-clickable td-bold"
                       [class.source-row--selected]="index === sourceServiceSelected"
@@ -370,7 +373,8 @@
                       <td class="td-cell td-center">
                         <span
                           class="tag tag-rounded td-bold"
-                          [ngClass]="item.protocol === 'TCP' ? 'is-success' : 'is-info'"
+                          [class.is-success]="item.protocol === 'TCP'"
+                        [class.is-info]="item.protocol !== 'TCP'"
                         >
                           {{ item.protocol }}
                         </span>
@@ -541,7 +545,8 @@
                     <td class="td-cell td-center">
                       <span
                         class="tag tag-rounded td-bold"
-                        [ngClass]="item.protocol === 'TCP' ? 'is-success' : 'is-info'"
+                        [class.is-success]="item.protocol === 'TCP'"
+                        [class.is-info]="item.protocol !== 'TCP'"
                       >
                         {{ item.protocol }}
                       </span>
