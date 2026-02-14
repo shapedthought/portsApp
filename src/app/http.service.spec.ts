@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { vi } from 'vitest';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { HttpService } from './http.service';
@@ -130,7 +131,7 @@ describe('HttpService', () => {
 
   describe('error handling', () => {
     it('should handle network error (status 0)', () => {
-      spyOn(console, 'error');
+      vi.spyOn(console, 'error').mockImplementation(() => {});
 
       service.getApps().subscribe({
         error: (err) => {
@@ -143,7 +144,7 @@ describe('HttpService', () => {
     });
 
     it('should handle HTTP 500 server error', () => {
-      spyOn(console, 'error');
+      vi.spyOn(console, 'error').mockImplementation(() => {});
 
       service.getApps().subscribe({
         error: (err) => {
@@ -156,7 +157,7 @@ describe('HttpService', () => {
     });
 
     it('should handle HTTP 404 not found', () => {
-      spyOn(console, 'error');
+      vi.spyOn(console, 'error').mockImplementation(() => {});
 
       service.getSource({ productName: 'NonExistent' }).subscribe({
         error: (err) => {
