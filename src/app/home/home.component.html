@@ -41,14 +41,18 @@
       </button>
       <button
         class="button is-primary"
-        [disabled]="checkMappedPortLength()"
+        [disabled]="checkMappedPortLength() || isSaving"
         (click)="savePortMappings()"
       >
         <span class="icon">
-          <i class="fas fa-download"></i>
+          @if (isSaving) {
+            <div class="loading-spinner"></div>
+          } @else {
+            <i class="fas fa-download"></i>
+          }
         </span>
-        <span class="is-hidden-mobile">Export JSON</span>
-        <span class="is-hidden-tablet">JSON</span>
+        <span class="is-hidden-mobile">{{ isSaving ? 'Saving...' : 'Export JSON' }}</span>
+        <span class="is-hidden-tablet">{{ isSaving ? '...' : 'JSON' }}</span>
       </button>
       <div class="file is-warning">
         <label class="file-label">
@@ -58,13 +62,18 @@
             name="resume"
             accept=".json"
             (change)="uploadPortMappings($event)"
+            [disabled]="isUploading"
           />
           <span class="file-cta file-cta--styled">
             <span class="file-icon">
-              <i class="fas fa-upload"></i>
+              @if (isUploading) {
+                <div class="loading-spinner"></div>
+              } @else {
+                <i class="fas fa-upload"></i>
+              }
             </span>
-            <span class="file-label is-hidden-mobile">Upload Config</span>
-            <span class="file-label is-hidden-tablet">Upload</span>
+            <span class="file-label is-hidden-mobile">{{ isUploading ? 'Uploading...' : 'Upload Config' }}</span>
+            <span class="file-label is-hidden-tablet">{{ isUploading ? '...' : 'Upload' }}</span>
           </span>
         </label>
       </div>
@@ -336,88 +345,81 @@
   </div>
 </div>
 }
-<!-- Modern Modal for Adding Server -->
-<div class="modal" [ngClass]="{ 'is-active': isModalActive }" style="z-index: 1000;">
-  <div class="modal-background modal-backdrop" (click)="closeModal()"></div>
-  <div class="modal-card modal-card--styled">
-    <header class="modal-card-head modal-header">
-      <div class="flex items-center">
-        <i class="fas fa-server mr-3 icon-accent"></i>
-        <p class="modal-card-title modal-title">Add New Server</p>
+<!-- PrimeNG Dialog for Adding Server -->
+<p-dialog
+    header="Add New Server"
+    [(visible)]="isModalActive"
+    [modal]="true"
+    [draggable]="false"
+    [resizable]="false"
+    [style]="{ width: '500px' }"
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    styleClass="server-dialog"
+>
+    <div class="field">
+      <label class="label field-label">
+        <i class="fas fa-tag mr-2 icon-primary"></i>
+        Server Name
+      </label>
+      <div class="control has-icons-left">
+        <input
+          class="input input-styled"
+          type="text"
+          [(ngModel)]="serverName"
+          placeholder="Enter server name (4-20 characters)"
+          (input)="checkServerName(serverName)"
+        />
+        <span class="icon is-left icon-muted">
+          <i class="fas fa-server"></i>
+        </span>
       </div>
-      <button class="delete modal-close-btn" aria-label="close" (click)="closeModal()"></button>
-    </header>
 
-    <section class="modal-card-body modal-body">
-      <div class="field">
-        <label class="label field-label">
-          <i class="fas fa-tag mr-2 icon-primary"></i>
-          Server Name
-        </label>
-        <div class="control has-icons-left">
-          <input
-            class="input input-styled"
-            type="text"
-            [(ngModel)]="serverName"
-            placeholder="Enter server name (4-20 characters)"
-            (change)="checkServerName(serverName)"
-          />
-          <span class="icon is-left icon-muted">
-            <i class="fas fa-server"></i>
-          </span>
+      @if (repeatServerName) {
+      <div class="mt-2 p-3 validation-error">
+        <div class="flex items-center">
+          <i class="fas fa-exclamation-triangle mr-2"></i>
+          <span class="td-bold">Server name already exists! Please choose a different name.</span>
         </div>
-
-        @if (repeatServerName) {
-        <div class="mt-2 p-3 validation-error">
-          <div class="flex items-center">
-            <i class="fas fa-exclamation-triangle mr-2"></i>
-            <span class="td-bold">Server name already exists! Please choose a different name.</span>
-          </div>
-        </div>
-        } @else if (serverName.length < 4 || serverName.length > 20) {
-        <div class="mt-2 p-3 validation-warning">
-          <div class="flex items-center">
-            <i class="fas fa-info-circle mr-2"></i>
-            <span>Server name must be between 4 and 20 characters</span>
-          </div>
-        </div>
-        } @else if (serverName.length >= 4) {
-        <div class="mt-2 p-3 validation-success">
-          <div class="flex items-center">
-            <i class="fas fa-check-circle mr-2"></i>
-            <span>Server name looks good!</span>
-          </div>
-        </div>
-        }
       </div>
-    </section>
+      } @else if (serverName.length < 4 || serverName.length > 20) {
+      <div class="mt-2 p-3 validation-warning">
+        <div class="flex items-center">
+          <i class="fas fa-info-circle mr-2"></i>
+          <span>Server name must be between 4 and 20 characters</span>
+        </div>
+      </div>
+      } @else if (serverName.length >= 4) {
+      <div class="mt-2 p-3 validation-success">
+        <div class="flex items-center">
+          <i class="fas fa-check-circle mr-2"></i>
+          <span>Server name looks good!</span>
+        </div>
+      </div>
+      }
+    </div>
 
-    <footer class="modal-card-foot modal-footer">
-      <div class="buttons is-right" style="margin: 0;">
-        <button
-          class="button is-success btn-bold hover-lift"
-          (click)="submitModal()"
-          [disabled]="
-            serverName.length < 4 ||
-            serverName.length > 20 ||
-            repeatServerName
-          "
-        >
-          <span class="icon">
-            <i class="fas fa-plus"></i>
-          </span>
-          <span>Add Server</span>
-        </button>
+    <ng-template #footer>
+      <div class="flex justify-end gap-2">
         <button
           class="button cancel-button hover-bg-light"
           (click)="closeModal()"
         >
           Cancel
         </button>
+        <button
+          class="button is-success btn-bold hover-lift"
+          (click)="submitModal()"
+          [disabled]="serverName.length < 4 || serverName.length > 20 || repeatServerName"
+        >
+          <span class="icon">
+            <i class="fas fa-plus"></i>
+          </span>
+          <span>Add Server</span>
+        </button>
       </div>
-    </footer>
-  </div>
-</div>
+    </ng-template>
+</p-dialog>
 
 <!-- Modern Footer -->
 <footer class="page-footer">

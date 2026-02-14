@@ -5,14 +5,15 @@ import { MappedPorts, PortMapping, ShowMappedPorts } from '../services';
 import { DataService } from '../data.service';
 import { HttpService } from '../http.service';
 import { FormsModule } from '@angular/forms';
-import Swal from 'sweetalert2';
+import { MessageService, ConfirmationService } from 'primeng/api';
+import { Dialog } from 'primeng/dialog';
 import { v4 as uuidv4 } from 'uuid';
 import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, Dialog],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
@@ -35,10 +36,21 @@ export class HomeComponent {
   showMappedPorts: ShowMappedPorts[] = [];
   showMappedInboundPorts: ShowMappedPorts[] = [];
   isDownloading: boolean = false;
+  isSaving: boolean = false;
+  isUploading: boolean = false;
 
   submitModal() {
-    this.dataService.addNewServer(this.serverName);
+    const newServerName = this.serverName;
+    this.dataService.addNewServer(newServerName);
     this.closeModal();
+    this.serverName = '';
+    this.repeatServerName = false;
+    this.portsMapped = this.dataService.getMappedPorts();
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Server Added',
+      detail: `"${newServerName}" has been added successfully.`
+    });
   }
 
   closeModal() {
@@ -66,17 +78,24 @@ export class HomeComponent {
   }
 
   deleteServer(index: number): void {
-    Swal.fire({
-      title: 'Are you sure you want to delete this server?',
-      text: 'This will also delete all mapped ports to this server.',
-      showDenyButton: true,
-      confirmButtonText: `Yes`,
-      denyButtonText: `No`,
-    }).then((result) => {
-      if (result.isConfirmed) {
+    const serverName = this.portsMapped[index].sourceServer;
+    this.confirmationService.confirm({
+      header: 'Delete Server',
+      message: 'Are you sure you want to delete this server? This will also delete all mapped ports to this server.',
+      icon: 'fas fa-exclamation-triangle',
+      acceptLabel: 'Yes',
+      rejectLabel: 'No',
+      acceptButtonStyleClass: 'p-button-danger',
+      accept: () => {
         this.dataService.deleteServer(index);
         this.portsMapped = this.dataService.getMappedPorts();
         this.portsDisplay = [];
+        this.selectedCardIndex = null;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Server Deleted',
+          detail: `"${serverName}" has been removed.`
+        });
       }
     });
   }
@@ -104,17 +123,23 @@ export class HomeComponent {
   }
 
   clearAllMappedPorts(): void {
-    Swal.fire({
-      title: 'Are you sure you want to delete all mappings?',
-      text: 'This cannot be undone.',
-      showDenyButton: true,
-      confirmButtonText: `Yes`,
-      denyButtonText: `No`,
-    }).then((result) => {
-      if (result.isConfirmed) {
+    this.confirmationService.confirm({
+      header: 'Clear All Mappings',
+      message: 'Are you sure you want to delete all mappings? This cannot be undone.',
+      icon: 'fas fa-exclamation-triangle',
+      acceptLabel: 'Yes',
+      rejectLabel: 'No',
+      acceptButtonStyleClass: 'p-button-danger',
+      accept: () => {
         this.dataService.deleteAll();
         this.portsMapped = this.dataService.getMappedPorts();
         this.portsDisplay = [];
+        this.selectedCardIndex = null;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'All Cleared',
+          detail: 'All port mappings have been removed.'
+        });
       }
     });
   }
@@ -144,20 +169,25 @@ export class HomeComponent {
         }
         window.open(urlUpdated);
         this.isDownloading = false;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Export Complete',
+          detail: 'Excel file has been generated and opened.'
+        });
       },
-      error: (error) => {
-        console.error('Error generating Excel:', error);
+      error: () => {
         this.isDownloading = false;
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Export Failed',
+          detail: 'Failed to generate Excel file. Please try again.'
+        });
       },
     });
   }
 
   savePortMappings(): void {
-    const button = event?.target as HTMLElement;
-    if (button) {
-      button.innerHTML =
-        '<span class="loading-spinner mr-2"></span><span>Saving...</span>';
-    }
+    this.isSaving = true;
 
     setTimeout(() => {
       const dataStr = JSON.stringify(this.portsMapped, null, 2);
@@ -168,32 +198,21 @@ export class HomeComponent {
       a.download = `port-mappings-${uuidv4()}.json`;
       a.click();
       window.URL.revokeObjectURL(url);
-
-      if (button) {
-        button.innerHTML =
-          '<span class="icon"><i class="fas fa-check"></i></span><span>Saved!</span>';
-        setTimeout(() => {
-          button.innerHTML =
-            '<span class="icon"><i class="fas fa-download"></i></span><span>Export JSON</span>';
-        }, 2000);
-      }
-    }, 500); // Small delay to show loading state
+      this.isSaving = false;
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Export Complete',
+        detail: 'JSON configuration file has been downloaded.'
+      });
+    }, 500);
   }
 
   uploadPortMappings(event: Event): void {
     const input = event.target as HTMLInputElement;
-    const fileLabel = input
-      .closest('.file')
-      ?.querySelector('.file-label') as HTMLElement;
 
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
-
-      // Show loading state
-      if (fileLabel) {
-        fileLabel.innerHTML =
-          '<span class="file-icon"><div class="loading-spinner"></div></span><span class="file-label">Uploading...</span>';
-      }
+      this.isUploading = true;
 
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -218,31 +237,20 @@ export class HomeComponent {
 
           this.portsMapped = parsed;
           this.dataService.uploadPortMapping(this.portsMapped);
-
-          // Show success state
-          if (fileLabel) {
-            fileLabel.innerHTML =
-              '<span class="file-icon"><i class="fas fa-check"></i></span><span class="file-label">Uploaded!</span>';
-            setTimeout(() => {
-              fileLabel.innerHTML =
-                '<span class="file-icon"><i class="fas fa-upload"></i></span><span class="file-label">Upload Config</span>';
-            }, 2000);
-          }
-
-          // Reset file input
+          this.isUploading = false;
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Upload Successful',
+            detail: `Loaded ${parsed.length} server configurations from file.`
+          });
           input.value = '';
         } catch (error) {
-          console.error('Error parsing JSON:', error);
-
-          // Show error state
-          if (fileLabel) {
-            fileLabel.innerHTML =
-              '<span class="file-icon"><i class="fas fa-exclamation-triangle"></i></span><span class="file-label">Error!</span>';
-            setTimeout(() => {
-              fileLabel.innerHTML =
-                '<span class="file-icon"><i class="fas fa-upload"></i></span><span class="file-label">Upload Config</span>';
-            }, 2000);
-          }
+          this.isUploading = false;
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Upload Failed',
+            detail: error instanceof Error ? error.message : 'Failed to parse JSON file.'
+          });
         }
       };
       reader.readAsText(file);
@@ -251,7 +259,9 @@ export class HomeComponent {
 
   constructor(
     private dataService: DataService,
-    private httpService: HttpService
+    private httpService: HttpService,
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService
   ) {}
 
   ngOnInit(): void {

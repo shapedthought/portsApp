@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, OnDestroy, OnChanges, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MessageService } from 'primeng/api';
 import mermaid from 'mermaid';
 import { PortMapping, MappedPorts } from '../services';
 
@@ -37,7 +38,7 @@ export class DiagramComponent implements OnInit, OnChanges, AfterViewInit, OnDes
   mermaidSyntax: string = '';
   isLoading: boolean = false;
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(private cdr: ChangeDetectorRef, private messageService: MessageService) {}
   
   // Display options
   layoutDirection: 'LR' | 'TD' | 'RL' | 'BT' = 'LR';
@@ -424,13 +425,13 @@ export class DiagramComponent implements OnInit, OnChanges, AfterViewInit, OnDes
   exportSVG(): void {
     try {
       if (!this.mermaidContainer?.nativeElement) {
-        alert('Diagram not ready for export. Please wait for diagram to load.');
+        this.messageService.add({ severity: 'warn', summary: 'Not Ready', detail: 'Diagram not ready for export. Please wait for it to load.' });
         return;
       }
 
       const svgElement = this.mermaidContainer.nativeElement.querySelector('svg');
       if (!svgElement) {
-        alert('No diagram found to export. Please generate a diagram first.');
+        this.messageService.add({ severity: 'warn', summary: 'No Diagram', detail: 'No diagram found to export. Please generate a diagram first.' });
         return;
       }
 
@@ -456,20 +457,20 @@ export class DiagramComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       this.downloadFile(blob, 'network-diagram.svg');
     } catch (error) {
       console.error('SVG export error:', error);
-      alert('Failed to export SVG. Please try again.');
+      this.messageService.add({ severity: 'error', summary: 'Export Failed', detail: 'Failed to export SVG. Please try again.' });
     }
   }
 
   exportPNG(): void {
     try {
       if (!this.mermaidContainer?.nativeElement) {
-        alert('Diagram not ready for export. Please wait for diagram to load.');
+        this.messageService.add({ severity: 'warn', summary: 'Not Ready', detail: 'Diagram not ready for export. Please wait for it to load.' });
         return;
       }
 
       const svgElement = this.mermaidContainer.nativeElement.querySelector('svg');
       if (!svgElement) {
-        alert('No diagram found to export. Please generate a diagram first.');
+        this.messageService.add({ severity: 'warn', summary: 'No Diagram', detail: 'No diagram found to export. Please generate a diagram first.' });
         return;
       }
 
@@ -516,7 +517,7 @@ export class DiagramComponent implements OnInit, OnChanges, AfterViewInit, OnDes
             if (blob) {
               this.downloadFile(blob, 'network-diagram.png');
             } else {
-              alert('Failed to create PNG file.');
+              this.messageService.add({ severity: 'error', summary: 'Export Failed', detail: 'Failed to create PNG file.' });
             }
           }, 'image/png', 0.95);
           
@@ -538,13 +539,13 @@ export class DiagramComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       
     } catch (error) {
       console.error('PNG export error:', error);
-      alert('Failed to export PNG. Please try again.');
+      this.messageService.add({ severity: 'error', summary: 'Export Failed', detail: 'Failed to export PNG. Please try again.' });
     }
   }
 
   // Fallback PNG export method
   private fallbackPNGExport(svgElement: SVGElement): void {
-    alert('PNG export failed due to browser security restrictions. Please try exporting as SVG instead, which can be converted to PNG using external tools.');
+    this.messageService.add({ severity: 'warn', summary: 'PNG Unavailable', detail: 'PNG export failed due to browser security restrictions. Try exporting as SVG instead.' });
     console.warn('PNG export fallback: Suggesting SVG export instead');
   }
 

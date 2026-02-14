@@ -1,44 +1,37 @@
 /* Tab links */
-.tab-list {
-  margin: 0;
-}
-
-.tab-link {
-  transition: all 0.2s ease;
-}
-
-.tab-link--left {
-  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
-}
-
-.tab-link--right {
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-}
-
-/* Report table */
-.report-table {
-  margin: 0;
-}
-
-/* Alternating row colors */
-.report-row {
-  transition: all 0.2s ease;
-  border-bottom: 1px solid var(--gray-100);
-}
-
-.report-row--alt {
-  background-color: rgba(248, 250, 252, 0.5);
-}
+.tab-list { margin: 0; }
+.tab-link { transition: all 0.2s ease; }
+.tab-link--left { border-radius: var(--radius-sm) 0 0 var(--radius-sm); }
+.tab-link--right { border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
 
 /* Protocol count */
-.protocol-count {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--primary-color);
-}
+.protocol-count { font-size: 1.25rem; font-weight: 700; color: var(--primary-color); }
 
 /* Server activity list */
-.server-activity-list {
-  max-height: 120px;
-  overflow-y: auto;
+.server-activity-list { max-height: 120px; overflow-y: auto; }
+
+/* PrimeNG DataTable overrides */
+:host ::ng-deep .p-datatable .p-datatable-header {
+  background: var(--bg-primary);
+  border: none;
+  padding: var(--spacing-md);
+}
+:host ::ng-deep .p-datatable .p-datatable-thead > tr > th {
+  background-color: var(--gray-50);
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.8125rem;
+  border-bottom: 1px solid var(--gray-200);
+  padding: var(--spacing-sm) var(--spacing-md);
+}
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-bottom: 1px solid var(--gray-100);
+}
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr:hover {
+  background-color: var(--gray-50);
+}
+:host ::ng-deep .p-paginator {
+  border: none;
+  padding: var(--spacing-md);
 }

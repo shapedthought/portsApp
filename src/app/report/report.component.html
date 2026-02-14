@@ -21,12 +21,12 @@
       </div>
     </div>
 
-    <!-- Report Statistics and View Toggle -->
+    <!-- Report Statistics -->
     <div class="flex justify-between items-center">
       <div class="flex gap-4">
         <div class="has-text-centered stat-card">
           <div class="stat-value" style="color: var(--primary-color);">
-            {{ getTotalMappings() }}
+            {{ flatMappings.length }}
           </div>
           <div class="stat-label">
             Total Mappings
@@ -42,7 +42,7 @@
         </div>
         <div class="has-text-centered stat-card">
           <div class="stat-value" style="color: var(--info-color);">
-            {{ getUniqueProtocols().length }}
+            {{ uniqueProtocols.length }}
           </div>
           <div class="stat-label">
             Protocols
@@ -95,183 +95,184 @@
 <!-- Network Diagram View -->
 <app-diagram [portMappings]="portMapping"></app-diagram>
 } @else {
-<!-- Table View with Filters and Search -->
-<div class="modern-card">
-  <div class="flex items-center justify-between mb-4">
-    <h3 class="title is-5 mb-0 section-title">
-      <i class="fas fa-filter mr-2 icon-secondary"></i>
-      Filter & Search
-    </h3>
-    <button
-      class="button is-light is-small"
-      (click)="clearFilters()"
-    >
-      <span class="icon is-small">
-        <i class="fas fa-times"></i>
-      </span>
-      <span>Clear Filters</span>
-    </button>
-  </div>
-
-  <div class="columns">
-    <div class="column">
-      <div class="field">
-        <label class="label is-small field-label--sm">Search</label>
-        <div class="control has-icons-left">
-          <input
-            class="input is-small"
-            type="text"
-            [(ngModel)]="searchTerm"
-            placeholder="Search servers, services, or ports..."
-          />
-          <span class="icon is-left is-small">
-            <i class="fas fa-search icon-muted"></i>
-          </span>
-        </div>
-      </div>
-    </div>
-    <div class="column">
-      <div class="field">
-        <label class="label is-small field-label--sm">Source Server</label>
-        <div class="select is-fullwidth is-small">
-          <select [(ngModel)]="selectedSourceServer">
-            <option value="">All Servers</option>
-            @for (server of getUniqueSourceServers(); track server) {
-            <option [value]="server">{{ server }}</option>
-            }
-          </select>
-        </div>
-      </div>
-    </div>
-    <div class="column">
-      <div class="field">
-        <label class="label is-small field-label--sm">Protocol</label>
-        <div class="select is-fullwidth is-small">
-          <select [(ngModel)]="selectedProtocol">
-            <option value="">All Protocols</option>
-            @for (protocol of getUniqueProtocols(); track protocol) {
-            <option [value]="protocol">{{ protocol }}</option>
-            }
-          </select>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Main Report Table -->
+<!-- Table View with PrimeNG DataTable -->
 <div class="modern-card">
   <div class="flex items-center justify-between mb-4">
     <h3 class="title is-5 mb-0 section-title">
       <i class="fas fa-table mr-2 icon-success"></i>
       Port Mapping Details
     </h3>
-    <div class="flex items-center gap-2">
-      <span class="tag is-light tag-rounded">
-        {{ getFilteredMappings().length }} of {{ getTotalMappings() }} mappings
+    <button
+      class="button is-info is-small"
+      (click)="exportReport()"
+      title="Export data as CSV"
+    >
+      <span class="icon is-small">
+        <i class="fas fa-download"></i>
       </span>
-      <button
-        class="button is-info is-small"
-        (click)="exportReport()"
-        title="Export filtered data"
-      >
-        <span class="icon is-small">
-          <i class="fas fa-download"></i>
-        </span>
-        <span>Export</span>
-      </button>
-    </div>
+      <span>Export CSV</span>
+    </button>
   </div>
 
-  @if (getFilteredMappings().length > 0) {
-  <div class="table-wrapper table-scroll--xl">
-    <table class="table is-fullwidth is-hoverable report-table">
-      <thead class="thead-sticky">
-        <tr class="gradient-thead">
-          <th class="th-cell">
+  <p-table
+    #dt
+    [value]="flatMappings"
+    [paginator]="true"
+    [rows]="15"
+    [rowsPerPageOptions]="[10, 15, 25, 50]"
+    [globalFilterFields]="['sourceServer', 'targetServerName', 'product', 'sourceService', 'targetService', 'port', 'protocol']"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} mappings"
+    styleClass="p-datatable-striped"
+    sortMode="multiple"
+    [filterDelay]="300"
+  >
+    <ng-template #caption>
+      <div class="flex items-center justify-between">
+        <span class="text-sm text-muted">
+          <i class="fas fa-filter mr-1 icon-secondary"></i>
+          Filter & Search
+        </span>
+        <div class="flex items-center gap-2">
+          <span class="p-input-icon-left">
+            <i class="fas fa-search"></i>
+            <input
+              #globalFilterInput
+              pInputText
+              type="text"
+              placeholder="Search all columns..."
+              (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+              class="p-inputtext-sm"
+            />
+          </span>
+          <button
+            class="button is-light is-small"
+            (click)="clearGlobalFilter(dt, globalFilterInput)"
+          >
+            <span class="icon is-small"><i class="fas fa-times"></i></span>
+            <span>Clear</span>
+          </button>
+        </div>
+      </div>
+    </ng-template>
+
+    <ng-template #header>
+      <tr>
+        <th pSortableColumn="sourceServer">
+          <div class="flex items-center">
             <i class="fas fa-server mr-1 icon-primary"></i>
             Source Server
-          </th>
-          <th class="th-cell">
+            <p-sortIcon field="sourceServer" />
+          </div>
+        </th>
+        <th pSortableColumn="targetServerName">
+          <div class="flex items-center">
             <i class="fas fa-bullseye mr-1 icon-warning"></i>
             Target Server
-          </th>
-          <th class="th-cell">
+            <p-sortIcon field="targetServerName" />
+          </div>
+        </th>
+        <th pSortableColumn="product">
+          <div class="flex items-center">
             <i class="fas fa-cube mr-1 icon-info"></i>
             Product
-          </th>
-          <th class="th-cell">
+            <p-sortIcon field="product" />
+          </div>
+        </th>
+        <th pSortableColumn="sourceService">
+          <div class="flex items-center">
             <i class="fas fa-cog mr-1 icon-success"></i>
             Source Service
-          </th>
-          <th class="th-cell">
+            <p-sortIcon field="sourceService" />
+          </div>
+        </th>
+        <th pSortableColumn="targetService">
+          <div class="flex items-center">
             <i class="fas fa-crosshairs mr-1 icon-secondary"></i>
             Target Service
-          </th>
-          <th class="th-cell td-center">
+            <p-sortIcon field="targetService" />
+          </div>
+        </th>
+        <th pSortableColumn="port">
+          <div class="flex items-center justify-center">
             <i class="fas fa-plug mr-1 icon-error"></i>
             Ports
-          </th>
-          <th class="th-cell td-center">
+            <p-sortIcon field="port" />
+          </div>
+        </th>
+        <th pSortableColumn="protocol">
+          <div class="flex items-center justify-center">
             <i class="fas fa-shield-alt mr-1 icon-primary"></i>
             Protocol
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        @for(item of getFilteredMappings(); track $index; let index = $index) {
-        <tr class="report-row row-clickable"
-          [class.report-row--alt]="index % 2 !== 0"
-        >
-          <td class="td-cell td-bold">
-            <div class="flex items-center">
-              <div class="mr-3 status-dot status-dot--primary"></div>
-              {{ item.sourceServer }}
-            </div>
-          </td>
-          <td class="td-cell td-bold">
-            <div class="flex items-center">
-              <div class="mr-3 status-dot status-dot--warning"></div>
-              {{ item.targetServerName }}
-            </div>
-          </td>
-          <td class="td-cell">
-            <span class="tag is-light tag-rounded text-xs">
-              {{ item.product }}
-            </span>
-          </td>
-          <td class="td-cell" style="color: var(--text-primary);">
-            {{ item.sourceService }}
-          </td>
-          <td class="td-cell" style="color: var(--text-primary);">
-            {{ item.targetService }}
-          </td>
-          <td class="td-cell td-center">
-            <code class="port-code port-code--lg">
-              {{ item.port }}
-            </code>
-          </td>
-          <td class="td-cell td-center">
-            <span class="tag tag-rounded"
-              [ngClass]="item.protocol === 'TCP' ? 'is-success' : 'is-info'"
-              style="font-weight: 600;">
-              {{ item.protocol }}
-            </span>
-          </td>
-        </tr>
-        }
-      </tbody>
-    </table>
-  </div>
-  } @else {
-  <div class="has-text-centered p-6 empty-state">
-    <i class="fas fa-search fa-3x mb-3 icon-muted"></i>
-    <h4 class="title is-6 text-muted">No Matching Results</h4>
-    <p class="text-muted text-sm">
-      No port mappings match your current search and filter criteria. Try adjusting your filters or clearing them to see all mappings.
-    </p>
-  </div>
-  }
+            <p-sortIcon field="protocol" />
+          </div>
+        </th>
+      </tr>
+      <tr>
+        <th><input pInputText type="text" (input)="dt.filter($any($event.target).value, 'sourceServer', 'contains')" placeholder="Filter..." class="p-inputtext-sm" style="width: 100%;" /></th>
+        <th><input pInputText type="text" (input)="dt.filter($any($event.target).value, 'targetServerName', 'contains')" placeholder="Filter..." class="p-inputtext-sm" style="width: 100%;" /></th>
+        <th><input pInputText type="text" (input)="dt.filter($any($event.target).value, 'product', 'contains')" placeholder="Filter..." class="p-inputtext-sm" style="width: 100%;" /></th>
+        <th><input pInputText type="text" (input)="dt.filter($any($event.target).value, 'sourceService', 'contains')" placeholder="Filter..." class="p-inputtext-sm" style="width: 100%;" /></th>
+        <th><input pInputText type="text" (input)="dt.filter($any($event.target).value, 'targetService', 'contains')" placeholder="Filter..." class="p-inputtext-sm" style="width: 100%;" /></th>
+        <th><input pInputText type="text" (input)="dt.filter($any($event.target).value, 'port', 'contains')" placeholder="Filter..." class="p-inputtext-sm" style="width: 100%;" /></th>
+        <th><input pInputText type="text" (input)="dt.filter($any($event.target).value, 'protocol', 'contains')" placeholder="Filter..." class="p-inputtext-sm" style="width: 100%;" /></th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-mapping>
+      <tr>
+        <td>
+          <div class="flex items-center">
+            <div class="mr-3 status-dot status-dot--primary"></div>
+            <span class="td-bold">{{ mapping.sourceServer }}</span>
+          </div>
+        </td>
+        <td>
+          <div class="flex items-center">
+            <div class="mr-3 status-dot status-dot--warning"></div>
+            <span class="td-bold">{{ mapping.targetServerName }}</span>
+          </div>
+        </td>
+        <td>
+          <span class="tag is-light tag-rounded text-xs">
+            {{ mapping.product }}
+          </span>
+        </td>
+        <td style="color: var(--text-primary);">
+          {{ mapping.sourceService }}
+        </td>
+        <td style="color: var(--text-primary);">
+          {{ mapping.targetService }}
+        </td>
+        <td class="td-center">
+          <code class="port-code port-code--lg">
+            {{ mapping.port }}
+          </code>
+        </td>
+        <td class="td-center">
+          <span class="tag tag-rounded"
+            [ngClass]="mapping.protocol === 'TCP' ? 'is-success' : 'is-info'"
+            style="font-weight: 600;">
+            {{ mapping.protocol }}
+          </span>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template #emptymessage>
+      <tr>
+        <td colspan="7">
+          <div class="has-text-centered p-6 empty-state" style="border: none;">
+            <i class="fas fa-search fa-3x mb-3 icon-muted"></i>
+            <h4 class="title is-6 text-muted">No Matching Results</h4>
+            <p class="text-muted text-sm">
+              No port mappings match your current search and filter criteria.
+            </p>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
 </div>
 
 <!-- Summary Cards -->
@@ -284,10 +285,10 @@
         Protocol Distribution
       </h4>
       <div class="flex gap-4">
-        @for (protocol of getUniqueProtocols(); track protocol) {
+        @for (protocol of uniqueProtocols; track protocol) {
         <div class="has-text-centered" style="flex: 1;">
           <div class="protocol-count">
-            {{ getProtocolCount(protocol) }}
+            {{ protocolCounts.get(protocol) }}
           </div>
           <div class="text-sm text-muted">
             {{ protocol }} connections
@@ -304,11 +305,11 @@
         Server Activity
       </h4>
       <div class="server-activity-list">
-        @for (server of getUniqueSourceServers(); track server) {
+        @for (server of uniqueServers; track server) {
         <div class="flex justify-between items-center mb-2">
           <span class="text-sm" style="color: var(--text-primary);">{{ server }}</span>
           <span class="tag is-small is-light tag-rounded">
-            {{ getServerMappingCount(server) }} mappings
+            {{ serverMappingCounts.get(server) }} mappings
           </span>
         </div>
         }
