@@ -88,7 +88,7 @@ export class MappingComponent {
 
   // Custom validator for unique server name
   uniqueServerNameValidator(control: AbstractControl): ValidationErrors | null {
-    if (!this.selectedPortMapping) return null;
+    if (!this.dataService || !this.selectedPortMapping) return null;
     const name = control.value;
     const servers = this.dataService.servers();
     const isDuplicate = servers.some(
