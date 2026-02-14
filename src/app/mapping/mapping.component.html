@@ -21,547 +21,608 @@
   </div>
 </div>
 
-<!-- Configuration Panel -->
+<!-- PrimeNG Stepper -->
 <div class="modern-card">
-  <h3 class="title is-5 mb-4 section-title">
-    <i class="fas fa-sliders-h mr-2 icon-secondary"></i>
-    Server Configuration
-  </h3>
+  <p-stepper [(value)]="activeStep" [linear]="true">
+    <p-step-list>
+      <p-step [value]="1">Server &amp; Product</p-step>
+      <p-step [value]="2" [disabled]="!canProceedToStep2">Service Selection</p-step>
+      <p-step [value]="3" [disabled]="!canProceedToStep3">Review</p-step>
+    </p-step-list>
 
-  <div class="columns">
-    <!-- Server Name Field -->
-    <div class="column">
-      <div class="field">
-        <label class="label field-label">
-          <i class="fas fa-server mr-2 icon-primary"></i>
-          Server Name
-        </label>
-        <div class="control has-icons-left">
-          <input
-            class="input input-styled"
-            type="text"
-            [(ngModel)]="serverName"
-            (blur)="updateName(serverName)"
-            placeholder="Enter server name"
-          />
-          <span class="icon is-left icon-muted">
-            <i class="fas fa-server"></i>
-          </span>
-        </div>
-        @if (repeatServerName) {
-        <div class="mt-2 p-2 validation-error text-sm">
-          <i class="fas fa-exclamation-triangle mr-1"></i>
-          No duplicate server names allowed!
-        </div>
-        }
-      </div>
-    </div>
+    <p-step-panels>
+      <!-- Step 1: Server & Product -->
+      <p-step-panel [value]="1">
+        <ng-template #content let-activateCallback="activateCallback">
+          <div class="step-content">
+            <h3 class="title is-5 mb-4 section-title">
+              <i class="fas fa-sliders-h mr-2 icon-secondary"></i>
+              Server Configuration
+            </h3>
 
-    <!-- Product Selection -->
-    <div class="column">
-      <div class="field">
-        <label class="label field-label">
-          <i class="fas fa-cube mr-2 icon-info"></i>
-          Product
-        </label>
-        <div class="control has-icons-left">
-          <div class="select is-fullwidth">
-            <select
-              [(ngModel)]="selectedProduct"
-              (change)="changeApp(selectedProduct)"
-              class="input-styled"
-            >
-              @for (item of products; track item.id) {
-              <option>{{ item.productName }}</option>
-              }
-            </select>
-          </div>
-          <span class="icon is-left icon-muted">
-            <i class="fas fa-cube"></i>
-          </span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Target Server Selection -->
-    <div class="column">
-      <div class="field">
-        <label class="label field-label">
-          <i class="fas fa-bullseye mr-2 icon-warning"></i>
-          Target Server
-        </label>
-        <div class="control has-icons-left">
-          <div class="select is-fullwidth">
-            <select
-              [(ngModel)]="selectedTargetServer"
-              class="input-styled"
-            >
-              @for (item of servers; track item.id) {
-              <option>{{ item.name }}</option>
-              }
-            </select>
-          </div>
-          <span class="icon is-left icon-muted">
-            <i class="fas fa-bullseye"></i>
-          </span>
-        </div>
-        <p class="help target-help">
-          <strong>Selected:</strong> {{ selectedTargetServer }}
-        </p>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- Service Filtering Section -->
-<div class="modern-card">
-  <div class="flex items-center justify-between mb-4">
-    <h3 class="title is-5 mb-0 section-title">
-      <i class="fas fa-filter mr-2 icon-secondary"></i>
-      Filter Services
-    </h3>
-    <div class="filter-results text-sm text-muted">
-      Showing {{ filteredSourceServices.length }} source,
-      {{ filteredTargetServices.length }} target services
-    </div>
-  </div>
-
-  <!-- Filter Controls -->
-  <div class="columns is-mobile">
-    <!-- Global Search -->
-    <div class="column is-4">
-      <div class="field">
-        <label class="label is-small field-label--sm">Filter</label>
-        <div class="control has-icons-left">
-          <input
-            class="input is-small input-styled"
-            type="text"
-            [(ngModel)]="searchTerm"
-            (input)="onSearchChange($event)"
-            placeholder="Search services..."
-          />
-          <span class="icon is-left is-small">
-            <i class="fas fa-search icon-muted"></i>
-          </span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Protocol Filters -->
-    <div class="column is-3">
-      <div class="field">
-        <label class="label is-small field-label--sm">Protocol</label>
-        <div class="buttons has-addons is-small">
-          <button
-            class="button protocol-btn--left"
-            [ngClass]="protocolFilter === 'ALL' ? 'is-primary' : 'is-light'"
-            (click)="onProtocolFilterChange('ALL')"
-          >
-            All
-          </button>
-          <button
-            class="button"
-            [ngClass]="protocolFilter === 'TCP' ? 'is-success' : 'is-light'"
-            (click)="onProtocolFilterChange('TCP')"
-          >
-            TCP
-          </button>
-          <button
-            class="button protocol-btn--right"
-            [ngClass]="protocolFilter === 'UDP' ? 'is-info' : 'is-light'"
-            (click)="onProtocolFilterChange('UDP')"
-          >
-            UDP
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Category Filter -->
-    <div class="column is-3">
-      <div class="field">
-        <label class="label is-small field-label--sm">Category</label>
-        <div class="select is-fullwidth is-small">
-          <select
-            [(ngModel)]="categoryFilter"
-            (change)="onCategoryFilterChange($event)"
-          >
-            <option value="">All Categories</option>
-            @for (category of availableCategories; track category) {
-            <option [value]="category">{{ category }}</option>
-            }
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <!-- Clear Filters -->
-    <div class="column is-2">
-      <div class="field clear-filters-field">
-        <button
-          class="button is-light is-small is-fullwidth"
-          (click)="clearAllFilters()"
-          [disabled]="!hasActiveFilters()"
-        >
-          <span class="icon is-small">
-            <i class="fas fa-times"></i>
-          </span>
-          <span>Clear</span>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Active Filters Display -->
-  @if (hasActiveFilters()) {
-  <div class="active-filters mb-3">
-    <span class="active-filters-label">Active filters:</span>
-    @for (filter of getActiveFilters(); track filter.key) {
-    <span class="tag is-primary is-light is-small mr-1 mb-1 tag-rounded">
-      {{ filter.label }}
-      <button
-        class="delete is-small ml-1"
-        (click)="removeFilter(filter.key)"
-      ></button>
-    </span>
-    }
-  </div>
-  }
-</div>
-
-<!-- Source Services Section -->
-<div class="modern-card">
-  <div class="flex items-center justify-between mb-4">
-    <h3 class="title is-5 mb-0 section-title">
-      <i class="fas fa-list-ul mr-2 icon-success"></i>
-      Source Services for {{ selectedProduct }}
-    </h3>
-    <span class="tag is-light tag-rounded">
-      {{ filteredSourceServices.length }} of
-      {{ sourceServices.length }} services
-    </span>
-  </div>
-
-  <p class="text-muted mb-4 text-sm">
-    Select a source service to view available target services and ports
-  </p>
-
-  <div class="scrollable-table-container table-wrapper table-scroll--sm">
-    <table class="table is-fullwidth is-hoverable mapping-table">
-      <thead>
-        <tr class="gradient-thead thead-sticky">
-          <th class="th-cell">
-            <i class="fas fa-service-stack mr-2 icon-success"></i>
-            Subheading
-          </th>
-          <th class="th-cell">
-            <i class="fas fa-service-stack mr-2 icon-success"></i>
-            Source Service
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (item of filteredSourceServices; track item.id; let index = $index)
-        {
-        <tr
-          [ngClass]="{ 'is-selected': index === sourceServiceSelected }"
-          (click)="selectService(index)"
-          class="row-clickable td-bold"
-          [class.source-row--selected]="index === sourceServiceSelected"
-          [style.border-left]="
-            index === sourceServiceSelected
-              ? '4px solid var(--primary-color)'
-              : '4px solid transparent'
-          "
-        >
-          <td class="td-cell">
-            <div class="flex items-center">
-              <div class="mr-3 status-dot status-dot--sm status-dot--success source-dot"></div>
-              {{ item.subheading }}
-            </div>
-          </td>
-          <td class="td-cell">
-            <div class="flex items-center">
-              {{ item.name }}
-            </div>
-          </td>
-        </tr>
-        }
-      </tbody>
-    </table>
-  </div>
-</div>
-<!-- Target Services Section -->
-<div class="modern-card">
-  <div class="flex items-center justify-between mb-4">
-    <h3 class="title is-5 mb-0 section-title">
-      <i class="fas fa-crosshairs mr-2 icon-info"></i>
-      Available Target Services
-    </h3>
-    <span class="tag is-info is-light tag-rounded">
-      {{ filteredTargetServices.length }} of
-      {{ fullServiceResponse.length }} services
-    </span>
-  </div>
-
-  <p class="text-muted mb-4 text-sm">
-    Click on a target service to see its description below, then add it to your
-    mapping configuration.
-  </p>
-
-  @if (sourceServiceName.length > 0 && serverName != 'Change me') {
-  <div class="scrollable-table-container table-wrapper table-scroll">
-    <table class="table is-fullwidth is-hoverable mapping-table">
-      <thead>
-        <tr class="gradient-thead thead-sticky">
-          <th class="th-cell">Section</th>
-          <th class="th-cell">Subsection</th>
-          <th class="th-cell">Target Service</th>
-          <th class="th-cell td-center">Ports</th>
-          <th class="th-cell td-center">Protocol</th>
-          <th class="th-cell action-col">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (item of filteredTargetServices; track item.id; let index = $index)
-        {
-        <tr
-          (click)="updateDescription(index)"
-          class="row-clickable"
-        >
-          <td class="td-cell td-bold">
-            <span class="tag is-light tag-rounded text-xs">
-              {{ item.subheading }}
-            </span>
-          </td>
-          <td class="td-cell">
-            <div>
-              <div class="td-bold" style="color: var(--text-primary);">
-                {{ item.subheadingL2 }}
+            <div class="columns">
+              <!-- Server Name Field -->
+              <div class="column">
+                <div class="field">
+                  <label class="label field-label">
+                    <i class="fas fa-server mr-2 icon-primary"></i>
+                    Server Name
+                  </label>
+                  <div class="control has-icons-left">
+                    <input
+                      class="input input-styled"
+                      type="text"
+                      [formControl]="serverForm.controls.serverName"
+                      (blur)="updateName()"
+                      placeholder="Enter server name"
+                    />
+                    <span class="icon is-left icon-muted">
+                      <i class="fas fa-server"></i>
+                    </span>
+                  </div>
+                  @if (serverForm.controls.serverName.hasError('required') && serverForm.controls.serverName.touched) {
+                  <div class="mt-2 p-2 validation-error text-sm">
+                    <i class="fas fa-exclamation-triangle mr-1"></i>
+                    Server name is required
+                  </div>
+                  } @else if (serverForm.controls.serverName.hasError('uniqueName') && serverForm.controls.serverName.touched) {
+                  <div class="mt-2 p-2 validation-error text-sm">
+                    <i class="fas fa-exclamation-triangle mr-1"></i>
+                    No duplicate server names allowed!
+                  </div>
+                  } @else if (serverForm.controls.serverName.hasError('minlength') && serverForm.controls.serverName.touched) {
+                  <div class="mt-2 p-2 validation-error text-sm">
+                    <i class="fas fa-exclamation-triangle mr-1"></i>
+                    Server name must be at least 3 characters
+                  </div>
+                  } @else if (serverForm.controls.serverName.hasError('maxlength') && serverForm.controls.serverName.touched) {
+                  <div class="mt-2 p-2 validation-error text-sm">
+                    <i class="fas fa-exclamation-triangle mr-1"></i>
+                    Server name must be at most 20 characters
+                  </div>
+                  }
+                </div>
               </div>
-              @if(item.subheadingL3.length > 0) {
-              <div class="subsection-detail">
-                {{ item.subheadingL3 }}
+
+              <!-- Product Selection -->
+              <div class="column">
+                <div class="field">
+                  <label class="label field-label">
+                    <i class="fas fa-cube mr-2 icon-info"></i>
+                    Product
+                  </label>
+                  <div class="control has-icons-left">
+                    <div class="select is-fullwidth">
+                      <select
+                        [formControl]="serverForm.controls.selectedProduct"
+                        (change)="changeApp()"
+                        class="input-styled"
+                      >
+                        @for (item of products; track item.id) {
+                        <option>{{ item.productName }}</option>
+                        }
+                      </select>
+                    </div>
+                    <span class="icon is-left icon-muted">
+                      <i class="fas fa-cube"></i>
+                    </span>
+                  </div>
+                </div>
               </div>
-              }
             </div>
-          </td>
-          <td class="td-cell td-bold" style="color: var(--text-primary);">
-            {{ item.targetService }}
-          </td>
-          <td class="td-cell td-center">
-            <code class="port-code">
-              {{ item.port }}
-            </code>
-          </td>
-          <td class="td-cell td-center">
-            <span
-              class="tag tag-rounded td-bold"
-              [ngClass]="item.protocol === 'TCP' ? 'is-success' : 'is-info'"
-            >
-              {{ item.protocol }}
-            </span>
-          </td>
-          <td class="td-cell">
-            <button
-              class="button is-primary is-small add-button"
-              (click)="updateService(index); $event.stopPropagation()"
-              [disabled]="serverName.length < 3 || repeatServerName"
-              title="Add this service mapping"
-            >
-              <span class="icon is-small">
-                <i class="fas fa-plus"></i>
-              </span>
-              <span>Add</span>
-            </button>
-          </td>
-        </tr>
-        }
-      </tbody>
-    </table>
-  </div>
-  } @else if (serverName == 'Change me') {
-  <div class="has-text-centered p-6 empty-state">
-    <i class="fas fa-edit fa-3x mb-3 icon-muted"></i>
-    <h4 class="title is-6 text-muted">Update Server Name</h4>
-    <p class="text-muted text-sm">
-      Please change the server name from the default value to continue with port
-      mapping configuration.
-    </p>
-  </div>
-  } @else {
-  <div class="has-text-centered p-6 empty-state">
-    <i class="fas fa-hand-pointer fa-3x mb-3 icon-muted"></i>
-    <h4 class="title is-6 text-muted">Select Source Service</h4>
-    <p class="text-muted text-sm">
-      Choose a source service from the list above to see available target
-      services and begin mapping ports.
-    </p>
-  </div>
-  }
-</div>
 
-<!-- Service Description -->
-@if (selectedDescription) {
-<div class="modern-card">
-  <h4 class="title is-6 mb-3 section-title">
-    <i class="fas fa-info-circle mr-2 icon-info"></i>
-    Service Description
-  </h4>
-  <div class="content info-box description-box">
-    <p class="section-subtitle" style="line-height: 1.6;">
-      {{ selectedDescription }}
-    </p>
-  </div>
-</div>
-}
+            <p class="text-muted text-sm mt-2">
+              Target server is selected per-service in Step 2.
+            </p>
 
-<!-- Current Mapped Services -->
-<div class="modern-card">
-  <div class="flex items-center justify-between mb-4">
-    <h3 class="title is-5 mb-0 section-title">
-      <i class="fas fa-sitemap mr-2 icon-success"></i>
-      Current Port Mappings
-    </h3>
-    @if (selectedPortMapping.mappedPorts.length > 0) {
-    <span class="tag is-success is-light tag-rounded">
-      {{ selectedPortMapping.mappedPorts.length }} mappings
-    </span>
-    } @else {
-    <span class="tag is-light tag-rounded">
-      No mappings yet
-    </span>
-    }
-  </div>
-
-  @if (selectedPortMapping.mappedPorts.length > 0) {
-  <div class="scrollable-table-container table-wrapper table-scroll--lg">
-    <table class="table is-fullwidth mapping-table">
-      <thead class="thead-sticky">
-        <tr class="gradient-thead">
-          <th class="th-cell">Product</th>
-          <th class="th-cell">Source Server</th>
-          <th class="th-cell">Target Server</th>
-          <th class="th-cell">Source Service</th>
-          <th class="th-cell">Target Service</th>
-          <th class="th-cell td-center">Ports</th>
-          <th class="th-cell td-center">Protocol</th>
-          <th class="th-cell action-col">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (item of selectedPortMapping.mappedPorts; track item; let index =
-        $index) {
-        <tr class="row-clickable">
-          <td class="td-cell">
-            <span class="tag is-light tag-rounded text-xs">
-              {{ item.product }}
-            </span>
-          </td>
-          <td class="td-cell td-bold">
-            <div class="flex items-center">
-              <div class="mr-2 status-dot status-dot--sm status-dot--primary"></div>
-              {{ selectedPortMapping.sourceServer }}
-            </div>
-          </td>
-          <td class="td-cell">
-            <div class="select is-fullwidth">
-              <select
-                [(ngModel)]="item.targetServerName"
-                (change)="updateTargetPortmapping()"
-                class="target-select"
+            <div class="flex justify-end mt-4">
+              <button
+                class="button is-primary"
+                [disabled]="!canProceedToStep2"
+                (click)="activateCallback(2)"
               >
-                @for (server of servers; track server) {
-                <option>{{ server.name }}</option>
-                }
-              </select>
+                <span>Next: Select Services</span>
+                <span class="icon is-small">
+                  <i class="fas fa-arrow-right"></i>
+                </span>
+              </button>
             </div>
-          </td>
-          <td class="td-cell td-bold">
-            {{ item.sourceService }}
-          </td>
-          <td class="td-cell" style="color: var(--text-primary);">
-            {{ item.targetService }}
-          </td>
-          <td class="td-cell td-center">
-            <code class="port-code">
-              {{ item.port }}
-            </code>
-          </td>
-          <td class="td-cell td-center">
-            <span
-              class="tag tag-rounded td-bold"
-              [ngClass]="item.protocol === 'TCP' ? 'is-success' : 'is-info'"
-            >
-              {{ item.protocol }}
-            </span>
-          </td>
-          <td class="td-cell">
-            <button
-              class="button is-danger is-small"
-              (click)="removeService(index)"
-              title="Remove this mapping"
-            >
-              <span class="icon is-small">
-                <i class="fas fa-trash"></i>
-              </span>
-            </button>
-          </td>
-        </tr>
-        }
-      </tbody>
-    </table>
-  </div>
-  } @else {
-  <div class="has-text-centered p-6 empty-state">
-    <i class="fas fa-sitemap fa-3x mb-3 icon-muted"></i>
-    <h4 class="title is-6 text-muted">No Port Mappings</h4>
-    <p class="text-muted text-sm">
-      Start adding port mappings by selecting services from the target services
-      table above.
-    </p>
-  </div>
-  }
-</div>
-<!-- Action Buttons -->
-<div class="modern-card action-card">
-  <div class="flex justify-between items-center">
-    <div class="flex items-center">
-      <div class="mr-4 status-dot status-dot--lg status-dot--success pulse-dot"></div>
-      <div>
-        <h6 class="title is-7 mb-1 section-title">
-          Ready to Save
-        </h6>
-        <p class="text-muted text-sm" style="margin: 0;">
-          @if (selectedPortMapping.mappedPorts.length > 0) { Configuration
-          complete with {{ selectedPortMapping.mappedPorts.length }} port
-          mapping(s) } @else { Add some port mappings before saving your
-          configuration }
-        </p>
-      </div>
-    </div>
+          </div>
+        </ng-template>
+      </p-step-panel>
 
-    <div class="buttons">
-      <button
-        class="button is-success btn-bold hover-lift"
-        [disabled]="
-          selectedPortMapping.mappedPorts.length == 0 || repeatServerName
-        "
-        (click)="saveMapping()"
-      >
-        <span class="icon">
-          <i class="fas fa-save"></i>
-        </span>
-        <span>Save Configuration</span>
-      </button>
-      <button
-        class="button is-light back-to-dashboard"
-        [routerLink]="['/']"
-      >
-        <span class="icon">
-          <i class="fas fa-arrow-left"></i>
-        </span>
-        <span>Back to Dashboard</span>
-      </button>
-    </div>
-  </div>
+      <!-- Step 2: Service Selection -->
+      <p-step-panel [value]="2">
+        <ng-template #content let-activateCallback="activateCallback">
+          <div class="step-content">
+            <!-- Service Filtering Section -->
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="title is-5 mb-0 section-title">
+                <i class="fas fa-filter mr-2 icon-secondary"></i>
+                Filter Services
+              </h3>
+              <div class="filter-results text-sm text-muted">
+                Showing {{ filteredSourceServices.length }} source,
+                {{ filteredTargetServices.length }} target services
+              </div>
+            </div>
+
+            <!-- Filter Controls -->
+            <div class="columns is-mobile">
+              <!-- Global Search -->
+              <div class="column is-4">
+                <div class="field">
+                  <label class="label is-small field-label--sm">Filter</label>
+                  <div class="control has-icons-left">
+                    <input
+                      class="input is-small input-styled"
+                      type="text"
+                      [(ngModel)]="searchTerm"
+                      (input)="onSearchChange($event)"
+                      placeholder="Search services..."
+                    />
+                    <span class="icon is-left is-small">
+                      <i class="fas fa-search icon-muted"></i>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Protocol Filters -->
+              <div class="column is-3">
+                <div class="field">
+                  <label class="label is-small field-label--sm">Protocol</label>
+                  <div class="buttons has-addons is-small">
+                    <button
+                      class="button protocol-btn--left"
+                      [ngClass]="protocolFilter === 'ALL' ? 'is-primary' : 'is-light'"
+                      (click)="onProtocolFilterChange('ALL')"
+                    >
+                      All
+                    </button>
+                    <button
+                      class="button"
+                      [ngClass]="protocolFilter === 'TCP' ? 'is-success' : 'is-light'"
+                      (click)="onProtocolFilterChange('TCP')"
+                    >
+                      TCP
+                    </button>
+                    <button
+                      class="button protocol-btn--right"
+                      [ngClass]="protocolFilter === 'UDP' ? 'is-info' : 'is-light'"
+                      (click)="onProtocolFilterChange('UDP')"
+                    >
+                      UDP
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Category Filter -->
+              <div class="column is-3">
+                <div class="field">
+                  <label class="label is-small field-label--sm">Category</label>
+                  <div class="select is-fullwidth is-small">
+                    <select
+                      [(ngModel)]="categoryFilter"
+                      (change)="onCategoryFilterChange($event)"
+                    >
+                      <option value="">All Categories</option>
+                      @for (category of availableCategories; track category) {
+                      <option [value]="category">{{ category }}</option>
+                      }
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Clear Filters -->
+              <div class="column is-2">
+                <div class="field clear-filters-field">
+                  <button
+                    class="button is-light is-small is-fullwidth"
+                    (click)="clearAllFilters()"
+                    [disabled]="!hasActiveFilters()"
+                  >
+                    <span class="icon is-small">
+                      <i class="fas fa-times"></i>
+                    </span>
+                    <span>Clear</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Active Filters Display -->
+            @if (hasActiveFilters()) {
+            <div class="active-filters mb-3">
+              <span class="active-filters-label">Active filters:</span>
+              @for (filter of getActiveFilters(); track filter.key) {
+              <span class="tag is-primary is-light is-small mr-1 mb-1 tag-rounded">
+                {{ filter.label }}
+                <button
+                  class="delete is-small ml-1"
+                  (click)="removeFilter(filter.key)"
+                ></button>
+              </span>
+              }
+            </div>
+            }
+
+            <!-- Source Services -->
+            <div class="mb-5">
+              <div class="flex items-center justify-between mb-3">
+                <h4 class="title is-6 mb-0 section-title">
+                  <i class="fas fa-list-ul mr-2 icon-success"></i>
+                  Source Services for {{ selectedProduct }}
+                </h4>
+                <span class="tag is-light tag-rounded">
+                  {{ filteredSourceServices.length }} of
+                  {{ sourceServices.length }} services
+                </span>
+              </div>
+
+              <div class="scrollable-table-container table-wrapper table-scroll--sm">
+                <table class="table is-fullwidth is-hoverable mapping-table">
+                  <thead>
+                    <tr class="gradient-thead thead-sticky">
+                      <th class="th-cell">
+                        <i class="fas fa-service-stack mr-2 icon-success"></i>
+                        Subheading
+                      </th>
+                      <th class="th-cell">
+                        <i class="fas fa-service-stack mr-2 icon-success"></i>
+                        Source Service
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (item of filteredSourceServices; track item.id; let index = $index)
+                    {
+                    <tr
+                      [ngClass]="{ 'is-selected': index === sourceServiceSelected }"
+                      (click)="selectService(index)"
+                      class="row-clickable td-bold"
+                      [class.source-row--selected]="index === sourceServiceSelected"
+                      [style.border-left]="
+                        index === sourceServiceSelected
+                          ? '4px solid var(--primary-color)'
+                          : '4px solid transparent'
+                      "
+                    >
+                      <td class="td-cell">
+                        <div class="flex items-center">
+                          <div class="mr-3 status-dot status-dot--sm status-dot--success source-dot"></div>
+                          {{ item.subheading }}
+                        </div>
+                      </td>
+                      <td class="td-cell">
+                        <div class="flex items-center">
+                          {{ item.name }}
+                        </div>
+                      </td>
+                    </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Target Services -->
+            <div class="mb-5">
+              <div class="flex items-center justify-between mb-3">
+                <h4 class="title is-6 mb-0 section-title">
+                  <i class="fas fa-crosshairs mr-2 icon-info"></i>
+                  Available Target Services
+                </h4>
+                <span class="tag is-info is-light tag-rounded">
+                  {{ filteredTargetServices.length }} of
+                  {{ fullServiceResponse.length }} services
+                </span>
+              </div>
+
+              @if (sourceServiceName.length > 0 && serverName != 'Change me') {
+              <div class="scrollable-table-container table-wrapper table-scroll">
+                <table class="table is-fullwidth is-hoverable mapping-table">
+                  <thead>
+                    <tr class="gradient-thead thead-sticky">
+                      <th class="th-cell">Section</th>
+                      <th class="th-cell">Subsection</th>
+                      <th class="th-cell">Target Service</th>
+                      <th class="th-cell td-center">Ports</th>
+                      <th class="th-cell td-center">Protocol</th>
+                      <th class="th-cell">Target Server</th>
+                      <th class="th-cell action-col">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (item of filteredTargetServices; track item.id; let index = $index)
+                    {
+                    <tr
+                      (click)="updateDescription(index)"
+                      class="row-clickable"
+                    >
+                      <td class="td-cell td-bold">
+                        <span class="tag is-light tag-rounded text-xs">
+                          {{ item.subheading }}
+                        </span>
+                      </td>
+                      <td class="td-cell">
+                        <div>
+                          <div class="td-bold" style="color: var(--text-primary);">
+                            {{ item.subheadingL2 }}
+                          </div>
+                          @if(item.subheadingL3.length > 0) {
+                          <div class="subsection-detail">
+                            {{ item.subheadingL3 }}
+                          </div>
+                          }
+                        </div>
+                      </td>
+                      <td class="td-cell td-bold" style="color: var(--text-primary);">
+                        {{ item.targetService }}
+                      </td>
+                      <td class="td-cell td-center">
+                        <code class="port-code">
+                          {{ item.port }}
+                        </code>
+                      </td>
+                      <td class="td-cell td-center">
+                        <span
+                          class="tag tag-rounded td-bold"
+                          [ngClass]="item.protocol === 'TCP' ? 'is-success' : 'is-info'"
+                        >
+                          {{ item.protocol }}
+                        </span>
+                      </td>
+                      <td class="td-cell">
+                        <div class="select is-small">
+                          <select
+                            [(ngModel)]="selectedTargetServer"
+                            class="target-select"
+                          >
+                            @for (server of servers; track server) {
+                            <option>{{ server.name }}</option>
+                            }
+                          </select>
+                        </div>
+                      </td>
+                      <td class="td-cell">
+                        <button
+                          class="button is-primary is-small add-button"
+                          (click)="updateService(index); $event.stopPropagation()"
+                          [disabled]="serverForm.controls.serverName.invalid"
+                          title="Add this service mapping"
+                        >
+                          <span class="icon is-small">
+                            <i class="fas fa-plus"></i>
+                          </span>
+                          <span>Add</span>
+                        </button>
+                      </td>
+                    </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+              } @else if (serverName == 'Change me') {
+              <div class="has-text-centered p-6 empty-state">
+                <i class="fas fa-edit fa-3x mb-3 icon-muted"></i>
+                <h4 class="title is-6 text-muted">Update Server Name</h4>
+                <p class="text-muted text-sm">
+                  Please change the server name from the default value to continue with port
+                  mapping configuration.
+                </p>
+              </div>
+              } @else {
+              <div class="has-text-centered p-6 empty-state">
+                <i class="fas fa-hand-pointer fa-3x mb-3 icon-muted"></i>
+                <h4 class="title is-6 text-muted">Select Source Service</h4>
+                <p class="text-muted text-sm">
+                  Choose a source service from the list above to see available target
+                  services and begin mapping ports.
+                </p>
+              </div>
+              }
+            </div>
+
+            <!-- Service Description -->
+            @if (selectedDescription) {
+            <div class="info-box description-box mb-4">
+              <h4 class="title is-7 mb-2 section-title">
+                <i class="fas fa-info-circle mr-2 icon-info"></i>
+                Service Description
+              </h4>
+              <p class="section-subtitle" style="line-height: 1.6;">
+                {{ selectedDescription }}
+              </p>
+            </div>
+            }
+
+            <div class="flex justify-between mt-4">
+              <button
+                class="button is-light"
+                (click)="activateCallback(1)"
+              >
+                <span class="icon is-small">
+                  <i class="fas fa-arrow-left"></i>
+                </span>
+                <span>Back</span>
+              </button>
+              <button
+                class="button is-primary"
+                [disabled]="!canProceedToStep3"
+                (click)="activateCallback(3)"
+              >
+                <span>Next: Review</span>
+                <span class="icon is-small">
+                  <i class="fas fa-arrow-right"></i>
+                </span>
+              </button>
+            </div>
+          </div>
+        </ng-template>
+      </p-step-panel>
+
+      <!-- Step 3: Review & Save -->
+      <p-step-panel [value]="3">
+        <ng-template #content let-activateCallback="activateCallback">
+          <div class="step-content">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="title is-5 mb-0 section-title">
+                <i class="fas fa-sitemap mr-2 icon-success"></i>
+                Current Port Mappings
+              </h3>
+              @if (selectedPortMapping.mappedPorts.length > 0) {
+              <span class="tag is-success is-light tag-rounded">
+                {{ selectedPortMapping.mappedPorts.length }} mappings
+              </span>
+              } @else {
+              <span class="tag is-light tag-rounded">
+                No mappings yet
+              </span>
+              }
+            </div>
+
+            @if (selectedPortMapping.mappedPorts.length > 0) {
+            <div class="scrollable-table-container table-wrapper table-scroll--lg">
+              <table class="table is-fullwidth mapping-table">
+                <thead class="thead-sticky">
+                  <tr class="gradient-thead">
+                    <th class="th-cell">Product</th>
+                    <th class="th-cell">Source Server</th>
+                    <th class="th-cell">Target Server</th>
+                    <th class="th-cell">Source Service</th>
+                    <th class="th-cell">Target Service</th>
+                    <th class="th-cell td-center">Ports</th>
+                    <th class="th-cell td-center">Protocol</th>
+                    <th class="th-cell action-col">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (item of selectedPortMapping.mappedPorts; track item; let index =
+                  $index) {
+                  <tr class="row-clickable">
+                    <td class="td-cell">
+                      <span class="tag is-light tag-rounded text-xs">
+                        {{ item.product }}
+                      </span>
+                    </td>
+                    <td class="td-cell td-bold">
+                      <div class="flex items-center">
+                        <div class="mr-2 status-dot status-dot--sm status-dot--primary"></div>
+                        {{ selectedPortMapping.sourceServer }}
+                      </div>
+                    </td>
+                    <td class="td-cell">
+                      <div class="select is-fullwidth">
+                        <select
+                          [(ngModel)]="item.targetServerName"
+                          (change)="updateTargetPortmapping()"
+                          class="target-select"
+                        >
+                          @for (server of servers; track server) {
+                          <option>{{ server.name }}</option>
+                          }
+                        </select>
+                      </div>
+                    </td>
+                    <td class="td-cell td-bold">
+                      {{ item.sourceService }}
+                    </td>
+                    <td class="td-cell" style="color: var(--text-primary);">
+                      {{ item.targetService }}
+                    </td>
+                    <td class="td-cell td-center">
+                      <code class="port-code">
+                        {{ item.port }}
+                      </code>
+                    </td>
+                    <td class="td-cell td-center">
+                      <span
+                        class="tag tag-rounded td-bold"
+                        [ngClass]="item.protocol === 'TCP' ? 'is-success' : 'is-info'"
+                      >
+                        {{ item.protocol }}
+                      </span>
+                    </td>
+                    <td class="td-cell">
+                      <button
+                        class="button is-danger is-small"
+                        (click)="removeService(index)"
+                        title="Remove this mapping"
+                      >
+                        <span class="icon is-small">
+                          <i class="fas fa-trash"></i>
+                        </span>
+                      </button>
+                    </td>
+                  </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+            } @else {
+            <div class="has-text-centered p-6 empty-state">
+              <i class="fas fa-sitemap fa-3x mb-3 icon-muted"></i>
+              <h4 class="title is-6 text-muted">No Port Mappings</h4>
+              <p class="text-muted text-sm">
+                Go back to Step 2 to add port mappings by selecting services.
+              </p>
+            </div>
+            }
+
+            <!-- Ready to Save -->
+            <div class="flex items-center mt-4 p-3 info-box">
+              <div class="mr-4 status-dot status-dot--lg status-dot--success pulse-dot"></div>
+              <div>
+                <h6 class="title is-7 mb-1 section-title">
+                  Ready to Save
+                </h6>
+                <p class="text-muted text-sm" style="margin: 0;">
+                  @if (selectedPortMapping.mappedPorts.length > 0) {
+                    Configuration complete with {{ selectedPortMapping.mappedPorts.length }} port mapping(s)
+                  } @else {
+                    Add some port mappings before saving your configuration
+                  }
+                </p>
+              </div>
+            </div>
+
+            <div class="flex justify-between mt-4">
+              <button
+                class="button is-light"
+                (click)="activateCallback(2)"
+              >
+                <span class="icon is-small">
+                  <i class="fas fa-arrow-left"></i>
+                </span>
+                <span>Back to Selection</span>
+              </button>
+              <div class="buttons">
+                <button
+                  class="button is-success btn-bold hover-lift"
+                  [disabled]="
+                    selectedPortMapping.mappedPorts.length == 0 || serverForm.controls.serverName.invalid
+                  "
+                  (click)="saveMapping()"
+                >
+                  <span class="icon">
+                    <i class="fas fa-save"></i>
+                  </span>
+                  <span>Save Configuration</span>
+                </button>
+                <button
+                  class="button is-light back-to-dashboard"
+                  [routerLink]="['/']"
+                >
+                  <span>Cancel</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </p-step-panel>
+    </p-step-panels>
+  </p-stepper>
 </div>

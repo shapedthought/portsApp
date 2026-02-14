@@ -41,7 +41,7 @@ export class ReportComponent implements OnInit {
 
   ngOnInit(): void {
     this.dataService.loadPortMapping();
-    this.portMapping = this.dataService.getMappedPorts();
+    this.portMapping = this.dataService.mappedPorts();
     this.buildFlatMappings();
     this.buildStats();
   }

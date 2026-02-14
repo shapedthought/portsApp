@@ -1,6 +1,6 @@
 /* Navigation header */
 .nav-header {
-  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
   border: none;
   min-height: 4rem;
@@ -17,7 +17,13 @@
 }
 
 .nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+}
+
+.nav-link.is-active {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  color: white !important;
 }
 
 .nav-brand {
@@ -27,7 +33,7 @@
 
 /* Version badge */
 .nav-version {
-  color: #a5b4fc;
+  color: #5eead4;
   font-size: 0.875rem;
 }
 
