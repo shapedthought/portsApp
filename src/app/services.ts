@@ -66,9 +66,9 @@ export interface FullServiceResponse {
 }
 
 export interface MappedPorts {
-  sourceServerId: number;
+  sourceServerId: string;
   sourceServerName: string;
-  targetServerId: number;
+  targetServerId: string;
   targetServerName: string;
   sourceService: string;
   targetService: string;
@@ -87,7 +87,7 @@ export interface ShowMappedPorts {
 }
 
 export interface PortMapping {
-  id: number;
+  id: string;
   sourceServer: string;
   totalMappedPorts: number;
   totalMappedInboundPorts: number;
@@ -111,7 +111,7 @@ export interface Server {
   name: string;
 }
 
-export function createDefaultPortMapping(id: number, name: string): PortMapping {
+export function createDefaultPortMapping(id: string, name: string): PortMapping {
   return {
     id,
     sourceServer: name,

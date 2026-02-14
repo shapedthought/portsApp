@@ -141,6 +141,15 @@
   }
 }
 
+/* Stepper step content */
+.step-content {
+  padding: var(--spacing-md) 0;
+}
+
+:host ::ng-deep .p-stepper .p-step-list {
+  margin-bottom: var(--spacing-lg);
+}
+
 /* Mobile responsive filters */
 @media (max-width: 768px) {
   .filter-controls .column {

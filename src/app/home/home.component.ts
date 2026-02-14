@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { MappedPorts, PortMapping, ShowMappedPorts } from '../services';
+import { MappedPorts, ShowMappedPorts } from '../services';
 import { DataService } from '../data.service';
 import { HttpService } from '../http.service';
 import { FormsModule } from '@angular/forms';
@@ -28,7 +28,6 @@ export class HomeComponent {
   codeStringUdp = '';
   codeStringInboundTcp = '';
   codeStringInboundUdp = '';
-  portsMapped: PortMapping[] = [];
   portsDisplay: MappedPorts[] = [];
   inboundPortsDisplay: MappedPorts[] = [];
   selectedCardIndex: number | null = null;
@@ -45,7 +44,6 @@ export class HomeComponent {
     this.closeModal();
     this.serverName = '';
     this.repeatServerName = false;
-    this.portsMapped = this.dataService.getMappedPorts();
     this.messageService.add({
       severity: 'success',
       summary: 'Server Added',
@@ -62,12 +60,8 @@ export class HomeComponent {
     this.isModalActive = true;
   }
 
-  getServerData(): void {
-    this.portsMapped = this.dataService.getMappedPorts();
-  }
-
   checkServerName(name: string) {
-    const serverNames = this.portsMapped.map(
+    const serverNames = this.dataService.mappedPorts().map(
       (portMapping) => portMapping.sourceServer
     );
     if (serverNames.includes(name)) {
@@ -77,8 +71,9 @@ export class HomeComponent {
     }
   }
 
-  deleteServer(index: number): void {
-    const serverName = this.portsMapped[index].sourceServer;
+  deleteServer(id: string): void {
+    const pm = this.dataService.mappedPorts().find(p => p.id === id);
+    const serverName = pm ? pm.sourceServer : 'Unknown';
     this.confirmationService.confirm({
       header: 'Delete Server',
       message: 'Are you sure you want to delete this server? This will also delete all mapped ports to this server.',
@@ -87,8 +82,7 @@ export class HomeComponent {
       rejectLabel: 'No',
       acceptButtonStyleClass: 'p-button-danger',
       accept: () => {
-        this.dataService.deleteServer(index);
-        this.portsMapped = this.dataService.getMappedPorts();
+        this.dataService.deleteServer(id);
         this.portsDisplay = [];
         this.selectedCardIndex = null;
         this.messageService.add({
@@ -101,24 +95,24 @@ export class HomeComponent {
   }
 
   loadMappedPorts(index: number): void {
+    const ports = this.dataService.mappedPorts();
     this.selectedCardIndex = index;
-    this.portsDisplay = this.portsMapped[index].mappedPorts;
-    this.sourceServer = this.portsMapped[index].sourceServer;
-    this.showMappedPorts = this.portsMapped[index].mappedPortsByProtocol;
-    this.showMappedInboundPorts =
-      this.portsMapped[index].mappedPortsByProtocolInbound;
+    this.portsDisplay = ports[index].mappedPorts;
+    this.sourceServer = ports[index].sourceServer;
+    this.showMappedPorts = ports[index].mappedPortsByProtocol;
+    this.showMappedInboundPorts = ports[index].mappedPortsByProtocolInbound;
 
-    this.codeStringTcp = this.portsMapped[index].allOutboundPortsTcp
-      ? this.portsMapped[index].allOutboundPortsTcp.join(',')
+    this.codeStringTcp = ports[index].allOutboundPortsTcp
+      ? ports[index].allOutboundPortsTcp.join(',')
       : '';
-    this.codeStringUdp = this.portsMapped[index].allOutboundPortsUdp
-      ? this.portsMapped[index].allOutboundPortsUdp.join(',')
+    this.codeStringUdp = ports[index].allOutboundPortsUdp
+      ? ports[index].allOutboundPortsUdp.join(',')
       : '';
-    this.codeStringInboundTcp = this.portsMapped[index].allInboundPortsTcp
-      ? this.portsMapped[index].allInboundPortsTcp.join(',')
+    this.codeStringInboundTcp = ports[index].allInboundPortsTcp
+      ? ports[index].allInboundPortsTcp.join(',')
       : '';
-    this.codeStringInboundUdp = this.portsMapped[index].allInboundPortsUdp
-      ? this.portsMapped[index].allInboundPortsUdp.join(',')
+    this.codeStringInboundUdp = ports[index].allInboundPortsUdp
+      ? ports[index].allInboundPortsUdp.join(',')
       : '';
   }
 
@@ -132,7 +126,6 @@ export class HomeComponent {
       acceptButtonStyleClass: 'p-button-danger',
       accept: () => {
         this.dataService.deleteAll();
-        this.portsMapped = this.dataService.getMappedPorts();
         this.portsDisplay = [];
         this.selectedCardIndex = null;
         this.messageService.add({
@@ -145,21 +138,14 @@ export class HomeComponent {
   }
 
   checkMappedPortLength(): boolean {
-    const mappedPortsTotal = this.portsMapped.flatMap(
-      (mappedPort) => mappedPort.mappedPorts
-    ).length;
-    if (mappedPortsTotal > 0) {
-      return false;
-    } else {
-      return true;
-    }
+    return !this.dataService.hasMappedPorts();
   }
 
   getExcelData(): void {
     if (this.isDownloading) return;
     this.isDownloading = true;
 
-    this.httpService.generateExcelData(this.portsMapped).subscribe({
+    this.httpService.generateExcelData(this.dataService.mappedPorts()).subscribe({
       next: (data) => {
         let urlUpdated = '';
         if (this.portsServer.includes('localhost')) {
@@ -190,7 +176,7 @@ export class HomeComponent {
     this.isSaving = true;
 
     setTimeout(() => {
-      const dataStr = JSON.stringify(this.portsMapped, null, 2);
+      const dataStr = JSON.stringify(this.dataService.mappedPorts(), null, 2);
       const blob = new Blob([dataStr], { type: 'application/json' });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -224,8 +210,8 @@ export class HomeComponent {
             throw new Error('Expected an array of port mappings');
           }
           for (const item of parsed) {
-            if (item.id == null || typeof item.id !== 'number') {
-              throw new Error('Each item must have a numeric "id"');
+            if (item.id == null || (typeof item.id !== 'number' && typeof item.id !== 'string')) {
+              throw new Error('Each item must have an "id" (number or string)');
             }
             if (!item.sourceServer || typeof item.sourceServer !== 'string') {
               throw new Error('Each item must have a "sourceServer" string');
@@ -235,8 +221,7 @@ export class HomeComponent {
             }
           }
 
-          this.portsMapped = parsed;
-          this.dataService.uploadPortMapping(this.portsMapped);
+          this.dataService.uploadPortMapping(parsed);
           this.isUploading = false;
           this.messageService.add({
             severity: 'success',
@@ -258,7 +243,7 @@ export class HomeComponent {
   }
 
   constructor(
-    private dataService: DataService,
+    public dataService: DataService,
     private httpService: HttpService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService
@@ -266,7 +251,6 @@ export class HomeComponent {
 
   ngOnInit(): void {
     this.dataService.loadPortMapping();
-    this.portsMapped = this.dataService.getMappedPorts();
-    this.sourceServer = this.portsMapped[0].sourceServer;
+    this.sourceServer = this.dataService.mappedPorts()[0].sourceServer;
   }
 }

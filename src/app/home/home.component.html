@@ -90,7 +90,7 @@
     </h3>
     <div class="flex items-center gap-3">
       <span class="tag is-light tag-rounded">
-        {{ portsMapped.length }} servers configured
+        {{ dataService.mappedPorts().length }} servers configured
       </span>
       <div class="buttons are-small">
         <button class="button is-primary is-small" (click)="openModal()">
@@ -138,7 +138,7 @@
         </tr>
       </thead>
       <tbody>
-        @for (item of portsMapped; track item.id; let index = $index) {
+        @for (item of dataService.mappedPorts(); track item.id; let index = $index) {
         <tr
           [ngClass]="{ 'is-selected': selectedCardIndex === index }"
           (click)="loadMappedPorts(index)"
@@ -170,7 +170,7 @@
             <div class="buttons are-small is-centered action-buttons">
               <button
                 class="button is-info is-light is-small"
-                [routerLink]="['/mapping', index]"
+                [routerLink]="['/mapping', item.id]"
                 title="Edit Server Configuration"
                 (click)="$event.stopPropagation()"
               >
@@ -181,8 +181,8 @@
               </button>
               <button
                 class="button is-danger is-light is-small"
-                (click)="deleteServer(index); $event.stopPropagation()"
-                [disabled]="portsMapped.length <= 2"
+                (click)="deleteServer(item.id); $event.stopPropagation()"
+                [disabled]="dataService.mappedPorts().length <= 2"
                 title="Delete Server"
               >
                 <span class="icon is-small">
