@@ -60,7 +60,12 @@
                       <i class="fas fa-server"></i>
                     </span>
                   </div>
-                  @if (serverForm.controls.serverName.hasError('uniqueName') && serverForm.controls.serverName.touched) {
+                  @if (serverForm.controls.serverName.hasError('required') && serverForm.controls.serverName.touched) {
+                  <div class="mt-2 p-2 validation-error text-sm">
+                    <i class="fas fa-exclamation-triangle mr-1"></i>
+                    Server name is required
+                  </div>
+                  } @else if (serverForm.controls.serverName.hasError('uniqueName') && serverForm.controls.serverName.touched) {
                   <div class="mt-2 p-2 validation-error text-sm">
                     <i class="fas fa-exclamation-triangle mr-1"></i>
                     No duplicate server names allowed!

@@ -78,7 +78,7 @@ export class DataService {
       const filtered = current.filter(pm => pm.id !== id);
       return filtered;
     });
-    this.recalculateServerMapedPorts();
+    this.recalculateServerMappedPorts();
     this.recalculateMappedPorts();
     this.savePortMapping();
   }
@@ -90,7 +90,7 @@ export class DataService {
     this.savePortMapping();
   }
 
-  recalculateServerMapedPorts(): void {
+  recalculateServerMappedPorts(): void {
     const mapToProtocolArray = (map: Map<string, Set<string>>) => {
       let index = 0;
       return Array.from(map.entries()).map(([key, ports]) => {
@@ -235,7 +235,7 @@ export class DataService {
     this.mappedPorts.update(current => {
       return current.map(pm => pm.id === portMapping.id ? portMapping : pm);
     });
-    this.recalculateServerMapedPorts();
+    this.recalculateServerMappedPorts();
     this.recalculateMappedPorts();
   }
 
