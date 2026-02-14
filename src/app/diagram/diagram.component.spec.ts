@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { MessageService } from 'primeng/api';
 import { DiagramComponent } from './diagram.component';
 
 describe('DiagramComponent', () => {
@@ -8,9 +8,9 @@ describe('DiagramComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DiagramComponent]
-    })
-    .compileComponents();
+      imports: [DiagramComponent],
+      providers: [MessageService],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(DiagramComponent);
     component = fixture.componentInstance;
