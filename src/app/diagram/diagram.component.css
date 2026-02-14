@@ -17,23 +17,19 @@
   overflow: auto;
 }
 
-/* Mermaid diagram styling overrides */
-.mermaid-diagram :global(svg) {
+/* Mermaid diagram styling overrides (ViewEncapsulation.None — scope to app-diagram) */
+app-diagram .mermaid-diagram svg {
   max-width: 100%;
   height: auto;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-.mermaid-diagram :global(.node rect) {
+app-diagram .mermaid-diagram .node rect {
   rx: 8px;
   ry: 8px;
 }
 
-.mermaid-diagram :global(.edgeLabel) {
-  background-color: rgba(255, 255, 255, 0.9);
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 11px;
+app-diagram .mermaid-diagram .edgeLabel {
   font-weight: 500;
 }
 

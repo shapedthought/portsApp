@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, OnChanges, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, OnChanges, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
@@ -27,7 +27,8 @@ interface DiagramData {
   selector: 'app-diagram',
   imports: [CommonModule, FormsModule],
   templateUrl: './diagram.component.html',
-  styleUrl: './diagram.component.css'
+  styleUrl: './diagram.component.css',
+  encapsulation: ViewEncapsulation.None
 })
 export class DiagramComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input() portMappings: PortMapping[] = [];
@@ -52,9 +53,9 @@ export class DiagramComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       startOnLoad: false,
       theme: 'base',
       themeVariables: {
-        primaryColor: '#6366f1',
+        primaryColor: '#1e3a5f',
         primaryTextColor: '#ffffff',
-        primaryBorderColor: '#4f46e5',
+        primaryBorderColor: '#0f2440',
         lineColor: '#6b7280',
         sectionBkgColor: '#f8fafc',
         altSectionBkgColor: '#f1f5f9',
@@ -62,7 +63,8 @@ export class DiagramComponent implements OnInit, OnChanges, AfterViewInit, OnDes
         secondaryColor: '#10b981',
         tertiaryColor: '#f59e0b',
         background: '#ffffff',
-        mainBkg: '#ffffff',
+        mainBkg: '#1e3a5f',
+        nodeTextColor: '#ffffff',
         secondBkg: '#f8fafc',
         tertiaryBkg: '#f1f5f9'
       }
@@ -335,10 +337,31 @@ export class DiagramComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       .substring(0, 15) + '_' + Math.random().toString(36).substr(2, 3);
   }
 
+  // Fix node text colors in the SVG string before inserting into DOM
+  private fixSvgNodeColors(svg: string): string {
+    // Use DOMParser to manipulate the SVG properly
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(svg, 'image/svg+xml');
+
+    // Fix every element inside .node containers
+    doc.querySelectorAll('.node').forEach(node => {
+      // SVG text elements
+      node.querySelectorAll('text, tspan').forEach(el => {
+        el.setAttribute('fill', '#ffffff');
+      });
+      // foreignObject HTML elements (Mermaid v10+ uses these for labels)
+      node.querySelectorAll('foreignObject *').forEach(el => {
+        (el as HTMLElement).style?.setProperty('color', '#ffffff', 'important');
+      });
+    });
+
+    return new XMLSerializer().serializeToString(doc.documentElement);
+  }
+
   // Generate Mermaid styling
   private generateMermaidStyles(): string {
     return `
-    classDef serverNode fill:#6366f1,stroke:#4f46e5,stroke-width:2px,color:#ffffff
+    classDef serverNode fill:#1e3a5f,stroke:#0f2440,stroke-width:2px,color:#ffffff
     classDef tcpConnection stroke:#3b82f6,stroke-width:2px
     classDef udpConnection stroke:#10b981,stroke-width:2px
     classDef mixedConnection stroke:#8b5cf6,stroke-width:3px
@@ -378,8 +401,7 @@ export class DiagramComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       
       // Check container is still available after async operation
       if (this.mermaidContainer?.nativeElement) {
-        // Clear any existing content and add the new diagram
-        this.mermaidContainer.nativeElement.innerHTML = svg;
+        this.mermaidContainer.nativeElement.innerHTML = this.fixSvgNodeColors(svg);
       } else {
         console.error('Container became unavailable during rendering');
       }

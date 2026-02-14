@@ -16,7 +16,7 @@ import { FormsModule, ReactiveFormsModule, FormGroup, FormControl, Validators, A
 import { DataService } from '../data.service';
 import { HttpService } from '../http.service';
 import { Router } from '@angular/router';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { Stepper, StepList, Step, StepPanels, StepPanel } from 'primeng/stepper';
 
 @Component({
@@ -83,7 +83,8 @@ export class MappingComponent {
     private router: Router,
     private dataService: DataService,
     private httpService: HttpService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
   ) {}
 
   // Custom validator for unique server name
@@ -226,6 +227,11 @@ export class MappingComponent {
     };
     this.selectedPortMapping.mappedPorts.push(mappedPorts);
     this.mappingsDirty = true;
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Port Mapping Added',
+      detail: `${mappedPorts.sourceService} → ${mappedPorts.targetService} (${mappedPorts.port} ${mappedPorts.protocol})`,
+    });
   }
 
   // Save the mapping triggered by the save button
@@ -240,8 +246,23 @@ export class MappingComponent {
 
   // Remove the service from the mapped triggered by the remove button
   removeService(index: number) {
-    this.selectedPortMapping.mappedPorts.splice(index, 1);
-    this.mappingsDirty = true;
+    const mapping = this.selectedPortMapping.mappedPorts[index];
+    this.confirmationService.confirm({
+      header: 'Remove Port Mapping',
+      message: `Remove ${mapping.sourceService} → ${mapping.targetService} (${mapping.port} ${mapping.protocol})?`,
+      acceptLabel: 'Remove',
+      rejectLabel: 'Cancel',
+      acceptButtonStyleClass: 'p-button-danger',
+      accept: () => {
+        this.selectedPortMapping.mappedPorts.splice(index, 1);
+        this.mappingsDirty = true;
+        this.messageService.add({
+          severity: 'warn',
+          summary: 'Port Mapping Removed',
+          detail: `${mapping.sourceService} → ${mapping.targetService}`,
+        });
+      },
+    });
   }
 
   // Change the application

@@ -5,11 +5,11 @@
 
 /* CSS Custom Properties for consistent theming */
 :root {
-  /* Color Palette */
-  --primary-color: #6366f1;
-  --primary-light: #a5b4fc;
-  --primary-dark: #4f46e5;
-  --secondary-color: #0ea5e9;
+  /* Color Palette — Midnight Blue */
+  --primary-color: #1e3a5f;
+  --primary-light: #2d5a8e;
+  --primary-dark: #0f2440;
+  --secondary-color: #14b8a6;
   --success-color: #10b981;
   --warning-color: #f59e0b;
   --error-color: #ef4444;
@@ -174,11 +174,13 @@ p {
 
 .button.is-primary {
   background-color: var(--primary-color) !important;
+  color: #ffffff !important;
   box-shadow: var(--shadow-sm) !important;
 }
 
 .button.is-primary:hover {
   background-color: var(--primary-dark) !important;
+  color: #ffffff !important;
   box-shadow: var(--shadow) !important;
   transform: translateY(-1px);
 }
@@ -218,7 +220,7 @@ p {
 
 .input:focus, .select select:focus {
   border-color: var(--primary-color) !important;
-  box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1) !important;
+  box-shadow: 0 0 0 3px rgb(30 58 95 / 0.15) !important;
 }
 
 /* Modern modal styles */
@@ -395,7 +397,7 @@ p {
   
   /* Mobile navigation adjustments */
   .navbar-menu {
-    background-color: rgba(99, 102, 241, 0.95) !important;
+    background-color: rgba(30, 58, 95, 0.95) !important;
     backdrop-filter: blur(10px);
   }
   
@@ -597,7 +599,7 @@ p {
 .icon-warning { color: var(--warning-color); }
 .icon-error { color: var(--error-color); }
 .icon-muted { color: var(--gray-400); }
-.icon-accent { color: #a5b4fc; }
+.icon-accent { color: #5eead4; }
 
 /* Section title/subtitle */
 .section-title {
@@ -762,7 +764,7 @@ p {
 .input-styled:focus {
   outline: none;
   border-color: var(--primary-color) !important;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.15);
 }
 
 /* Back button (shared across components) */

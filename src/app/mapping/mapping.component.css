@@ -40,7 +40,7 @@
 
 /* Source row selected indicator */
 .source-row--selected {
-  background-color: rgba(99, 102, 241, 0.1);
+  background-color: rgba(30, 58, 95, 0.08);
 }
 
 /* Source service dot opacity */
@@ -85,7 +85,7 @@
 
 /* Action card with top border */
 .action-card {
-  border-top: 3px solid var(--primary-color);
+  border-top: 3px solid var(--secondary-color);
 }
 
 /* Pulse animation dot */
