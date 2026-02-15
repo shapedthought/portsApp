@@ -1,10 +1,71 @@
+<p-toast position="top-right" [life]="4000" />
+<p-confirmDialog />
 
-<main class="main">
-  <div class="container">
+<!-- Modern Navigation Header -->
+<nav class="navbar is-light nav-header" role="navigation" aria-label="main navigation">
+  <div class="modern-container">
+    <div class="navbar-brand">
+      <!-- Mobile hamburger menu -->
+      <a role="button"
+         class="navbar-burger nav-burger"
+         aria-label="menu"
+         aria-expanded="false"
+         data-target="navbar-menu"
+         (click)="toggleMobileMenu()"
+         [class.is-active]="isMobileMenuOpen">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
 
-  <router-outlet></router-outlet>
+    <div id="navbar-menu" class="navbar-menu" [class.is-active]="isMobileMenuOpen">
+      <div class="navbar-start">
+        <!-- Brand moved to navbar-start (left side) -->
+        <a routerLink="/"
+           class="navbar-item nav-link nav-brand"
+           (click)="closeMobileMenu()">
+          <i class="fas fa-network-wired mr-2 icon-accent"></i>
+          <span class="is-hidden-mobile">PortsApp</span>
+          <span class="is-hidden-tablet">Ports</span>
+        </a>
 
-</div>
+        <!-- Navigation items -->
+        <a routerLink="/"
+           class="navbar-item nav-link"
+           routerLinkActive="is-active"
+           [routerLinkActiveOptions]="{exact: true}"
+           (click)="closeMobileMenu()">
+          <i class="fas fa-home mr-2"></i>
+          Dashboard
+        </a>
+        <a routerLink="/report"
+           class="navbar-item nav-link"
+           routerLinkActive="is-active"
+           (click)="closeMobileMenu()">
+          <i class="fas fa-chart-bar mr-2"></i>
+          Report
+        </a>
+      </div>
+
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <span class="nav-version">
+            <i class="fas fa-code mr-1"></i>
+            <span class="is-hidden-mobile">v0.5.0</span>
+            <span class="is-hidden-tablet">v0.5</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Modern Main Content Area -->
+<main class="main main-content">
+  <div class="modern-container main-container">
+    <div class="fade-in">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
 </main>
-
-

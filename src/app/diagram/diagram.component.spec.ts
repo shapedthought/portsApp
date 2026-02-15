@@ -1,19 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { ReportComponent } from './report.component';
+import { DiagramComponent } from './diagram.component';
 
-describe('ReportComponent', () => {
-  let component: ReportComponent;
-  let fixture: ComponentFixture<ReportComponent>;
+describe('DiagramComponent', () => {
+  let component: DiagramComponent;
+  let fixture: ComponentFixture<DiagramComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReportComponent],
-      providers: [MessageService, provideRouter([])],
+      imports: [DiagramComponent],
+      providers: [MessageService],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ReportComponent);
+    fixture = TestBed.createComponent(DiagramComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

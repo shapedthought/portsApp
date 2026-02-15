@@ -9,6 +9,8 @@ export interface TargetServices {
 export interface Service {
   id?: number;
   name: string;
+  product: string;
+  subheading: string;
   targetServices: TargetServices[];
 }
 
@@ -23,16 +25,6 @@ export interface MappedServices {
   protocol: string;
 }
 
-// export interface PortMapping {
-//     id: number;
-//     targetServer: string;
-//     service: string;
-//     ports: string;
-//     totalMappedPorts: number;
-//     totalMappedServers: number;
-//     protocol: string;
-// }
-
 export interface SourceServiceRequest {
   productName: string;
 }
@@ -42,9 +34,16 @@ export interface SourceService {
   sourceService: string;
 }
 
+export interface SourceServiceDetailed {
+  product: string;
+  sourceService: string;
+  subheading: string;
+}
+
 export interface TargetServiceRequest {
   productName: string;
   sourceService: string;
+  subheading: string;
 }
 
 export interface FullServiceRequest {
@@ -67,9 +66,8 @@ export interface FullServiceResponse {
 }
 
 export interface MappedPorts {
-  sourceServerId: number;
+  sourceServerId: string;
   sourceServerName: string;
-  targetServerId: number;
   targetServerName: string;
   sourceService: string;
   targetService: string;
@@ -88,7 +86,7 @@ export interface ShowMappedPorts {
 }
 
 export interface PortMapping {
-  id: number;
+  id: string;
   sourceServer: string;
   totalMappedPorts: number;
   totalMappedInboundPorts: number;
@@ -110,4 +108,21 @@ export interface Product {
 export interface Server {
   id: number;
   name: string;
+}
+
+export function createDefaultPortMapping(id: string, name: string): PortMapping {
+  return {
+    id,
+    sourceServer: name,
+    totalMappedPorts: 0,
+    totalMappedInboundPorts: 0,
+    totalMappedServers: 0,
+    mappedPorts: [],
+    allInboundPortsTcp: [],
+    allInboundPortsUdp: [],
+    allOutboundPortsTcp: [],
+    allOutboundPortsUdp: [],
+    mappedPortsByProtocol: [],
+    mappedPortsByProtocolInbound: [],
+  };
 }

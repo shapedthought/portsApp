@@ -1,17 +1,50 @@
-.card {
-    transition: box-shadow 0.3s ease-in-out;
+.overview-table { margin: 0; table-layout: fixed; }
+.server-row--selected { background-color: rgba(30, 58, 95, 0.08); }
+.server-dot { box-shadow: 0 0 4px rgba(16, 185, 129, 0.4); }
+.config-dot { box-shadow: 0 0 8px rgba(20, 184, 166, 0.4); }
+.action-buttons { gap: 0.25rem; }
+.port-table { margin: 0; }
+.port-table-head { background-color: var(--gray-50); }
+.port-table-row { border-bottom: 1px solid var(--gray-100); }
+.file-cta--styled { font-weight: 500; }
+.select-hint { max-width: 400px; margin: 0 auto; }
+
+:host ::ng-deep .server-dialog .p-dialog-header {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color: white;
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+}
+:host ::ng-deep .server-dialog .p-dialog-title { color: white; font-weight: 600; }
+:host ::ng-deep .server-dialog .p-dialog-header-actions button { color: rgba(255, 255, 255, 0.8); }
+:host ::ng-deep .server-dialog .p-dialog-header-actions button:hover { color: white; }
+:host ::ng-deep .server-dialog .p-dialog-content { padding: var(--spacing-xl); }
+:host ::ng-deep .server-dialog .p-dialog-footer {
+  background-color: var(--gray-50);
+  border-top: 1px solid var(--gray-200);
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+  padding: var(--spacing-lg);
+}
+.cancel-button {
+  font-weight: 500;
+  background-color: white;
+  border: 2px solid var(--gray-300) !important;
+  color: var(--text-primary);
+  transition: all 0.2s ease;
 }
 
-.card:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+.page-footer {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-top: 1px solid var(--gray-200);
+  margin-top: var(--spacing-2xl);
+  padding: var(--spacing-2xl) 0;
 }
+.footer-card { margin-bottom: 0; border: none; background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); }
+.footer-description { max-width: 600px; margin: 0 auto; }
+.footer-box { background-color: rgba(255, 255, 255, 0.5); border: 1px solid var(--gray-200); border-radius: var(--radius-lg); }
+.footer-link { color: var(--primary-color); text-decoration: none; font-weight: 500; font-size: 0.875rem; }
+.footer-link:hover { text-decoration: underline; }
 
-.is-selected {
-    background-color: rgb(223, 237, 226);
-  }
-
-.custom-textarea {
-    background-color: black;
-    color: white;
-    font-family: 'Courier New', Courier, monospace;
-  }
+.card { transition: box-shadow 0.3s ease-in-out; }
+.card:hover { box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); }
+.is-selected { background-color: rgb(223, 237, 226); }
+.custom-textarea { background-color: black; color: white; font-family: 'Courier New', Courier, monospace; }

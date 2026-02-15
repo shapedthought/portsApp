@@ -37,6 +37,13 @@ yarn-error.log
 testem.log
 /typings
 
+# Logs
+ng-serve.log
+
+# Planning docs
+PLAN.md
+RECOMMENDATIONS.md
+
 # System files
 .DS_Store
 Thumbs.db

@@ -1,41 +1,79 @@
-<div class="columns mt-2">
-  <div class="column">
-    <div class="buttons is-pulled-right">
+<!-- Modern Header Section -->
+<div class="modern-card slide-up">
+  <div class="flex justify-between items-center mb-6">
+    <div>
+      <h1 class="title is-3 mb-2 section-title">
+        <i class="fas fa-server mr-2 icon-primary"></i>
+        Server Port Management
+      </h1>
+      <p class="subtitle is-6 section-subtitle">
+        Manage and configure network port mappings between your servers
+      </p>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="buttons is-responsive">
       <button
-        class="button is-primary mr-2"
+        class="button is-info"
         [routerLink]="['/report']"
         [disabled]="checkMappedPortLength()"
       >
-        Report
+        <span class="icon">
+          <i class="fas fa-chart-line"></i>
+        </span>
+        <span class="is-hidden-mobile">View Report</span>
+        <span class="is-hidden-tablet">Report</span>
       </button>
       <button
-        class="button is-primary mr-2"
+        class="button is-success"
         (click)="getExcelData()"
-        [disabled]="checkMappedPortLength()"
+        [disabled]="checkMappedPortLength() || isDownloading"
       >
-        Excel
+        <span class="icon">
+          @if (isDownloading) {
+            <div class="loading-spinner"></div>
+          } @else {
+            <i class="fas fa-file-excel"></i>
+          }
+        </span>
+        <span class="is-hidden-mobile">{{ isDownloading ? 'Generating...' : 'Export Excel' }}</span>
+        <span class="is-hidden-tablet">{{ isDownloading ? '...' : 'Excel' }}</span>
       </button>
       <button
-        class="button is-primary mr-2"
-        [disabled]="checkMappedPortLength()"
+        class="button is-primary"
+        [disabled]="checkMappedPortLength() || isSaving"
         (click)="savePortMappings()"
       >
-        Save
+        <span class="icon">
+          @if (isSaving) {
+            <div class="loading-spinner"></div>
+          } @else {
+            <i class="fas fa-download"></i>
+          }
+        </span>
+        <span class="is-hidden-mobile">{{ isSaving ? 'Saving...' : 'Export JSON' }}</span>
+        <span class="is-hidden-tablet">{{ isSaving ? '...' : 'JSON' }}</span>
       </button>
-      <div class="file is-primary mr-2">
+      <div class="file is-warning">
         <label class="file-label">
           <input
             class="file-input"
             type="file"
             name="resume"
-            accept="json"
+            accept=".json"
             (change)="uploadPortMappings($event)"
+            [disabled]="isUploading"
           />
-          <span class="file-cta">
+          <span class="file-cta file-cta--styled">
             <span class="file-icon">
-              <i class="fas fa-upload"></i>
+              @if (isUploading) {
+                <div class="loading-spinner"></div>
+              } @else {
+                <i class="fas fa-upload"></i>
+              }
             </span>
-            <span class="file-label">Upload</span>
+            <span class="file-label is-hidden-mobile">{{ isUploading ? 'Uploading...' : 'Upload Config' }}</span>
+            <span class="file-label is-hidden-tablet">{{ isUploading ? '...' : 'Upload' }}</span>
           </span>
         </label>
       </div>
@@ -43,224 +81,405 @@
   </div>
 </div>
 
-<div class="columns">
-  <!-- <button class="button is-small" (click)="this.showTable = !this.showTable">Cards</button> -->
-  <div class="column mr-3">
-    <h3 class="is-bold">Click table to select server</h3>
-    <table class="table is-fullwidth">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Outbound</th>
-          <th>Inbound</th>
-          <th>Targets</th>
-          <th>Edit</th>
-          <th>Delete</th>
+<!-- Servers Overview Section - Now at Top -->
+<div class="modern-card slide-up">
+  <div class="flex justify-between items-center mb-4">
+    <h3 class="title is-5 mb-0 section-title">
+      <i class="fas fa-list mr-2 icon-secondary"></i>
+      Servers Overview
+    </h3>
+    <div class="flex items-center gap-3">
+      <span class="tag is-light tag-rounded">
+        {{ dataService.mappedPorts().length }} servers configured
+      </span>
+      <div class="buttons are-small">
+        <button class="button is-primary is-small" (click)="openModal()">
+          <span class="icon is-small">
+            <i class="fas fa-plus"></i>
+          </span>
+          <span>Add Server</span>
+        </button>
+        <button class="button is-danger is-light is-small" (click)="clearAllMappedPorts()">
+          <span class="icon is-small">
+            <i class="fas fa-trash-alt"></i>
+          </span>
+          <span>Clear All</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <p class="text-muted mb-4 text-sm">
+    Click on a server to view its detailed port configuration below
+  </p>
+
+  <!-- Enhanced Server Table with Better Spacing -->
+  <div class="table-wrapper table-scroll">
+    <table class="table is-fullwidth is-hoverable overview-table">
+      <thead class="thead-sticky">
+        <tr class="gradient-thead">
+          <th class="th-cell" style="width: 35%;">
+            <i class="fas fa-server mr-1 icon-primary"></i>
+            Server Name
+          </th>
+          <th class="th-cell td-center" style="width: 15%;">
+            <i class="fas fa-arrow-up mr-1 icon-success"></i>
+            Outbound
+          </th>
+          <th class="th-cell td-center" style="width: 15%;">
+            <i class="fas fa-arrow-down mr-1 icon-info"></i>
+            Inbound
+          </th>
+          <th class="th-cell td-center" style="width: 15%;">
+            <i class="fas fa-bullseye mr-1 icon-warning"></i>
+            Targets
+          </th>
+          <th class="th-cell td-center" style="width: 20%;">Actions</th>
         </tr>
       </thead>
       <tbody>
-        @for (item of portsMapped; track item.id; let index = $index) {
+        @for (item of dataService.mappedPorts(); track item.id; let index = $index) {
         <tr
-          [ngClass]="{ 'is-selected': selectedCardIndex === index }"
+          [class.is-selected]="selectedCardIndex === index"
           (click)="loadMappedPorts(index)"
+          (keydown.enter)="loadMappedPorts(index)"
+          (keydown.space)="loadMappedPorts(index); $event.preventDefault()"
+          tabindex="0"
+          class="row-clickable"
+          [class.server-row--selected]="selectedCardIndex === index"
         >
-          <td>{{ item.sourceServer }}</td>
-          <td>{{ item.totalMappedPorts }}</td>
-          <td>{{ item.totalMappedInboundPorts }}</td>
-          <td>{{ item.totalMappedServers }}</td>
-          <td>
-            <button class="button is-info" [routerLink]="['/mapping', index]">
-              <span class="icon-text">
-                <span class="icon">
+          <td class="td-cell td-bold" style="width: 35%; max-width: 0;">
+            <div class="flex items-center">
+              <div class="mr-2 status-dot status-dot--sm status-dot--success server-dot"></div>
+              <span class="text-truncate" title="{{ item.sourceServer }}">{{ item.sourceServer }}</span>
+            </div>
+          </td>
+          <td class="td-cell td-center" style="width: 15%;">
+            <span class="tag is-success is-light tag-rounded td-bold">
+              {{ item.totalMappedPorts }}
+            </span>
+          </td>
+          <td class="td-cell td-center" style="width: 15%;">
+            <span class="tag is-info is-light tag-rounded td-bold">
+              {{ item.totalMappedInboundPorts }}
+            </span>
+          </td>
+          <td class="td-cell td-center" style="width: 15%;">
+            <span class="tag is-warning is-light tag-rounded td-bold">
+              {{ item.totalMappedServers }}
+            </span>
+          </td>
+          <td class="td-cell td-center" style="width: 20%;">
+            <div class="buttons are-small is-centered action-buttons">
+              <button
+                class="button is-info is-light is-small"
+                [routerLink]="['/mapping', item.id]"
+                title="Edit Server Configuration"
+                (click)="$event.stopPropagation()"
+              >
+                <span class="icon is-small">
                   <i class="fas fa-edit"></i>
                 </span>
-              </span>
-            </button>
-          </td>
-          <td>
-            <button
-              class="button is-danger"
-              (click)="deleteServer(index); $event.stopPropagation()"
-              [disabled]="this.portsMapped.length <= 2"
-            >
-              <span class="icon-text">
-                <span class="icon">
+                <span class="is-hidden-touch">Edit</span>
+              </button>
+              <button
+                class="button is-danger is-light is-small"
+                (click)="deleteServer(item.id); $event.stopPropagation()"
+                [disabled]="dataService.mappedPorts().length <= 2"
+                title="Delete Server"
+              >
+                <span class="icon is-small">
                   <i class="fas fa-trash"></i>
                 </span>
-              </span>
-            </button>
+                <span class="is-hidden-touch">Delete</span>
+              </button>
+            </div>
           </td>
         </tr>
         }
       </tbody>
     </table>
-    <button class="button is-primary is-small mr-2" (click)="openModal()">
-      Add Server
-    </button>
-    <button class="button is-danger is-small" (click)="cleaAllMappedPorts()">
-      Clear All
-    </button>
-  </div>
-
-  <!-- <div class="column mr-3">
-    <button class="button is-small" (click)="this.showTable = !this.showTable">Table</button>
-    @for (item of portsMapped; track item.id; let index = $index) {
-    <div
-      class="card"
-      [ngClass]="{ 'is-selected': selectedCardIndex === index }"
-      (click)="loadMappedPorts(index)"
-    >
-      <div class="card-content">
-        <div class="content">
-          <h3>Server Name: {{ item.sourceServer }}</h3>
-          <h5>Total Outbound ports: {{ item.totalMappedPorts }}</h5>
-          <h5>Total Inbound ports: {{ item.totalMappedInboundPorts }}</h5>
-          <h5>Target Server qty: {{ item.totalMappedServers }}</h5>
-          <button
-            class="button is-primary mr-2"
-            [routerLink]="['/mapping', index]"
-          >
-            Edit
-          </button>
-          <button
-            class="button is-danger"
-            (click)="deleteServer(index)"
-            [disabled]="this.portsMapped.length <= 2"
-          >
-            Delete
-          </button>
-        </div>
-      </div>
-    </div>
-    }
-  </div> -->
-  <div class="column">
-    @if (showMappedPorts.length > 0) {
-    <h4 class="title">Source Server: {{ sourceServer }}</h4>
-    <h4 class="is-size-4">Outbound ports</h4>
-    <div class="table is-fullwidth">
-      <thead>
-        <tr>
-          <th>Target Server</th>
-          <th>Ports</th>
-          <th>Protocol</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (item of showMappedPorts; track item.index) {
-        <tr>
-          <td>{{ item.serverName }}</td>
-          <td>{{ item.port }}</td>
-          <td>{{ item.protocol }}</td>
-        </tr>
-        }
-      </tbody>
-      @if (codeStringTcp.length > 0) {
-      <p>TCP Ports: {{ codeStringTcp }}</p>
-      } 
-      @if (codeStringUdp.length > 0) {
-      <p>UDP Ports: {{ codeStringUdp }}</p>
-      } 
-    </div>
-    } @else {
-    <h4 class="title is-4">{{ sourceServer }}: No outbound ports mapped</h4>
-    } @if (showMappedInboundPorts.length > 0) {
-    <h4 class="is-size-4">Inbound ports</h4>
-    <div class="table is-fullwidth">
-      <thead>
-        <tr>
-          <th>Source Server</th>
-          <th>Ports</th>
-          <th>Protocol</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (item of showMappedInboundPorts; track item.index) {
-        <tr>
-          <td>{{ item.serverName }}</td>
-          <td>{{ item.port }}</td>
-          <td>{{ item.protocol }}</td>
-        </tr>
-        }
-      </tbody>
-    </div>
-    @if (codeStringInboundTcp.length > 0) {
-    <p>TCP Ports: {{ codeStringInboundTcp }}</p>
-    }
-    @if (codeStringInboundUdp.length > 0) {
-    <p>UDP Ports: {{ codeStringInboundUdp }}</p>
-    }
-    } @else {
-    <h4 class="title is-4">{{ sourceServer }}: No inbound ports mapped</h4>
-    }
   </div>
 </div>
-<!-- Button to open the modal -->
 
-<!-- Modal structure -->
-<div class="modal" [ngClass]="{ 'is-active': isModalActive }">
-  <div class="modal-background" (click)="closeModal()"></div>
-  <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">Server Name</p>
-      <button class="delete" aria-label="close" (click)="closeModal()"></button>
-    </header>
-    <section class="modal-card-body">
-      <div class="field">
-        <label class="label">Server Name</label>
-        <div class="control">
-          <input
-            class="input"
-            type="text"
-            [(ngModel)]="serverName"
-            placeholder="Enter server name"
-            (change)="checkServerName(serverName)"
-          />
-          @if (this.repeatServerName) {
-          <p class="help is-danger">No duplicate server names!</p>
-          } @else if (serverName.length < 4 || serverName.length > 20) {
-          <p class="help is-danger">
-            Server name must be between 4 and 20 characters
-          </p>
+<!-- Active Configuration Details - Now Below Overview -->
+@if (sourceServer && selectedCardIndex !== null) {
+<div class="modern-card slide-up">
+  <div class="flex items-center mb-4">
+    <div class="mr-4 status-dot status-dot--lg status-dot--primary config-dot"></div>
+    <h3 class="title is-5 mb-0 section-title">
+      <i class="fas fa-cog mr-2 icon-primary"></i>
+      Configuration for {{ sourceServer }}
+    </h3>
+    <span class="tag is-primary is-light ml-auto tag-rounded">
+      Active Selection
+    </span>
+  </div>
+
+      <!-- Outbound Ports Section -->
+      @if (showMappedPorts.length > 0) {
+      <div class="mb-6">
+        <h4 class="title is-6 mb-3 section-title">
+          <i class="fas fa-arrow-up mr-2 icon-success"></i>
+          Outbound Connections
+        </h4>
+
+        <div class="table-wrapper">
+          <table class="table is-fullwidth port-table">
+            <thead>
+              <tr class="port-table-head">
+                <th class="th-cell">Target Server</th>
+                <th class="th-cell">Ports</th>
+                <th class="th-cell">Protocol</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of showMappedPorts; track item.index) {
+              <tr class="port-table-row">
+                <td class="td-cell td-bold">{{ item.serverName }}</td>
+                <td class="td-cell">
+                  <code class="port-code">
+                    {{ item.port }}
+                  </code>
+                </td>
+                <td class="td-cell">
+                  <span class="tag tag-rounded td-bold"
+                    [class.is-success]="item.protocol === 'TCP'"
+                    [class.is-info]="item.protocol !== 'TCP'">
+                    {{ item.protocol }}
+                  </span>
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        @if (codeStringTcp.length > 0 || codeStringUdp.length > 0) {
+        <div class="mt-3 p-3 summary-box">
+          <p class="title is-7 mb-2 text-secondary">Port Summary:</p>
+          @if (codeStringTcp.length > 0) {
+          <p class="mb-1"><strong>TCP:</strong> <code class="port-code port-code--white">{{ codeStringTcp }}</code></p>
+          }
+          @if (codeStringUdp.length > 0) {
+          <p class="mb-0"><strong>UDP:</strong> <code class="port-code port-code--white">{{ codeStringUdp }}</code></p>
           }
         </div>
+        }
       </div>
-    </section>
-    <footer class="modal-card-foot">
-      <button
-        class="button is-success mr-2"
-        (click)="submitModal()"
-        [disabled]="
-          serverName.length < 4 ||
-          serverName.length > 20 ||
-          this.repeatServerName
-        "
-      >
-        Submit
-      </button>
-      <button class="button" (click)="closeModal()">Cancel</button>
-    </footer>
+      } @else {
+      <div class="has-text-centered p-6 empty-state">
+        <i class="fas fa-arrow-up fa-3x mb-3 icon-muted"></i>
+        <h5 class="title is-6 text-muted">No Outbound Ports</h5>
+        <p class="text-muted text-sm">{{ sourceServer }} has no outbound port mappings configured</p>
+      </div>
+      }
+
+      <!-- Inbound Ports Section -->
+      @if (showMappedInboundPorts.length > 0) {
+      <div class="mt-6">
+        <h4 class="title is-6 mb-3 section-title">
+          <i class="fas fa-arrow-down mr-2 icon-info"></i>
+          Inbound Connections
+        </h4>
+
+        <div class="table-wrapper">
+          <table class="table is-fullwidth port-table">
+            <thead>
+              <tr class="port-table-head">
+                <th class="th-cell">Source Server</th>
+                <th class="th-cell">Ports</th>
+                <th class="th-cell">Protocol</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of showMappedInboundPorts; track item.index) {
+              <tr class="port-table-row">
+                <td class="td-cell td-bold">{{ item.serverName }}</td>
+                <td class="td-cell">
+                  <code class="port-code">
+                    {{ item.port }}
+                  </code>
+                </td>
+                <td class="td-cell">
+                  <span class="tag tag-rounded td-bold"
+                    [class.is-success]="item.protocol === 'TCP'"
+                    [class.is-info]="item.protocol !== 'TCP'">
+                    {{ item.protocol }}
+                  </span>
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        @if (codeStringInboundTcp.length > 0 || codeStringInboundUdp.length > 0) {
+        <div class="mt-3 p-3 summary-box">
+          <p class="title is-7 mb-2 text-secondary">Port Summary:</p>
+          @if (codeStringInboundTcp.length > 0) {
+          <p class="mb-1"><strong>TCP:</strong> <code class="port-code port-code--white">{{ codeStringInboundTcp }}</code></p>
+          }
+          @if (codeStringInboundUdp.length > 0) {
+          <p class="mb-0"><strong>UDP:</strong> <code class="port-code port-code--white">{{ codeStringInboundUdp }}</code></p>
+          }
+        </div>
+        }
+      </div>
+      } @else {
+      <div class="has-text-centered p-6 mt-6 empty-state">
+        <i class="fas fa-arrow-down fa-3x mb-3 icon-muted"></i>
+        <h5 class="title is-6 text-muted">No Inbound Ports</h5>
+        <p class="text-muted text-sm">{{ sourceServer }} has no inbound port mappings configured</p>
+      </div>
+      }
+    </div>
+} @else {
+<div class="modern-card slide-up">
+  <div class="has-text-centered p-6">
+    <i class="fas fa-mouse-pointer fa-4x mb-4" style="color: var(--gray-300);"></i>
+    <h4 class="title is-5 mb-3 text-muted">Select a Server</h4>
+    <p class="text-muted select-hint">
+      Click on any server from the overview table above to view its detailed port configuration, connection mappings, and network topology.
+    </p>
+    <div class="mt-4">
+      <span class="tag is-light tag-rounded">
+        💡 Tip: Use the Edit button to modify server configurations
+      </span>
+    </div>
   </div>
 </div>
+}
+<!-- PrimeNG Dialog for Adding Server -->
+<p-dialog
+    header="Add New Server"
+    [(visible)]="isModalActive"
+    [modal]="true"
+    [draggable]="false"
+    [resizable]="false"
+    [style]="{ width: '500px' }"
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    styleClass="server-dialog"
+>
+    <div class="field">
+      <label class="label field-label">
+        <i class="fas fa-tag mr-2 icon-primary"></i>
+        Server Name
+      </label>
+      <div class="control has-icons-left">
+        <input
+          class="input input-styled"
+          type="text"
+          [(ngModel)]="serverName"
+          placeholder="Enter server name (4-20 characters)"
+          (input)="checkServerName(serverName)"
+        />
+        <span class="icon is-left icon-muted">
+          <i class="fas fa-server"></i>
+        </span>
+      </div>
 
-<footer class="footer mt-4">
-  <div class="content has-text-centered">
-    <p>
-      If you would like to view the code for this project, contribute, raise an
-      issue or have any recommendations, please visit the following links:
-    </p>
-    <p>
-      <strong>Ports App Front End Project Git: </strong>
-      <a href="https://github.com/shapedthought/portsApp"
-        >https://github.com/shapedthought/portsApp</a
-      >
-    </p>
-    <p>
-      <strong>Ports App Backend End Project Git: </strong>
-      <a href="https://github.com/shapedthought/ports_server"
-        >https://github.com/shapedthought/ports_server</a
-      >
-    </p>
-    <p>Version: 0.2.0</p>
+      @if (repeatServerName) {
+      <div class="mt-2 p-3 validation-error">
+        <div class="flex items-center">
+          <i class="fas fa-exclamation-triangle mr-2"></i>
+          <span class="td-bold">Server name already exists! Please choose a different name.</span>
+        </div>
+      </div>
+      } @else if (serverName.length < 4 || serverName.length > 20) {
+      <div class="mt-2 p-3 validation-warning">
+        <div class="flex items-center">
+          <i class="fas fa-info-circle mr-2"></i>
+          <span>Server name must be between 4 and 20 characters</span>
+        </div>
+      </div>
+      } @else if (serverName.length >= 4) {
+      <div class="mt-2 p-3 validation-success">
+        <div class="flex items-center">
+          <i class="fas fa-check-circle mr-2"></i>
+          <span>Server name looks good!</span>
+        </div>
+      </div>
+      }
+    </div>
+
+    <ng-template #footer>
+      <div class="flex justify-end gap-2">
+        <button
+          class="button cancel-button hover-bg-light"
+          (click)="closeModal()"
+        >
+          Cancel
+        </button>
+        <button
+          class="button is-success btn-bold hover-lift"
+          (click)="submitModal()"
+          [disabled]="serverName.length < 4 || serverName.length > 20 || repeatServerName"
+        >
+          <span class="icon">
+            <i class="fas fa-plus"></i>
+          </span>
+          <span>Add Server</span>
+        </button>
+      </div>
+    </ng-template>
+</p-dialog>
+
+<!-- Modern Footer -->
+<footer class="page-footer">
+  <div class="modern-container">
+    <div class="modern-card footer-card">
+      <div class="has-text-centered">
+        <div class="mb-4">
+          <i class="fas fa-code fa-2x mb-3 icon-primary"></i>
+          <h4 class="title is-6 mb-2 section-title">Open Source Project</h4>
+          <p class="text-secondary footer-description">
+            PortsApp is an open-source network port management tool. Contribute, report issues, or check out the source code on GitHub.
+          </p>
+        </div>
+
+        <div class="columns is-mobile">
+          <div class="column">
+            <div class="box footer-box">
+              <h6 class="title is-7 mb-2 section-title">
+                <i class="fab fa-angular mr-1" style="color: #dd0031;"></i>
+                Frontend
+              </h6>
+              <a href="https://github.com/shapedthought/portsApp" target="_blank" rel="noopener"
+                 class="footer-link">
+                <i class="fab fa-github mr-1"></i>
+                shapedthought/portsApp
+              </a>
+            </div>
+          </div>
+          <div class="column">
+            <div class="box footer-box">
+              <h6 class="title is-7 mb-2 section-title">
+                <i class="fas fa-server mr-1 icon-success"></i>
+                Backend
+              </h6>
+              <a href="https://github.com/shapedthought/ports_server" target="_blank" rel="noopener"
+                 class="footer-link">
+                <i class="fab fa-github mr-1"></i>
+                shapedthought/ports_server
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-center gap-4 mt-4 text-sm text-muted">
+          <span>
+            <i class="fas fa-tag mr-1"></i>
+            Version 0.5.0
+          </span>
+          <span>&bull;</span>
+          <span>
+            <i class="fas fa-heart mr-1" style="color: #ef4444;"></i>
+            Made with Angular & PrimeNG
+          </span>
+        </div>
+      </div>
+    </div>
   </div>
 </footer>

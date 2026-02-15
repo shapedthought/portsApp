@@ -1,0 +1,49 @@
+/* Navigation header */
+.nav-header {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  border: none;
+  min-height: 4rem;
+}
+
+.nav-burger {
+  color: white;
+}
+
+/* Nav links */
+.nav-link {
+  color: white;
+  transition: all 0.2s;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+}
+
+.nav-link.is-active {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  color: white !important;
+}
+
+.nav-brand {
+  font-weight: 600;
+  font-size: 1.25rem;
+}
+
+/* Version badge */
+.nav-version {
+  color: #5eead4;
+  font-size: 0.875rem;
+}
+
+/* Main content area */
+.main-content {
+  background-color: var(--bg-secondary);
+  min-height: calc(100vh - 4rem);
+}
+
+.main-container {
+  padding-top: var(--spacing-xl);
+  padding-bottom: var(--spacing-xl);
+}
