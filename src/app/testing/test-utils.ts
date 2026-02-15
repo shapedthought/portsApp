@@ -12,7 +12,6 @@ export function createTestMappedPort(overrides?: Partial<MappedPorts>): MappedPo
   return {
     sourceServerId: 'src-id',
     sourceServerName: 'Server 1',
-    targetServerId: 'tgt-id',
     targetServerName: 'Server 2',
     sourceService: 'Backup Server',
     targetService: 'Cloud Service',

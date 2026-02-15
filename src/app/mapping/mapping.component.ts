@@ -215,7 +215,6 @@ export class MappingComponent {
     let mappedPorts: MappedPorts = {
       sourceServerId: this.id,
       sourceServerName: this.serverName,
-      targetServerId: '',
       targetServerName: this.selectedTargetServer,
       sourceService: this.sourceServiceName,
       targetService: this.fullServiceResponse[index].targetService,

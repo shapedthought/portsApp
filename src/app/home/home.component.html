@@ -142,6 +142,9 @@
         <tr
           [class.is-selected]="selectedCardIndex === index"
           (click)="loadMappedPorts(index)"
+          (keydown.enter)="loadMappedPorts(index)"
+          (keydown.space)="loadMappedPorts(index); $event.preventDefault()"
+          tabindex="0"
           class="row-clickable"
           [class.server-row--selected]="selectedCardIndex === index"
         >

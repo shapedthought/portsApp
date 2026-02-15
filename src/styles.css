@@ -1,7 +1,7 @@
 /* Modern Global Styles for PortsApp */
 
 /* Import PrimeNG and modern fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&display=swap');
 
 /* CSS Custom Properties for consistent theming */
 :root {
@@ -815,6 +815,12 @@ p {
 }
 
 .row-clickable:hover {
+  background-color: var(--gray-50);
+}
+
+.row-clickable:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: -2px;
   background-color: var(--gray-50);
 }
 
