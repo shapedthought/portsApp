@@ -140,7 +140,7 @@
       <tbody>
         @for (item of dataService.mappedPorts(); track item.id; let index = $index) {
         <tr
-          [ngClass]="{ 'is-selected': selectedCardIndex === index }"
+          [class.is-selected]="selectedCardIndex === index"
           (click)="loadMappedPorts(index)"
           class="row-clickable"
           [class.server-row--selected]="selectedCardIndex === index"
@@ -241,7 +241,8 @@
                 </td>
                 <td class="td-cell">
                   <span class="tag tag-rounded td-bold"
-                    [ngClass]="item.protocol === 'TCP' ? 'is-success' : 'is-info'">
+                    [class.is-success]="item.protocol === 'TCP'"
+                    [class.is-info]="item.protocol !== 'TCP'">
                     {{ item.protocol }}
                   </span>
                 </td>
@@ -299,7 +300,8 @@
                 </td>
                 <td class="td-cell">
                   <span class="tag tag-rounded td-bold"
-                    [ngClass]="item.protocol === 'TCP' ? 'is-success' : 'is-info'">
+                    [class.is-success]="item.protocol === 'TCP'"
+                    [class.is-info]="item.protocol !== 'TCP'">
                     {{ item.protocol }}
                   </span>
                 </td>
@@ -466,7 +468,7 @@
         <div class="flex items-center justify-center gap-4 mt-4 text-sm text-muted">
           <span>
             <i class="fas fa-tag mr-1"></i>
-            Version 0.4.0
+            Version 0.5.0
           </span>
           <span>&bull;</span>
           <span>

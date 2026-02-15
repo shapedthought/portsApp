@@ -69,7 +69,7 @@
     <!-- Tab-Style Toggle -->
     <div class="tabs is-boxed is-small">
       <ul class="tab-list">
-        <li [ngClass]="viewMode === 'table' ? 'is-active' : ''">
+        <li [class.is-active]="viewMode === 'table'">
           <a (click)="toggleView('table')" class="tab-link tab-link--left">
             <span class="icon is-small">
               <i class="fas fa-table"></i>
@@ -77,7 +77,7 @@
             <span>Table</span>
           </a>
         </li>
-        <li [ngClass]="viewMode === 'diagram' ? 'is-active' : ''">
+        <li [class.is-active]="viewMode === 'diagram'">
           <a (click)="toggleView('diagram')" class="tab-link tab-link--right">
             <span class="icon is-small">
               <i class="fas fa-project-diagram"></i>
@@ -251,7 +251,8 @@
         </td>
         <td class="td-center">
           <span class="tag tag-rounded"
-            [ngClass]="mapping.protocol === 'TCP' ? 'is-success' : 'is-info'"
+            [class.is-success]="mapping.protocol === 'TCP'"
+            [class.is-info]="mapping.protocol !== 'TCP'"
             style="font-weight: 600;">
             {{ mapping.protocol }}
           </span>

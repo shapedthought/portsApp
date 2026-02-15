@@ -11,7 +11,6 @@ import {
   TargetServices,
   createDefaultPortMapping,
 } from '../services';
-import { NgClass } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormControl, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { DataService } from '../data.service';
 import { HttpService } from '../http.service';
@@ -21,7 +20,7 @@ import { Stepper, StepList, Step, StepPanels, StepPanel } from 'primeng/stepper'
 
 @Component({
   selector: 'app-mapping',
-  imports: [NgClass, FormsModule, ReactiveFormsModule, RouterLink, Stepper, StepList, Step, StepPanels, StepPanel],
+  imports: [FormsModule, ReactiveFormsModule, RouterLink, Stepper, StepList, Step, StepPanels, StepPanel],
   templateUrl: './mapping.component.html',
   styleUrl: './mapping.component.css',
 })

@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { vi } from 'vitest';
 import { DataService } from './data.service';
 import { createTestPortMapping, createTestMappedPort } from './testing/test-utils';
 import { PortMapping } from './services';
@@ -9,12 +10,16 @@ describe('DataService', () => {
 
   beforeEach(() => {
     store = {};
-    spyOn(localStorage, 'getItem').and.callFake((key: string) => store[key] ?? null);
-    spyOn(localStorage, 'setItem').and.callFake((key: string, value: string) => { store[key] = value; });
-    spyOn(localStorage, 'removeItem').and.callFake((key: string) => { delete store[key]; });
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation((key: string) => store[key] ?? null);
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation((key: string, value: string) => { store[key] = value; });
+    vi.spyOn(Storage.prototype, 'removeItem').mockImplementation((key: string) => { delete store[key]; });
 
     TestBed.configureTestingModule({});
     service = TestBed.inject(DataService);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   // --- Initialization & Defaults ---
@@ -47,14 +52,14 @@ describe('DataService', () => {
     });
 
     it('hasMappedPorts should return false when no mappings exist', () => {
-      expect(service.hasMappedPorts()).toBeFalse();
+      expect(service.hasMappedPorts()).toBe(false);
     });
 
     it('hasMappedPorts should return true when mappings exist', () => {
       const pm = service.mappedPorts()[0];
       pm.mappedPorts.push(createTestMappedPort());
       service.mappedPorts.set([pm, service.mappedPorts()[1]]);
-      expect(service.hasMappedPorts()).toBeTrue();
+      expect(service.hasMappedPorts()).toBe(true);
     });
   });
 
@@ -63,7 +68,7 @@ describe('DataService', () => {
   describe('localStorage persistence', () => {
     it('savePortMapping() should write to localStorage', () => {
       service.savePortMapping();
-      expect(localStorage.setItem).toHaveBeenCalledWith('portMapping', jasmine.any(String));
+      expect(localStorage.setItem).toHaveBeenCalledWith('portMapping', expect.any(String));
       const saved = JSON.parse(store['portMapping']);
       expect(saved.length).toBe(2);
     });
@@ -92,7 +97,7 @@ describe('DataService', () => {
       expect(ports.length).toBe(2);
       // IDs should now be UUIDs (not integers)
       ports.forEach(pm => {
-        expect(/^\d+$/.test(pm.id)).toBeFalse();
+        expect(/^\d+$/.test(pm.id)).toBe(false);
         expect(pm.id.length).toBeGreaterThan(10);
       });
       // Should have saved the migrated data

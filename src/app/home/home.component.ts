@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MappedPorts, ShowMappedPorts } from '../services';
@@ -13,7 +12,7 @@ import { environment } from '../../environments/environment';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, Dialog],
+  imports: [RouterLink, FormsModule, Dialog],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
