@@ -2,7 +2,7 @@
 .server-row--selected { background-color: rgba(30, 58, 95, 0.08); }
 .server-dot { box-shadow: 0 0 4px rgba(16, 185, 129, 0.4); }
 .config-dot { box-shadow: 0 0 8px rgba(20, 184, 166, 0.4); }
-.action-buttons { gap: 0.25rem; }
+.action-buttons { gap: 0.25rem; flex-wrap: nowrap; }
 .port-table { margin: 0; }
 .port-table-head { background-color: var(--gray-50); }
 .port-table-row { border-bottom: 1px solid var(--gray-100); }

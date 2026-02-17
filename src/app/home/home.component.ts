@@ -19,7 +19,11 @@ import { environment } from '../../environments/environment';
 export class HomeComponent {
   portsServer = environment.portsServer;
   isModalActive: boolean = false;
+  isRenameModalActive: boolean = false;
   serverName: string = '';
+  renameServerName: string = '';
+  renameServerId: string = '';
+  renameRepeatServerName: boolean = false;
   serverIndex = 2;
   sourceServer = '';
   repeatServerName: boolean = false;
@@ -68,6 +72,40 @@ export class HomeComponent {
     } else {
       this.repeatServerName = false;
     }
+  }
+
+  openRenameModal(id: string, currentName: string): void {
+    this.renameServerId = id;
+    this.renameServerName = currentName;
+    this.renameRepeatServerName = false;
+    this.isRenameModalActive = true;
+  }
+
+  closeRenameModal(): void {
+    this.isRenameModalActive = false;
+  }
+
+  checkRenameServerName(name: string): void {
+    const serverNames = this.dataService.mappedPorts()
+      .filter(pm => pm.id !== this.renameServerId)
+      .map(pm => pm.sourceServer);
+    this.renameRepeatServerName = serverNames.includes(name);
+  }
+
+  submitRenameModal(): void {
+    const newName = this.renameServerName;
+    const oldPm = this.dataService.mappedPorts().find(pm => pm.id === this.renameServerId);
+    const oldName = oldPm ? oldPm.sourceServer : '';
+    this.dataService.updateName(newName, this.renameServerId);
+    this.closeRenameModal();
+    if (this.sourceServer === oldName) {
+      this.sourceServer = newName;
+    }
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Server Renamed',
+      detail: `"${oldName}" has been renamed to "${newName}".`
+    });
   }
 
   deleteServer(id: string): void {
