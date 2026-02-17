@@ -6,6 +6,7 @@ import { PortMapping, MappedPorts } from '../services';
 import { DiagramComponent } from '../diagram/diagram.component';
 import { TableModule, Table } from 'primeng/table';
 import { InputText } from 'primeng/inputtext';
+import { MessageService, ConfirmationService } from 'primeng/api';
 
 interface FlatMapping extends MappedPorts {
   sourceServer: string;
@@ -35,7 +36,9 @@ export class ReportComponent implements OnInit {
   serverMappingCounts: Map<string, number> = new Map();
 
   constructor(
-    private dataService: DataService
+    private dataService: DataService,
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService
   ) { }
 
   ngOnInit(): void {
@@ -119,6 +122,28 @@ export class ReportComponent implements OnInit {
   // Toggle between table and diagram view
   toggleView(mode: 'table' | 'diagram'): void {
     this.viewMode = mode;
+  }
+
+  // Delete a specific port mapping entry
+  deleteMapping(mapping: FlatMapping): void {
+    this.confirmationService.confirm({
+      header: 'Delete Port Mapping',
+      message: `Delete "${mapping.sourceService} → ${mapping.targetService}" (${mapping.port} ${mapping.protocol}) from ${mapping.sourceServer}?`,
+      acceptLabel: 'Delete',
+      rejectLabel: 'Cancel',
+      acceptButtonStyleClass: 'p-button-danger',
+      accept: () => {
+        this.dataService.deleteMappedPort(mapping.sourceServerId, mapping);
+        this.portMapping = this.dataService.mappedPorts();
+        this.buildFlatMappings();
+        this.buildStats();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Mapping Deleted',
+          detail: `Removed ${mapping.port} ${mapping.protocol} mapping from "${mapping.sourceServer}".`
+        });
+      }
+    });
   }
 
 }

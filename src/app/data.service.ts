@@ -230,6 +230,29 @@ export class DataService {
     return [portQty, Array.from(tcpPorts), Array.from(udpPorts)];
   }
 
+  // Delete a specific mapped port entry from a server
+  deleteMappedPort(serverId: string, mappedPort: MappedPorts): void {
+    this.mappedPorts.update(current => {
+      return current.map(pm => {
+        if (pm.id !== serverId) return pm;
+        const index = pm.mappedPorts.findIndex(mp =>
+          mp.targetServerName === mappedPort.targetServerName &&
+          mp.sourceService === mappedPort.sourceService &&
+          mp.targetService === mappedPort.targetService &&
+          mp.port === mappedPort.port &&
+          mp.protocol === mappedPort.protocol &&
+          mp.product === mappedPort.product
+        );
+        if (index === -1) return pm;
+        const updated = [...pm.mappedPorts];
+        updated.splice(index, 1);
+        return { ...pm, mappedPorts: updated };
+      });
+    });
+    this.recalculateServerMappedPorts();
+    this.recalculateMappedPorts();
+  }
+
   // Update the port mapping data by UUID
   updatePortMapping(portMapping: PortMapping): void {
     this.mappedPorts.update(current => {
