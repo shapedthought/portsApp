@@ -382,7 +382,7 @@
           class="input input-styled"
           type="text"
           [(ngModel)]="serverName"
-          placeholder="Enter server name (4-20 characters)"
+          placeholder="Enter server name (3-20 characters)"
           (input)="checkServerName(serverName)"
         />
         <span class="icon is-left icon-muted">
@@ -397,14 +397,14 @@
           <span class="td-bold">Server name already exists! Please choose a different name.</span>
         </div>
       </div>
-      } @else if (serverName.length < 4 || serverName.length > 20) {
+      } @else if (serverName.length < 3 || serverName.length > 20) {
       <div class="mt-2 p-3 validation-warning">
         <div class="flex items-center">
           <i class="fas fa-info-circle mr-2"></i>
-          <span>Server name must be between 4 and 20 characters</span>
+          <span>Server name must be between 3 and 20 characters</span>
         </div>
       </div>
-      } @else if (serverName.length >= 4) {
+      } @else if (serverName.length >= 3) {
       <div class="mt-2 p-3 validation-success">
         <div class="flex items-center">
           <i class="fas fa-check-circle mr-2"></i>
@@ -425,7 +425,7 @@
         <button
           class="button is-success btn-bold hover-lift"
           (click)="submitModal()"
-          [disabled]="serverName.length < 4 || serverName.length > 20 || repeatServerName"
+          [disabled]="serverName.length < 3 || serverName.length > 20 || repeatServerName"
         >
           <span class="icon">
             <i class="fas fa-plus"></i>
