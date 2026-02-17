@@ -118,23 +118,23 @@
     <table class="table is-fullwidth is-hoverable overview-table">
       <thead class="thead-sticky">
         <tr class="gradient-thead">
-          <th class="th-cell" style="width: 35%;">
+          <th class="th-cell" style="width: 28%; text-align: center;">
             <i class="fas fa-server mr-1 icon-primary"></i>
             Server Name
           </th>
-          <th class="th-cell td-center" style="width: 15%;">
+          <th class="th-cell td-center" style="width: 12%;">
             <i class="fas fa-arrow-up mr-1 icon-success"></i>
             Outbound
           </th>
-          <th class="th-cell td-center" style="width: 15%;">
+          <th class="th-cell td-center" style="width: 12%;">
             <i class="fas fa-arrow-down mr-1 icon-info"></i>
             Inbound
           </th>
-          <th class="th-cell td-center" style="width: 15%;">
+          <th class="th-cell td-center" style="width: 12%;">
             <i class="fas fa-bullseye mr-1 icon-warning"></i>
             Targets
           </th>
-          <th class="th-cell td-center" style="width: 20%;">Actions</th>
+          <th class="th-cell td-center" style="width: 36%;">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -148,29 +148,39 @@
           class="row-clickable"
           [class.server-row--selected]="selectedCardIndex === index"
         >
-          <td class="td-cell td-bold" style="width: 35%; max-width: 0;">
+          <td class="td-cell td-bold" style="width: 28%; max-width: 0;">
             <div class="flex items-center">
               <div class="mr-2 status-dot status-dot--sm status-dot--success server-dot"></div>
               <span class="text-truncate" title="{{ item.sourceServer }}">{{ item.sourceServer }}</span>
             </div>
           </td>
-          <td class="td-cell td-center" style="width: 15%;">
+          <td class="td-cell td-center" style="width: 12%;">
             <span class="tag is-success is-light tag-rounded td-bold">
               {{ item.totalMappedPorts }}
             </span>
           </td>
-          <td class="td-cell td-center" style="width: 15%;">
+          <td class="td-cell td-center" style="width: 12%;">
             <span class="tag is-info is-light tag-rounded td-bold">
               {{ item.totalMappedInboundPorts }}
             </span>
           </td>
-          <td class="td-cell td-center" style="width: 15%;">
+          <td class="td-cell td-center" style="width: 12%;">
             <span class="tag is-warning is-light tag-rounded td-bold">
               {{ item.totalMappedServers }}
             </span>
           </td>
-          <td class="td-cell td-center" style="width: 20%;">
+          <td class="td-cell td-center" style="width: 36%;">
             <div class="buttons are-small is-centered action-buttons">
+              <button
+                class="button is-warning is-light is-small"
+                (click)="openRenameModal(item.id, item.sourceServer); $event.stopPropagation()"
+                title="Rename Server"
+              >
+                <span class="icon is-small">
+                  <i class="fas fa-pencil-alt"></i>
+                </span>
+                <span class="is-hidden-touch">Rename</span>
+              </button>
               <button
                 class="button is-info is-light is-small"
                 [routerLink]="['/mapping', item.id]"
@@ -372,7 +382,7 @@
           class="input input-styled"
           type="text"
           [(ngModel)]="serverName"
-          placeholder="Enter server name (4-20 characters)"
+          placeholder="Enter server name (3-20 characters)"
           (input)="checkServerName(serverName)"
         />
         <span class="icon is-left icon-muted">
@@ -387,14 +397,14 @@
           <span class="td-bold">Server name already exists! Please choose a different name.</span>
         </div>
       </div>
-      } @else if (serverName.length < 4 || serverName.length > 20) {
+      } @else if (serverName.length < 3 || serverName.length > 20) {
       <div class="mt-2 p-3 validation-warning">
         <div class="flex items-center">
           <i class="fas fa-info-circle mr-2"></i>
-          <span>Server name must be between 4 and 20 characters</span>
+          <span>Server name must be between 3 and 20 characters</span>
         </div>
       </div>
-      } @else if (serverName.length >= 4) {
+      } @else if (serverName.length >= 3) {
       <div class="mt-2 p-3 validation-success">
         <div class="flex items-center">
           <i class="fas fa-check-circle mr-2"></i>
@@ -415,12 +425,88 @@
         <button
           class="button is-success btn-bold hover-lift"
           (click)="submitModal()"
-          [disabled]="serverName.length < 4 || serverName.length > 20 || repeatServerName"
+          [disabled]="serverName.length < 3 || serverName.length > 20 || repeatServerName"
         >
           <span class="icon">
             <i class="fas fa-plus"></i>
           </span>
           <span>Add Server</span>
+        </button>
+      </div>
+    </ng-template>
+</p-dialog>
+
+<!-- PrimeNG Dialog for Renaming Server -->
+<p-dialog
+    header="Rename Server"
+    [(visible)]="isRenameModalActive"
+    [modal]="true"
+    [draggable]="false"
+    [resizable]="false"
+    [style]="{ width: '500px' }"
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    styleClass="server-dialog"
+>
+    <div class="field">
+      <label class="label field-label">
+        <i class="fas fa-tag mr-2 icon-primary"></i>
+        Server Name
+      </label>
+      <div class="control has-icons-left">
+        <input
+          class="input input-styled"
+          type="text"
+          [(ngModel)]="renameServerName"
+          placeholder="Enter server name (3-20 characters)"
+          (input)="checkRenameServerName(renameServerName)"
+        />
+        <span class="icon is-left icon-muted">
+          <i class="fas fa-server"></i>
+        </span>
+      </div>
+
+      @if (renameRepeatServerName) {
+      <div class="mt-2 p-3 validation-error">
+        <div class="flex items-center">
+          <i class="fas fa-exclamation-triangle mr-2"></i>
+          <span class="td-bold">Server name already exists! Please choose a different name.</span>
+        </div>
+      </div>
+      } @else if (renameServerName.length < 3 || renameServerName.length > 20) {
+      <div class="mt-2 p-3 validation-warning">
+        <div class="flex items-center">
+          <i class="fas fa-info-circle mr-2"></i>
+          <span>Server name must be between 3 and 20 characters</span>
+        </div>
+      </div>
+      } @else if (renameServerName.length >= 3) {
+      <div class="mt-2 p-3 validation-success">
+        <div class="flex items-center">
+          <i class="fas fa-check-circle mr-2"></i>
+          <span>Server name looks good!</span>
+        </div>
+      </div>
+      }
+    </div>
+
+    <ng-template #footer>
+      <div class="flex justify-end gap-2">
+        <button
+          class="button cancel-button hover-bg-light"
+          (click)="closeRenameModal()"
+        >
+          Cancel
+        </button>
+        <button
+          class="button is-success btn-bold hover-lift"
+          (click)="submitRenameModal()"
+          [disabled]="renameServerName.length < 3 || renameServerName.length > 20 || renameRepeatServerName"
+        >
+          <span class="icon">
+            <i class="fas fa-check"></i>
+          </span>
+          <span>Rename</span>
         </button>
       </div>
     </ng-template>
