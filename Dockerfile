@@ -1,4 +1,4 @@
-FROM node:latest AS build
+FROM node:22-alpine AS build
 
 WORKDIR /usr/src/app
 
@@ -12,7 +12,7 @@ RUN npm run build
 
 # stage 2
 
-FROM nginx:latest
+FROM nginx:alpine
 
 COPY --from=build /usr/src/app/dist/ports-app/browser /usr/share/nginx/html
 

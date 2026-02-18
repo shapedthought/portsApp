@@ -1,0 +1,11 @@
+node_modules
+dist
+.angular
+.git
+.vscode
+*.md
+ng-serve.log
+PLAN.md
+RECOMMENDATIONS.md
+.DS_Store
+coverage
