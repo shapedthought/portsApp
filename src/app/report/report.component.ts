@@ -54,6 +54,7 @@ export class ReportComponent implements OnInit {
       item.mappedPorts.forEach(target => {
         this.flatMappings.push({
           ...target,
+          sourceServerId: item.id,
           sourceServer: item.sourceServer
         });
       });
@@ -133,15 +134,23 @@ export class ReportComponent implements OnInit {
       rejectLabel: 'Cancel',
       acceptButtonStyleClass: 'p-button-danger',
       accept: () => {
-        this.dataService.deleteMappedPort(mapping.sourceServerId, mapping);
-        this.portMapping = this.dataService.mappedPorts();
-        this.buildFlatMappings();
-        this.buildStats();
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Mapping Deleted',
-          detail: `Removed ${mapping.port} ${mapping.protocol} mapping from "${mapping.sourceServer}".`
-        });
+        const deleted = this.dataService.deleteMappedPort(mapping.sourceServerId, mapping);
+        if (deleted) {
+          this.portMapping = this.dataService.mappedPorts();
+          this.buildFlatMappings();
+          this.buildStats();
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Mapping Deleted',
+            detail: `Removed ${mapping.port} ${mapping.protocol} mapping from "${mapping.sourceServer}".`
+          });
+        } else {
+          this.messageService.add({
+            severity: 'warn',
+            summary: 'Mapping Not Found',
+            detail: `No matching mapping found for ${mapping.port} ${mapping.protocol} on "${mapping.sourceServer}".`
+          });
+        }
       }
     });
   }

@@ -231,7 +231,8 @@ export class DataService {
   }
 
   // Delete a specific mapped port entry from a server
-  deleteMappedPort(serverId: string, mappedPort: MappedPorts): void {
+  deleteMappedPort(serverId: string, mappedPort: MappedPorts): boolean {
+    let deleted = false;
     this.mappedPorts.update(current => {
       return current.map(pm => {
         if (pm.id !== serverId) return pm;
@@ -244,13 +245,17 @@ export class DataService {
           mp.product === mappedPort.product
         );
         if (index === -1) return pm;
+        deleted = true;
         const updated = [...pm.mappedPorts];
         updated.splice(index, 1);
         return { ...pm, mappedPorts: updated };
       });
     });
-    this.recalculateServerMappedPorts();
-    this.recalculateMappedPorts();
+    if (deleted) {
+      this.recalculateServerMappedPorts();
+      this.recalculateMappedPorts();
+    }
+    return deleted;
   }
 
   // Update the port mapping data by UUID
