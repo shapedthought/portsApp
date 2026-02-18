@@ -207,6 +207,7 @@
             <p-sortIcon field="protocol" />
           </div>
         </th>
+        <th style="width: 4rem; text-align: center;"></th>
       </tr>
       <tr>
         <th><input pInputText type="text" (input)="dt.filter($any($event.target).value, 'sourceServer', 'contains')" placeholder="Filter..." class="p-inputtext-sm" style="width: 100%;" /></th>
@@ -216,6 +217,7 @@
         <th><input pInputText type="text" (input)="dt.filter($any($event.target).value, 'targetService', 'contains')" placeholder="Filter..." class="p-inputtext-sm" style="width: 100%;" /></th>
         <th><input pInputText type="text" (input)="dt.filter($any($event.target).value, 'port', 'contains')" placeholder="Filter..." class="p-inputtext-sm" style="width: 100%;" /></th>
         <th><input pInputText type="text" (input)="dt.filter($any($event.target).value, 'protocol', 'contains')" placeholder="Filter..." class="p-inputtext-sm" style="width: 100%;" /></th>
+        <th></th>
       </tr>
     </ng-template>
 
@@ -245,7 +247,7 @@
           {{ mapping.targetService }}
         </td>
         <td class="td-center">
-          <code class="port-code port-code--lg">
+          <code class="port-code port-code--lg" title="{{ mapping.description }}">
             {{ mapping.port }}
           </code>
         </td>
@@ -257,12 +259,24 @@
             {{ mapping.protocol }}
           </span>
         </td>
+        <td class="td-center">
+          <button
+            class="button is-danger is-light is-small"
+            (click)="deleteMapping(mapping)"
+            title="Delete this port mapping"
+            aria-label="Delete port mapping"
+          >
+            <span class="icon is-small">
+              <i class="fas fa-trash"></i>
+            </span>
+          </button>
+        </td>
       </tr>
     </ng-template>
 
     <ng-template #emptymessage>
       <tr>
-        <td colspan="7">
+        <td colspan="8">
           <div class="has-text-centered p-6 empty-state" style="border: none;">
             <i class="fas fa-search fa-3x mb-3 icon-muted"></i>
             <h4 class="title is-6 text-muted">No Matching Results</h4>
