@@ -118,6 +118,8 @@ Add these under **Settings → Secrets and variables → Actions**:
 
 If Hub secrets are missing, the build/push job fails immediately with a clear error (this workflow does not run on pull_request, so PR forks never attempt a Hub push).
 
+**Job outputs:** pass only the image **tag** (`image_tag`, e.g. `1.2` or `sha-abcdef`) between jobs. Do **not** put the Docker Hub username (or a full `user/repo:tag` ref built from it) into job outputs — Actions treats secret-matching values as sensitive and skips those outputs (`Skip output '…' since it may contain secret`), which leaves deploy with an empty `IMAGE_REF`. The deploy job builds `IMAGE_REF` as `${IMAGE_NAME}:${image_tag}` using the workflow `env` constant `IMAGE_NAME`.
+
 ### First deploy of tag `1.2`
 
 1. Set the secrets above.

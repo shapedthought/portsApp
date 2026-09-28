@@ -30,8 +30,11 @@ jobs:
     # Not triggered on pull_request — forks won't push unless they configure Hub secrets
     # and run this workflow themselves.
     outputs:
+      # Tag only — never pass a full image ref as a job output. GitHub Actions
+      # redacts/skips outputs that contain secret values; DOCKERHUB_USERNAME is
+      # embedded in IMAGE_NAME, so image_ref would be stripped and deploy would
+      # see an empty IMAGE_REF.
       image_tag: ${{ steps.meta.outputs.primary_tag }}
-      image_ref: ${{ steps.meta.outputs.image_ref }}
     steps:
       - name: Require Docker Hub secrets
         env:
@@ -94,7 +97,6 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
           echo "primary_tag=${PRIMARY}" >> "$GITHUB_OUTPUT"
-          echo "image_ref=${IMAGE_NAME}:${PRIMARY}" >> "$GITHUB_OUTPUT"
           echo "Resolved primary tag: ${PRIMARY}"
           echo "All image refs:"
           for t in "${UNIQUE[@]}"; do echo "  - ${IMAGE_NAME}:${t}"; done
@@ -143,10 +145,29 @@ jobs:
           fi
           echo "SSH deploy secret is present."
 
+      - name: Resolve and guard IMAGE_REF
+        env:
+          IMAGE_TAG: ${{ needs.build-and-push.outputs.image_tag }}
+        run: |
+          set -euo pipefail
+          # Build ref from workflow env IMAGE_NAME + job output image_tag only.
+          # Never take a full image ref from a job/step output (secret-redaction risk).
+          IMAGE_REF="${IMAGE_NAME}:${IMAGE_TAG}"
+          if [ -z "${IMAGE_TAG}" ] || [ -z "${IMAGE_REF}" ] || [[ "${IMAGE_REF}" == *: ]]; then
+            echo "::error::IMAGE_REF is empty or missing a tag (got '${IMAGE_REF}')."
+            echo "Build job must export image_tag (tag only). Do not pass a full image"
+            echo "ref as a job output — GitHub redacts outputs containing secret values"
+            echo "(e.g. DOCKERHUB_USERNAME inside the Hub image name)."
+            exit 1
+          fi
+          echo "Deploying image: ${IMAGE_REF}"
+
       - name: Deploy image via SSH + kubectl
         uses: appleboy/ssh-action@v1.2.0
         env:
-          IMAGE_REF: ${{ needs.build-and-push.outputs.image_ref }}
+          # Compose here from IMAGE_NAME (workflow env) + image_tag (job output).
+          # Do not read a full image_ref from needs.*.outputs — Actions skips those.
+          IMAGE_REF: ${{ env.IMAGE_NAME }}:${{ needs.build-and-push.outputs.image_tag }}
           DEPLOYMENT_NAME: ${{ env.DEPLOYMENT_NAME }}
           CONTAINER_NAME: ${{ env.CONTAINER_NAME }}
           K8S_NAMESPACE: ${{ env.K8S_NAMESPACE }}
