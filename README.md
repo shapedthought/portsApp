@@ -100,6 +100,8 @@ kubectl rollout status deployment/ports-frontend-deployment -n default
 
 Defaults: host `89.116.228.135`, user `ed` (override with secrets `SSH_HOST` / `SSH_USER`).
 
+Deploy requires a readable kubeconfig at `~/.kube/config` on the VPS for the SSH user (e.g. `/home/ed/.kube/config`). Do not rely on the root-only k3s default (`/etc/rancher/k3s/k3s.yaml`); the workflow sets `KUBECONFIG` to `$HOME/.kube/config` before calling `kubectl`.
+
 **Alternative (documented, not primary):** store a kubeconfig as a secret and run `kubectl` directly on the runner. Prefer SSH to match how the VPS is operated day-to-day.
 
 ### Required secrets

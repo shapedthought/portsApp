@@ -157,6 +157,11 @@ jobs:
           envs: IMAGE_REF,DEPLOYMENT_NAME,CONTAINER_NAME,K8S_NAMESPACE
           script: |
             set -euo pipefail
+            export KUBECONFIG="${KUBECONFIG:-$HOME/.kube/config}"
+            if [ ! -f "$KUBECONFIG" ]; then
+              echo "::error::Missing kubeconfig at $KUBECONFIG"
+              exit 1
+            fi
             echo "Rolling out ${IMAGE_REF} → ${DEPLOYMENT_NAME}/${CONTAINER_NAME}"
             kubectl set image "deployment/${DEPLOYMENT_NAME}" \
               "${CONTAINER_NAME}=${IMAGE_REF}" \
