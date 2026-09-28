@@ -46,6 +46,13 @@
           <i class="fas fa-chart-bar mr-2"></i>
           Report
         </a>
+        <a routerLink="/mcp"
+           class="navbar-item nav-link"
+           routerLinkActive="is-active"
+           (click)="closeMobileMenu()">
+          <i class="fas fa-robot mr-2"></i>
+          MCP
+        </a>
       </div>
 
       <div class="navbar-end">
@@ -69,3 +76,51 @@
     </div>
   </div>
 </main>
+
+<!-- MCP awareness promo (return visits only) -->
+<p-dialog
+    header="Try MagicPorts with AI assistants"
+    [(visible)]="showMcpPromo"
+    [modal]="true"
+    [draggable]="false"
+    [resizable]="false"
+    [style]="{ width: '520px' }"
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    styleClass="mcp-promo-dialog"
+    (onHide)="closeMcpPromo()"
+>
+    <div class="mcp-promo-body">
+      <p class="mb-3">
+        Connect Claude Desktop, Claude Code, or Cursor to MagicPorts via MCP —
+        ask about Veeam ports, generate topology diagrams, and build firewall import files
+        from natural language.
+      </p>
+      <label class="checkbox mcp-promo-checkbox">
+        <input type="checkbox" [(ngModel)]="dontShowAgain" />
+        Don't show again
+      </label>
+    </div>
+
+    <ng-template #footer>
+      <div class="flex justify-end gap-2">
+        <button
+          class="button cancel-button hover-bg-light"
+          type="button"
+          (click)="closeMcpPromo()"
+        >
+          Maybe later
+        </button>
+        <button
+          class="button is-link btn-bold hover-lift"
+          type="button"
+          (click)="learnMoreMcp()"
+        >
+          <span class="icon">
+            <i class="fas fa-book-open"></i>
+          </span>
+          <span>Learn more</span>
+        </button>
+      </div>
+    </ng-template>
+</p-dialog>

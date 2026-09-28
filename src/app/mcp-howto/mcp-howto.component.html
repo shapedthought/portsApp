@@ -1,0 +1,145 @@
+<!-- Header -->
+<div class="modern-card slide-up">
+  <div class="flex items-center mb-4">
+    <button
+      class="button is-light mr-4 back-button"
+      [routerLink]="['/']"
+      type="button"
+    >
+      <span class="icon">
+        <i class="fas fa-arrow-left"></i>
+      </span>
+    </button>
+    <div>
+      <h1 class="title is-3 mb-2 section-title">
+        <i class="fas fa-robot mr-2 icon-primary"></i>
+        MagicPorts MCP
+      </h1>
+      <p class="subtitle is-6 section-subtitle">
+        Ask AI assistants about Veeam ports, generate topology diagrams, and build firewall import files —
+        powered by the same Magic Ports API this app uses.
+      </p>
+    </div>
+  </div>
+
+  <div class="notification is-info is-light mcp-prereq">
+    <p class="mb-1">
+      <strong>Prerequisite:</strong> install
+      <a href="https://docs.astral.sh/uv/getting-started/installation/" target="_blank" rel="noopener noreferrer">uv</a>
+      (a single binary). The
+      <code>uvx</code> command downloads and runs
+      <code>veeam-ports-mcp</code> automatically — no repo clone needed.
+    </p>
+  </div>
+</div>
+
+<!-- Claude Desktop -->
+<div class="modern-card slide-up">
+  <h2 class="title is-5 section-title">
+    <i class="fas fa-desktop mr-2 icon-primary"></i>
+    Claude Desktop
+  </h2>
+  <p class="mb-3 text-muted">
+    Add the server to your Claude Desktop config, then restart Claude Desktop.
+  </p>
+  <ul class="mb-3 mcp-path-list">
+    <li><strong>macOS:</strong> <code>~/Library/Application Support/Claude/claude_desktop_config.json</code></li>
+    <li><strong>Windows:</strong> <code>%APPDATA%\Claude\claude_desktop_config.json</code></li>
+  </ul>
+  <div class="mcp-code-block">
+    <button class="button is-small is-light mcp-copy" type="button" (click)="copyText(claudeDesktopConfig, $event)" title="Copy">
+      <i class="fas fa-copy"></i>
+    </button>
+    <pre><code>{{ claudeDesktopConfig }}</code></pre>
+  </div>
+</div>
+
+<!-- Claude Code / VS Code -->
+<div class="modern-card slide-up">
+  <h2 class="title is-5 section-title">
+    <i class="fas fa-terminal mr-2 icon-primary"></i>
+    Claude Code / VS Code
+  </h2>
+  <p class="mb-3 text-muted">
+    From a terminal (with the Claude Code CLI available):
+  </p>
+  <div class="mcp-code-block">
+    <button class="button is-small is-light mcp-copy" type="button" (click)="copyText(claudeCodeCommand, $event)" title="Copy">
+      <i class="fas fa-copy"></i>
+    </button>
+    <pre><code>{{ claudeCodeCommand }}</code></pre>
+  </div>
+</div>
+
+<!-- Cursor -->
+<div class="modern-card slide-up">
+  <h2 class="title is-5 section-title">
+    <i class="fas fa-code mr-2 icon-primary"></i>
+    Cursor
+  </h2>
+  <p class="mb-3 text-muted">
+    Create or edit <code>.cursor/mcp.json</code> in your project (or your global Cursor MCP config)
+    and add:
+  </p>
+  <div class="mcp-code-block">
+    <button class="button is-small is-light mcp-copy" type="button" (click)="copyText(cursorMcpConfig, $event)" title="Copy">
+      <i class="fas fa-copy"></i>
+    </button>
+    <pre><code>{{ cursorMcpConfig }}</code></pre>
+  </div>
+  <p class="mt-3 text-muted text-sm">
+    Then enable the server in Cursor Settings → MCP, and restart if needed.
+  </p>
+</div>
+
+<!-- What you can do -->
+<div class="modern-card slide-up">
+  <h2 class="title is-5 section-title">
+    <i class="fas fa-magic mr-2 icon-primary"></i>
+    What you can ask
+  </h2>
+  <p class="mb-3 text-muted">
+    Once connected, try prompts like:
+  </p>
+  <ul class="mcp-prompt-list">
+    @for (prompt of examplePrompts; track prompt) {
+      <li>
+        <i class="fas fa-comment-dots mr-2 icon-secondary"></i>
+        “{{ prompt }}”
+      </li>
+    }
+  </ul>
+</div>
+
+<!-- Tools overview -->
+<div class="modern-card slide-up">
+  <h2 class="title is-5 section-title">
+    <i class="fas fa-toolbox mr-2 icon-primary"></i>
+    Available tools
+  </h2>
+  <div class="table-container">
+    <table class="table is-fullwidth is-striped mcp-tools-table">
+      <thead>
+        <tr>
+          <th>Tool</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (tool of tools; track tool.name) {
+          <tr>
+            <td><code>{{ tool.name }}</code></td>
+            <td>{{ tool.desc }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  <p class="mt-3 text-muted text-sm">
+    Package:
+    <a href="https://github.com/shapedthought/veeam-ports-mcp" target="_blank" rel="noopener noreferrer">
+      shapedthought/veeam-ports-mcp
+    </a>
+    · Import files default to <code>~/Documents/veeam-ports-exports/</code>
+  </p>
+</div>

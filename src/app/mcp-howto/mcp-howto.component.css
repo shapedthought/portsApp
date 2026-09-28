@@ -1,0 +1,67 @@
+.mcp-prereq {
+  margin-bottom: 0;
+}
+
+.mcp-path-list {
+  list-style: disc;
+  padding-left: 1.25rem;
+  line-height: 1.7;
+}
+
+.mcp-code-block {
+  position: relative;
+  background: #0f172a;
+  color: #e2e8f0;
+  border-radius: var(--radius-lg, 0.5rem);
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+}
+
+.mcp-code-block pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  background: transparent;
+  color: inherit;
+  padding: 0;
+}
+
+.mcp-code-block code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  font-size: inherit;
+}
+
+.mcp-copy {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 1;
+}
+
+.mcp-prompt-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mcp-prompt-list li {
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--gray-100, #f1f5f9);
+  line-height: 1.5;
+}
+
+.mcp-prompt-list li:last-child {
+  border-bottom: none;
+}
+
+.mcp-tools-table code {
+  font-size: 0.85rem;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+}
