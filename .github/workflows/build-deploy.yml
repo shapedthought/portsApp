@@ -1,0 +1,166 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "Docker image tag to build/push (and deploy if enabled)"
+        required: true
+        default: "1.2"
+        type: string
+      deploy:
+        description: "Deploy to cluster after push (SSH + kubectl)"
+        required: true
+        default: true
+        type: boolean
+
+env:
+  IMAGE_NAME: txtxx56/portsapp
+  DEPLOYMENT_NAME: ports-frontend-deployment
+  CONTAINER_NAME: ports-frontend
+  K8S_NAMESPACE: default
+
+jobs:
+  build-and-push:
+    name: Build and push image
+    runs-on: ubuntu-latest
+    # Not triggered on pull_request — forks won't push unless they configure Hub secrets
+    # and run this workflow themselves.
+    outputs:
+      image_tag: ${{ steps.meta.outputs.primary_tag }}
+      image_ref: ${{ steps.meta.outputs.image_ref }}
+    steps:
+      - name: Require Docker Hub secrets
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: |
+          if [ -z "${DOCKERHUB_USERNAME}" ] || [ -z "${DOCKERHUB_TOKEN}" ]; then
+            echo "::error::DOCKERHUB_USERNAME and/or DOCKERHUB_TOKEN secrets are not set."
+            echo "Add them under Settings → Secrets and variables → Actions, then re-run."
+            exit 1
+          fi
+          echo "Docker Hub secrets are present."
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve image tags
+        id: meta
+        shell: bash
+        run: |
+          set -euo pipefail
+          SHORT_SHA="${GITHUB_SHA::7}"
+          TAGS=()
+
+          if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
+            PRIMARY="${{ inputs.image_tag }}"
+            if [[ -z "${PRIMARY}" ]]; then
+              echo "::error::image_tag input is required for workflow_dispatch"
+              exit 1
+            fi
+            TAGS+=("${PRIMARY}")
+            TAGS+=("sha-${SHORT_SHA}")
+          elif [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            PRIMARY="${GITHUB_REF_NAME#v}"
+            TAGS+=("${PRIMARY}")
+          elif [[ "${GITHUB_REF}" == refs/heads/main ]]; then
+            PRIMARY="sha-${SHORT_SHA}"
+            TAGS+=("${PRIMARY}")
+          else
+            echo "::error::Unsupported ref for build: ${GITHUB_REF}"
+            exit 1
+          fi
+
+          # Deduplicate while preserving order
+          UNIQUE=()
+          for t in "${TAGS[@]}"; do
+            skip=false
+            for u in "${UNIQUE[@]+"${UNIQUE[@]}"}"; do
+              [[ "$t" == "$u" ]] && skip=true && break
+            done
+            $skip || UNIQUE+=("$t")
+          done
+
+          {
+            echo "tags<<EOF"
+            for t in "${UNIQUE[@]}"; do
+              echo "${IMAGE_NAME}:${t}"
+            done
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+          echo "primary_tag=${PRIMARY}" >> "$GITHUB_OUTPUT"
+          echo "image_ref=${IMAGE_NAME}:${PRIMARY}" >> "$GITHUB_OUTPUT"
+          echo "Resolved primary tag: ${PRIMARY}"
+          echo "All image refs:"
+          for t in "${UNIQUE[@]}"; do echo "  - ${IMAGE_NAME}:${t}"; done
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          platforms: linux/amd64
+          tags: ${{ steps.meta.outputs.tags }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    name: Deploy via SSH
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    # Only on explicit dispatch (when deploy=true) or when a version tag is pushed.
+    # Never auto-deploy on every push to main.
+    if: >
+      always() &&
+      needs.build-and-push.result == 'success' &&
+      (
+        (github.event_name == 'workflow_dispatch' && inputs.deploy == true) ||
+        (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v'))
+      )
+    steps:
+      - name: Require SSH deploy secret
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          if [ -z "${SSH_PRIVATE_KEY}" ]; then
+            echo "::error::SSH_PRIVATE_KEY secret is not set."
+            echo "Add it under Settings → Secrets and variables → Actions, then re-run deploy."
+            exit 1
+          fi
+          echo "SSH deploy secret is present."
+
+      - name: Deploy image via SSH + kubectl
+        uses: appleboy/ssh-action@v1.2.0
+        env:
+          IMAGE_REF: ${{ needs.build-and-push.outputs.image_ref }}
+          DEPLOYMENT_NAME: ${{ env.DEPLOYMENT_NAME }}
+          CONTAINER_NAME: ${{ env.CONTAINER_NAME }}
+          K8S_NAMESPACE: ${{ env.K8S_NAMESPACE }}
+        with:
+          host: ${{ secrets.SSH_HOST || '89.116.228.135' }}
+          username: ${{ secrets.SSH_USER || 'ed' }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          envs: IMAGE_REF,DEPLOYMENT_NAME,CONTAINER_NAME,K8S_NAMESPACE
+          script: |
+            set -euo pipefail
+            echo "Rolling out ${IMAGE_REF} → ${DEPLOYMENT_NAME}/${CONTAINER_NAME}"
+            kubectl set image "deployment/${DEPLOYMENT_NAME}" \
+              "${CONTAINER_NAME}=${IMAGE_REF}" \
+              -n "${K8S_NAMESPACE}"
+            kubectl rollout status "deployment/${DEPLOYMENT_NAME}" \
+              -n "${K8S_NAMESPACE}" --timeout=180s
+            kubectl get pods -n "${K8S_NAMESPACE}" -o wide || true
