@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
   FullServiceResponse,
@@ -17,14 +17,20 @@ import { HttpService } from '../http.service';
 import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Stepper, StepList, Step, StepPanels, StepPanel } from 'primeng/stepper';
+import { ArrowLeft, ArrowRight, LucideAngularModule, Plus, Save, Search, Trash2, X } from 'lucide-angular';
+import { ThemeService } from '../theme.service';
 
 @Component({
   selector: 'app-mapping',
-  imports: [FormsModule, ReactiveFormsModule, RouterLink, Stepper, StepList, Step, StepPanels, StepPanel],
+  imports: [FormsModule, ReactiveFormsModule, RouterLink, Stepper, StepList, Step, StepPanels, StepPanel, LucideAngularModule],
   templateUrl: './mapping.component.html',
   styleUrl: './mapping.component.css',
 })
 export class MappingComponent {
+  readonly theme = inject(ThemeService);
+  readonly icons = { ArrowLeft, ArrowRight, Plus, Save, Search, Trash2, X };
+  readonly protocolOptions: ('ALL' | 'TCP' | 'UDP')[] = ['ALL', 'TCP', 'UDP'];
+
   id: string = '';
   /** The source service whose targets are listed (null until one is picked). */
   selectedSourceService: Service | null = null;

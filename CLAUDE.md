@@ -22,6 +22,7 @@ The backend API is a separate service. `src/environments/environment.ts` points 
   - `mapping/:id` → `MappingComponent` (map ports for one server; guarded by `unsavedChangesGuard`)
   - `report` → `ReportComponent` (table + diagram views, delete mappings, CSV/Excel export)
   - `mcp` → `McpHowtoComponent` (how to install the `veeam-ports-mcp` MCP server)
+- The Mapping page's click handlers take the service object, not a row index: the tables render filtered lists, so indexes don't match the underlying arrays.
 - `DiagramComponent` renders Mermaid diagrams and is embedded in the report. The Map mode does not use it; `network-map/` draws its own SVG with a dagre layout (`map-layout.ts`).
 - [topology.ts](src/app/topology.ts) holds pure functions that derive per-server counts, source→target edges, peer groups and stats from the port mappings. Ports are counted as entries (a range like `2500-3300` counts once).
 - [workspace.service.ts](src/app/workspace.service.ts) holds UI state shared by Dashboard and Map (selection, direction, protocol filter), so the selection survives switching modes. Servers and selections are keyed by **name**, because `MappedPorts` refer to targets by name.
@@ -32,18 +33,17 @@ The backend API is a separate service. `src/environments/environment.ts` points 
 
 ## UI conventions
 
-- A redesign is in progress (design handoff: three themes, Dashboard/Map modes). The shell, Dashboard, Map and detail panel are done; Report, Mapping and MCP still use the old Bulma/Font Awesome styling and will be restyled next, after which Bulma and Font Awesome are removed.
-- Design tokens and shared primitives live in [src/theme.css](src/theme.css): colours and fonts as CSS variables per `[data-theme]`, and `pa-` classes (`pa-btn`, `pa-seg`, `pa-panel`, `pa-caption`, `pa-chip`, `pa-tag`, `pa-input`…). Use the variables, never hard-coded colours. No shadows.
-- Bulma is still loaded globally, so don't name component classes after Bulma ones (`title`, `label`, `grid`, `footer`, `button`, `box`, `tag`, `table`…); they pick up Bulma styles.
-- Use **PrimeNG 21** components (Dialog, Toast, ConfirmDialog, etc.). User feedback goes through `MessageService` and confirmations through `ConfirmationService`. Dialogs and toasts are restyled in `theme.css` with `html`-prefixed selectors (PrimeNG injects its CSS after ours). PrimeNG's own `--p-*` tokens are deliberately not overridden globally, because that breaks the not-yet-restyled Report table.
-- New UI uses Lucide icons (`lucide-angular`: import `LucideAngularModule` and pass icons with `[img]`).
+- [src/theme.css](src/theme.css) is the only global stylesheet (no Bulma, no Font Awesome). It holds the three themes as CSS variables per `[data-theme]` (`--bg`, `--panel`, `--ink`, `--accent`, `--font-head`…), a small base reset, and shared `pa-` classes: page layout (`pa-page`, `pa-page-header`, `pa-page-title`, `pa-stats`), `pa-panel`, `pa-toolbar`, `pa-btn`, `pa-icon-btn`, `pa-seg`, `pa-table`, `pa-input`/`pa-check`, `pa-chip`, `pa-tag`, `pa-code`, `pa-empty`. Build pages from these; use the variables, never hard-coded colours. No shadows.
+- Per-theme wording (kickers above page titles, panel captions) comes from `ThemeService.copy()`.
+- Use **PrimeNG 21** components (Table, Stepper, Dialog, Toast, ConfirmDialog). User feedback goes through `MessageService` and confirmations through `ConfirmationService`. `theme.css` maps PrimeNG's `--p-*` tokens onto the theme, including a `--p-surface-*` ramp mixed from `--panel` to `--ink` (PrimeNG's light scheme is always active, so this also inverts it for the dark theme). Direct PrimeNG overrides use `html`-prefixed selectors because PrimeNG injects its CSS after ours.
+- The Mermaid diagram on the Report page deliberately stays on a light "paper" palette in every theme (`PAPER` in `diagram.component.ts`) so SVG/PNG exports look the same.
+- Icons are Lucide (`lucide-angular`: import `LucideAngularModule` and pass icons with `[img]`). Alias `Image` when importing it; it shadows the DOM `Image` constructor.
 - Component stylesheets fail the production build above 4 kB (warning at 2 kB); put shared styles in `theme.css`.
 - Keep styles in component `.css` files, not inline `style=""` attributes. Avoid calling methods in templates; use signals, computed values, or properties instead.
 
 ## Testing
 
 - Specs sit next to their components (`*.spec.ts`). Use the helpers `createTestPortMapping` and `createTestMappedPort` from [src/app/testing/test-utils.ts](src/app/testing/test-utils.ts).
-- The MCP how-to component has no spec yet.
 - `NetworkMapComponent` guards `ResizeObserver`, which jsdom lacks.
 
 ## Deployment

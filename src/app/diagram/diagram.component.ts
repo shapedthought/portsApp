@@ -1,8 +1,18 @@
-import { Component, Input, OnInit, OnDestroy, OnChanges, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, OnChanges, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, ViewEncapsulation, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
+import { Copy, Download, Image as ImageIcon, LucideAngularModule } from 'lucide-angular';
 import mermaid from 'mermaid';
 import { PortMapping, MappedPorts } from '../services';
+import { ThemeService } from '../theme.service';
+
+/** Neutral "paper" palette: the diagram and its exports look the same in every app theme. */
+const PAPER = {
+  node: '#ffffff',
+  ink: '#1d1f20',
+  line: '#5d5d60',
+  label: '#e7e7ea',
+};
 
 interface PortGroup {
   protocol: 'TCP' | 'UDP';
@@ -24,7 +34,7 @@ interface DiagramData {
 
 @Component({
   selector: 'app-diagram',
-  imports: [FormsModule],
+  imports: [FormsModule, LucideAngularModule],
   templateUrl: './diagram.component.html',
   styleUrl: './diagram.component.css',
   encapsulation: ViewEncapsulation.None
@@ -37,6 +47,9 @@ export class DiagramComponent implements OnInit, OnChanges, AfterViewInit, OnDes
   diagramData: DiagramData = { connections: [], servers: [] };
   mermaidSyntax: string = '';
   isLoading: boolean = false;
+
+  readonly theme = inject(ThemeService);
+  readonly icons = { Copy, Download, Image: ImageIcon };
 
   constructor(private cdr: ChangeDetectorRef, private messageService: MessageService) {}
   
@@ -52,20 +65,16 @@ export class DiagramComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       startOnLoad: false,
       theme: 'base',
       themeVariables: {
-        primaryColor: '#1e3a5f',
-        primaryTextColor: '#ffffff',
-        primaryBorderColor: '#0f2440',
-        lineColor: '#6b7280',
-        sectionBkgColor: '#f8fafc',
-        altSectionBkgColor: '#f1f5f9',
-        gridColor: '#e5e7eb',
-        secondaryColor: '#10b981',
-        tertiaryColor: '#f59e0b',
-        background: '#ffffff',
-        mainBkg: '#1e3a5f',
-        nodeTextColor: '#ffffff',
-        secondBkg: '#f8fafc',
-        tertiaryBkg: '#f1f5f9'
+        primaryColor: PAPER.node,
+        primaryTextColor: PAPER.ink,
+        primaryBorderColor: PAPER.ink,
+        lineColor: PAPER.line,
+        secondaryColor: PAPER.label,
+        tertiaryColor: PAPER.label,
+        background: PAPER.node,
+        mainBkg: PAPER.node,
+        nodeTextColor: PAPER.ink,
+        edgeLabelBackground: PAPER.label,
       }
     });
 
@@ -303,21 +312,12 @@ export class DiagramComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     return ports.slice(0, 3).join(',') + `... (+${ports.length - 3})`;
   }
 
-  // Get connection style based on protocols
+  // Link style: dotted for UDP-only, thick for more than 5 ports, otherwise a plain arrow.
+  // Every style keeps its arrowhead so direction is never lost.
   private getConnectionStyle(connection: ServerConnection): string {
-    const hasMultipleProtocols = connection.portGroups.length > 1;
-    const totalPorts = connection.totalConnections;
-    
-    if (hasMultipleProtocols) {
-      return totalPorts > 5 ? '===' : '-->';
-    }
-    
-    const protocol = connection.portGroups[0]?.protocol;
-    if (protocol === 'UDP') {
-      return totalPorts > 3 ? '===>' : '-..->';
-    }
-    
-    return totalPorts > 5 ? '===' : '-->';
+    const udpOnly = connection.portGroups.length === 1 && connection.portGroups[0].protocol === 'UDP';
+    if (udpOnly) return '-.->';
+    return connection.totalConnections > 5 ? '==>' : '-->';
   }
 
   // Sanitize server names for Mermaid
@@ -346,11 +346,11 @@ export class DiagramComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     doc.querySelectorAll('.node').forEach(node => {
       // SVG text elements
       node.querySelectorAll('text, tspan').forEach(el => {
-        el.setAttribute('fill', '#ffffff');
+        el.setAttribute('fill', PAPER.ink);
       });
       // foreignObject HTML elements (Mermaid v10+ uses these for labels)
       node.querySelectorAll('foreignObject *').forEach(el => {
-        (el as HTMLElement).style?.setProperty('color', '#ffffff', 'important');
+        (el as HTMLElement).style?.setProperty('color', PAPER.ink, 'important');
       });
     });
 
@@ -360,11 +360,8 @@ export class DiagramComponent implements OnInit, OnChanges, AfterViewInit, OnDes
   // Generate Mermaid styling
   private generateMermaidStyles(): string {
     return `
-    classDef serverNode fill:#1e3a5f,stroke:#0f2440,stroke-width:2px,color:#ffffff
-    classDef tcpConnection stroke:#3b82f6,stroke-width:2px
-    classDef udpConnection stroke:#10b981,stroke-width:2px
-    classDef mixedConnection stroke:#8b5cf6,stroke-width:3px
-    
+    classDef serverNode fill:${PAPER.node},stroke:${PAPER.ink},stroke-width:1.5px,color:${PAPER.ink}
+
 `;
   }
 
@@ -411,21 +408,16 @@ export class DiagramComponent implements OnInit, OnChanges, AfterViewInit, OnDes
       
       // Show error message only if container is still available
       if (this.mermaidContainer?.nativeElement) {
+        const detail = document.createElement('pre');
+        detail.textContent = String(error);
         this.mermaidContainer.nativeElement.innerHTML = `
-          <div class="has-text-danger p-4" style="border: 2px dashed #ef4444; border-radius: 8px; background-color: #fef2f2;">
-            <h5 class="title is-6 has-text-danger">Diagram Generation Error</h5>
-            <p>Unable to generate the network diagram. This might be due to:</p>
-            <ul>
-              <li>Invalid server names or port data</li>
-              <li>Complex port mapping configurations</li>
-              <li>Mermaid syntax issues</li>
-            </ul>
-            <details class="mt-2">
-              <summary>Technical Details</summary>
-              <pre style="font-size: 0.75rem; margin-top: 0.5rem;">${error}</pre>
-            </details>
+          <div class="diagram-error">
+            <strong>The diagram couldn't be generated.</strong>
+            <p>This usually comes from unusual server names or port data.</p>
+            <details><summary>Technical details</summary></details>
           </div>
         `;
+        this.mermaidContainer.nativeElement.querySelector('details')?.append(detail);
       }
     } finally {
       this.isLoading = false;
@@ -571,7 +563,10 @@ export class DiagramComponent implements OnInit, OnChanges, AfterViewInit, OnDes
   }
 
   copyMermaidCode(): void {
-    navigator.clipboard.writeText(this.mermaidSyntax);
+    navigator.clipboard.writeText(this.mermaidSyntax).then(
+      () => this.messageService.add({ severity: 'success', summary: 'Mermaid code copied' }),
+      () => this.messageService.add({ severity: 'error', summary: 'Copy failed', detail: 'Clipboard access was blocked by the browser.' }),
+    );
   }
 
   private downloadFile(blob: Blob, filename: string): void {

@@ -94,6 +94,50 @@
   color-scheme: light;
 }
 
+/* ---------- Base ---------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background-color: var(--bg);
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6, p, ul, ol, dl, dd, figure, pre {
+  margin: 0;
+}
+
+a {
+  color: var(--accent-text);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
 /* ---------- Focus ring (every control) ---------- */
 
 :where(button, a, input, select, textarea, [tabindex]):focus-visible {
@@ -285,6 +329,197 @@
   border-radius: var(--radius);
 }
 
+/* ---------- Page layout ---------- */
+
+.pa-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.pa-page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.pa-page-header .pa-kicker {
+  margin-bottom: 8px;
+}
+
+.pa-page-title {
+  margin: 0;
+  font-family: var(--font-head);
+  font-weight: var(--head-weight);
+  text-transform: var(--head-case);
+  letter-spacing: var(--head-track);
+  font-size: 38px;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.pa-page-subtitle {
+  margin: 8px 0 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.pa-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.pa-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  border-top: 2px solid var(--line-strong);
+  border-bottom: 1px solid var(--line);
+}
+
+.pa-stat {
+  margin-right: 18px;
+  padding: 14px 18px 14px 0;
+  border-right: 1px solid var(--line);
+}
+
+.pa-stat-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.pa-stat-value {
+  margin-top: 4px;
+  font-family: var(--font-head);
+  font-weight: var(--head-weight);
+  font-size: 32px;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.pa-empty {
+  padding: 40px 18px;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.pa-empty strong {
+  display: block;
+  margin-bottom: 4px;
+  font-family: var(--font-head);
+  font-weight: var(--head-weight);
+  text-transform: var(--head-case);
+  font-size: 15px;
+  color: var(--ink);
+}
+
+.pa-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 18px;
+  padding: 10px 14px;
+  border-bottom: 2px solid var(--line-strong);
+}
+
+@media (max-width: 600px) {
+  .pa-page-title {
+    font-size: 30px;
+  }
+}
+
+/* ---------- Tables ---------- */
+
+.pa-table-scroll {
+  overflow: auto;
+  max-height: 480px;
+}
+
+.pa-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.pa-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 8px 14px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--line-strong);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.pa-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+}
+
+.pa-table tr.is-clickable {
+  cursor: pointer;
+}
+
+.pa-table tr.is-clickable:hover,
+.pa-table tr.is-selected {
+  background: var(--accent-soft);
+}
+
+.pa-table tr.is-selected td:first-child {
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.pa-table .num {
+  text-align: right;
+}
+
+.pa-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+/* ---------- Code ---------- */
+
+.pa-code {
+  position: relative;
+  margin: 0;
+  padding: 14px 16px;
+  overflow-x: auto;
+  background: var(--chip);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  font: 12px/1.6 var(--font-mono);
+  color: var(--ink);
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  color: var(--accent-text);
+}
+
+.pa-code code {
+  font-size: inherit;
+  color: inherit;
+}
+
 /* ---------- Form fields ---------- */
 
 .pa-field {
@@ -311,6 +546,34 @@
   color: var(--ink);
 }
 
+select.pa-input {
+  padding-right: 28px;
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position: calc(100% - 14px) 50%, calc(100% - 9px) 50%;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+.pa-input--sm {
+  height: 30px;
+  font-size: 13px;
+}
+
+.pa-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.pa-check input {
+  margin: 0;
+  accent-color: var(--accent);
+}
+
 .pa-input:focus {
   outline: 2px solid var(--accent);
   outline-offset: -1px;
@@ -328,6 +591,78 @@
 
 /* ---------- PrimeNG overrides ---------- */
 /* Prefixed with html: PrimeNG injects its styles after this sheet, so equal specificity would lose. */
+
+:root[data-theme] {
+  /* PrimeNG's light colour scheme is always active, so its grey "surface" ramp is rebuilt from each theme:
+     0 is the panel colour and 950 is almost the text colour, which also inverts it for the dark theme. */
+  --p-surface-0: var(--panel);
+  --p-surface-50: color-mix(in srgb, var(--ink) 4%, var(--panel));
+  --p-surface-100: color-mix(in srgb, var(--ink) 8%, var(--panel));
+  --p-surface-200: color-mix(in srgb, var(--ink) 16%, var(--panel));
+  --p-surface-300: color-mix(in srgb, var(--ink) 28%, var(--panel));
+  --p-surface-400: color-mix(in srgb, var(--ink) 42%, var(--panel));
+  --p-surface-500: color-mix(in srgb, var(--ink) 56%, var(--panel));
+  --p-surface-600: color-mix(in srgb, var(--ink) 68%, var(--panel));
+  --p-surface-700: color-mix(in srgb, var(--ink) 80%, var(--panel));
+  --p-surface-800: color-mix(in srgb, var(--ink) 88%, var(--panel));
+  --p-surface-900: color-mix(in srgb, var(--ink) 94%, var(--panel));
+  --p-surface-950: var(--ink);
+
+  --p-primary-color: var(--accent);
+  --p-primary-contrast-color: var(--accent-ink);
+  --p-primary-hover-color: var(--accent);
+  --p-primary-active-color: var(--accent);
+  --p-highlight-background: var(--accent-soft);
+  --p-highlight-focus-background: var(--accent-soft);
+  --p-highlight-color: var(--ink);
+  --p-highlight-focus-color: var(--ink);
+  --p-text-color: var(--ink);
+  --p-text-hover-color: var(--ink);
+  --p-text-muted-color: var(--muted);
+  --p-text-hover-muted-color: var(--ink);
+  --p-content-background: var(--panel);
+  --p-content-hover-background: var(--accent-soft);
+  --p-content-border-color: var(--line);
+  --p-content-color: var(--ink);
+  --p-content-hover-color: var(--ink);
+  --p-form-field-background: var(--bg);
+  --p-form-field-disabled-background: var(--chip);
+  --p-form-field-filled-background: var(--bg);
+  --p-form-field-border-color: var(--line-strong);
+  --p-form-field-hover-border-color: var(--accent);
+  --p-form-field-focus-border-color: var(--accent);
+  --p-form-field-color: var(--ink);
+  --p-form-field-disabled-color: var(--muted);
+  --p-form-field-placeholder-color: var(--muted);
+  --p-form-field-icon-color: var(--muted);
+  --p-form-field-shadow: none;
+  --p-overlay-select-background: var(--panel);
+  --p-overlay-select-border-color: var(--line-strong);
+  --p-overlay-select-color: var(--ink);
+  --p-overlay-select-shadow: none;
+  --p-overlay-popover-background: var(--panel);
+  --p-overlay-popover-border-color: var(--line-strong);
+  --p-overlay-popover-color: var(--ink);
+  --p-overlay-popover-shadow: none;
+  --p-overlay-modal-background: var(--panel);
+  --p-overlay-modal-border-color: var(--line-strong);
+  --p-overlay-modal-color: var(--ink);
+  --p-overlay-modal-shadow: none;
+  --p-list-option-focus-background: var(--accent-soft);
+  --p-list-option-selected-background: var(--accent-soft);
+  --p-list-option-selected-focus-background: var(--accent-soft);
+  --p-list-option-color: var(--ink);
+  --p-list-option-focus-color: var(--ink);
+  --p-list-option-selected-color: var(--ink);
+  --p-list-option-selected-focus-color: var(--ink);
+  --p-focus-ring-color: var(--accent);
+  --p-border-radius-xs: var(--radius);
+  --p-border-radius-sm: var(--radius);
+  --p-border-radius-md: var(--radius);
+  --p-border-radius-lg: var(--radius);
+  --p-border-radius-xl: var(--radius);
+}
+
 
 
 html .p-dialog {
@@ -360,8 +695,6 @@ html .p-dialog .p-dialog-footer {
   padding: 12px 18px 18px;
 }
 
-/* PrimeNG's own tokens are left alone so the pages not yet restyled keep their look;
-   dialogs and toasts are styled directly instead. */
 html .p-dialog .p-button {
   height: 36px;
   padding: 0 14px;

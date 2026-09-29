@@ -1,11 +1,11 @@
-<div class="page">
-  <header class="page-header">
+<div class="pa-page">
+  <header class="pa-page-header">
     <div>
       <div class="pa-kicker">{{ header().kicker }}</div>
-      <h1 class="pa-heading page-title">{{ header().title }}</h1>
-      <p class="page-subtitle">{{ header().subtitle }}</p>
+      <h1 class="pa-page-title">{{ header().title }}</h1>
+      <p class="pa-page-subtitle">{{ header().subtitle }}</p>
     </div>
-    <div class="header-actions">
+    <div class="pa-actions">
       <input #fileInput type="file" accept=".json,application/json" hidden (change)="uploadPortMappings($event)" />
       <button type="button" class="pa-btn" [disabled]="isUploading" (click)="chooseUploadFile()">
         <lucide-icon [img]="icons.Upload" [size]="15" [strokeWidth]="1.5" />Upload config
@@ -32,11 +32,11 @@
     </div>
   </header>
 
-  <section class="stats" aria-label="Summary">
+  <section class="pa-stats" aria-label="Summary">
     @for (s of statCells(); track s.label) {
-      <div class="stat">
-        <div class="stat-label">{{ s.label }}</div>
-        <div class="pa-heading stat-value">{{ s.value }}</div>
+      <div class="pa-stat">
+        <div class="pa-stat-label">{{ s.label }}</div>
+        <div class="pa-stat-value">{{ s.value }}</div>
       </div>
     }
   </section>
@@ -65,7 +65,7 @@
             <span class="num pa-mono muted">{{ s.targets || '—' }}</span>
           </button>
         } @empty {
-          <div class="empty">No servers yet. Add one to start mapping ports.</div>
+          <div class="pa-empty">No servers yet. Add one to start mapping ports.</div>
         }
         <div class="servers-foot">
           <button type="button" class="pa-text-btn pa-text-btn--danger" (click)="clearAllMappedPorts()">Clear all</button>

@@ -11,10 +11,52 @@ export const THEMES: { key: Theme; label: string }[] = [
 export const THEME_STORAGE_KEY = 'portsapp-redesign-theme';
 
 /** Section captions that change with the theme. */
-const COPY: Record<Theme, { dashKicker: string; mapKicker: string; list: string; map: string }> = {
-  ops: { dashKicker: '~/portsapp/servers', mapKicker: '~/portsapp/topology', list: '// servers', map: '// topology' },
-  sheet: { dashKicker: 'Section 1 — Servers', mapKicker: 'Section 2 — Topology', list: 'Table 1 · Configured servers', map: 'Fig. 1 · Network map' },
-  blueprint: { dashKicker: 'Dashboard', mapKicker: 'Topology', list: 'Servers', map: 'Network map' },
+export interface ThemeCopy {
+  dashKicker: string;
+  mapKicker: string;
+  reportKicker: string;
+  mappingKicker: string;
+  mcpKicker: string;
+  list: string;
+  map: string;
+  mappingsTable: string;
+  diagram: string;
+}
+
+const COPY: Record<Theme, ThemeCopy> = {
+  ops: {
+    dashKicker: '~/portsapp/servers',
+    mapKicker: '~/portsapp/topology',
+    reportKicker: '~/portsapp/report',
+    mappingKicker: '~/portsapp/servers/edit',
+    mcpKicker: '~/portsapp/mcp',
+    list: '// servers',
+    map: '// topology',
+    mappingsTable: '// mappings',
+    diagram: '// diagram',
+  },
+  sheet: {
+    dashKicker: 'Section 1 — Servers',
+    mapKicker: 'Section 2 — Topology',
+    reportKicker: 'Section 3 — Report',
+    mappingKicker: 'Section 1.1 — Edit server',
+    mcpKicker: 'Appendix A — MCP',
+    list: 'Table 1 · Configured servers',
+    map: 'Fig. 1 · Network map',
+    mappingsTable: 'Table 2 · Port mappings',
+    diagram: 'Fig. 2 · Mermaid diagram',
+  },
+  blueprint: {
+    dashKicker: 'Dashboard',
+    mapKicker: 'Topology',
+    reportKicker: 'Report',
+    mappingKicker: 'Edit server',
+    mcpKicker: 'MCP',
+    list: 'Servers',
+    map: 'Network map',
+    mappingsTable: 'Port mappings',
+    diagram: 'Diagram',
+  },
 };
 
 function isTheme(value: string | null): value is Theme {
