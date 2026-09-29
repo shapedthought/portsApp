@@ -11,6 +11,8 @@ npm run build        # production build -> dist/ports-app/browser
 npm test             # ng test (Vitest + jsdom via @angular/build:unit-test)
 ```
 
+CI installs with `npm ci` on Node 22 / npm 10. A lockfile written by npm 11 can be rejected there, so after any dependency change run `npx -y npm@10 install --package-lock-only` (or check with `npx -y npm@10 ci`). Angular packages must stay on matching versions; upgrade them with `ng update`.
+
 The backend API is a separate service. `src/environments/environment.ts` points at `http://localhost:8001` for dev; production (`environment.prod.ts`) uses `/ports_server`, proxied by nginx.
 
 ## Architecture
