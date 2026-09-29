@@ -26,7 +26,8 @@ import { Stepper, StepList, Step, StepPanels, StepPanel } from 'primeng/stepper'
 })
 export class MappingComponent {
   id: string = '';
-  sourceServiceSelected = 0;
+  /** The source service whose targets are listed (null until one is picked). */
+  selectedSourceService: Service | null = null;
   selectedTargetServer = '';
   servers: Server[] = [{ id: 0, name: 'server 1' }];
   products: Product[] = [];
@@ -148,25 +149,22 @@ export class MappingComponent {
     return this.serverForm.get('selectedProduct')!.value || '';
   }
 
-  selectService(index: number) {
+  // Rows are rendered from the filtered lists, so handlers take the item itself rather than an index.
+  selectService(service: Service) {
     this.httpService
-      .getTarget(
-        this.selectedProduct,
-        this.sourceServices[index].name,
-        this.sourceServices[index].subheading
-      )
+      .getTarget(this.selectedProduct, service.name, service.subheading)
       .subscribe((data) => {
         this.targetServices = [];
         this.fullServiceResponse = data;
-        this.sourceServiceName = this.sourceServices[index].name;
-        this.sourceServiceSelected = index;
+        this.sourceServiceName = service.name;
+        this.selectedSourceService = service;
         this.updateAvailableCategories();
         this.applyFilters();
       });
   }
 
-  updateDescription(index: number) {
-    this.selectedDescription = this.fullServiceResponse[index].description;
+  updateDescription(target: FullServiceResponse) {
+    this.selectedDescription = target.description;
   }
 
   splitAndAddComma(port: string): string {
@@ -188,17 +186,17 @@ export class MappingComponent {
   }
 
   // Updates
-  updateService(index: number) {
+  updateService(target: FullServiceResponse) {
     let checkeAdded = false;
     // check if the service is already mapped
     this.selectedPortMapping.mappedPorts.forEach((mappedPort) => {
       if (
         mappedPort.targetService ===
-          this.fullServiceResponse[index].targetService &&
+          target.targetService &&
         mappedPort.sourceService === this.sourceServiceName &&
-        mappedPort.product === this.fullServiceResponse[index].product &&
-        mappedPort.protocol === this.fullServiceResponse[index].protocol &&
-        mappedPort.port === this.fullServiceResponse[index].port &&
+        mappedPort.product === target.product &&
+        mappedPort.protocol === target.protocol &&
+        mappedPort.port === target.port &&
         mappedPort.sourceServerName === this.serverName &&
         mappedPort.targetServerName === this.selectedTargetServer
       ) {
@@ -210,18 +208,18 @@ export class MappingComponent {
     }
     // Add the service to the mapped ports in the mapping component
     const checkedPort = this.splitAndAddComma(
-      this.fullServiceResponse[index].port
+      target.port
     );
     let mappedPorts: MappedPorts = {
       sourceServerId: this.id,
       sourceServerName: this.serverName,
       targetServerName: this.selectedTargetServer,
       sourceService: this.sourceServiceName,
-      targetService: this.fullServiceResponse[index].targetService,
-      description: this.fullServiceResponse[index].description,
-      product: this.fullServiceResponse[index].product,
+      targetService: target.targetService,
+      description: target.description,
+      product: target.product,
       port: checkedPort,
-      protocol: this.fullServiceResponse[index].protocol,
+      protocol: target.protocol,
     };
     this.selectedPortMapping.mappedPorts.push(mappedPorts);
     this.mappingsDirty = true;

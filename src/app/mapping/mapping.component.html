@@ -280,15 +280,15 @@
                     </tr>
                   </thead>
                   <tbody>
-                    @for (item of filteredSourceServices; track item.id; let index = $index)
+                    @for (item of filteredSourceServices; track item.id)
                     {
                     <tr
-                      [class.is-selected]="index === sourceServiceSelected"
-                      (click)="selectService(index)"
+                      [class.is-selected]="item === selectedSourceService"
+                      (click)="selectService(item)"
                       class="row-clickable td-bold"
-                      [class.source-row--selected]="index === sourceServiceSelected"
+                      [class.source-row--selected]="item === selectedSourceService"
                       [style.border-left]="
-                        index === sourceServiceSelected
+                        item === selectedSourceService
                           ? '4px solid var(--primary-color)'
                           : '4px solid transparent'
                       "
@@ -339,10 +339,10 @@
                     </tr>
                   </thead>
                   <tbody>
-                    @for (item of filteredTargetServices; track item.id; let index = $index)
+                    @for (item of filteredTargetServices; track item.id)
                     {
                     <tr
-                      (click)="updateDescription(index)"
+                      (click)="updateDescription(item)"
                       class="row-clickable"
                     >
                       <td class="td-cell td-bold">
@@ -394,7 +394,7 @@
                       <td class="td-cell">
                         <button
                           class="button is-primary is-small add-button"
-                          (click)="updateService(index); $event.stopPropagation()"
+                          (click)="updateService(item); $event.stopPropagation()"
                           [disabled]="serverForm.controls.serverName.invalid"
                           title="Add this service mapping"
                         >
