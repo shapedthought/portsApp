@@ -1,0 +1,76 @@
+<div class="toolbar">
+  <span class="pa-caption">{{ theme.copy().map }}</span>
+  <div class="pa-seg" role="group" aria-label="Protocol filter">
+    @for (p of protocolOptions; track p) {
+      <button type="button" class="proto-btn" [class.is-active]="ws.protocolFilter() === p" [attr.aria-pressed]="ws.protocolFilter() === p" (click)="ws.protocolFilter.set(p)">{{ p }}</button>
+    }
+  </div>
+  <label class="ports-toggle">
+    <input type="checkbox" [checked]="ws.showPortNumbers()" (change)="ws.showPortNumbers.set(!ws.showPortNumbers())" />
+    Port numbers
+  </label>
+  <span class="hint">Click a server or a connection</span>
+</div>
+
+<div class="canvas-wrap">
+  <div class="canvas" #canvas (click)="select({ type: 'none' })">
+    @if (nodes().length) {
+      <div class="stage" [style.width.px]="stage().width" [style.height.px]="stage().height">
+        <svg class="edges" [attr.width]="stage().width" [attr.height]="stage().height" aria-hidden="true">
+          <g [attr.transform]="'translate(' + stage().offsetX + ',' + stage().offsetY + ')'">
+            @for (e of edges(); track e.id) {
+              <path
+                [attr.d]="e.d"
+                [class.hot]="e.hot"
+                [attr.stroke-width]="e.strokeWidth"
+                [attr.stroke-dasharray]="e.dashed ? '5 4' : null"
+                [style.opacity]="e.opacity"
+              />
+            }
+          </g>
+        </svg>
+
+        @for (e of edges(); track e.id) {
+          <button
+            type="button"
+            class="edge-label"
+            [class.hot]="e.hot"
+            [class.active]="e.active"
+            [style.left.px]="e.labelX"
+            [style.top.px]="e.labelY"
+            [style.--fade]="e.opacity"
+            [attr.title]="e.title"
+            [attr.aria-pressed]="e.active"
+            (click)="select({ type: 'edge', id: e.id }, $event)"
+          >
+            <span>{{ e.dir }}</span><span class="edge-label-proto">{{ e.protocol }}</span><span>{{ e.text }}</span>
+          </button>
+        }
+
+        @for (n of nodes(); track n.name) {
+          <button
+            type="button"
+            class="node"
+            [class.selected]="n.selected"
+            [class.faded]="n.faded"
+            [style.left.px]="n.x"
+            [style.top.px]="n.y"
+            [attr.aria-pressed]="n.selected"
+            (click)="select({ type: 'node', id: n.name }, $event)"
+          >
+            <span class="pa-heading node-name">{{ n.name }}</span>
+            <span class="node-meta">OUT {{ n.out }} · IN {{ n.in }}</span>
+          </button>
+        }
+      </div>
+    } @else {
+      <div class="empty">Add a server to see the network map.</div>
+    }
+  </div>
+
+  <div class="legend">
+    <span class="legend-item"><span class="legend-line"></span>TCP</span>
+    <span class="legend-item"><span class="legend-line legend-line--udp"></span>UDP</span>
+    <span>Line weight = port count</span>
+  </div>
+</div>

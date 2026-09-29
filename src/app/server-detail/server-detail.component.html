@@ -1,0 +1,97 @@
+@let d = detail();
+@if (d.kind === 'node') {
+  <div class="head">
+    <div class="head-main">
+      <div class="pa-caption">Server</div>
+      <h2 class="pa-heading name">{{ d.server.name }}</h2>
+      @if (d.server.products.length) {
+        <span class="product">{{ d.server.products.join(' · ') }}</span>
+      }
+    </div>
+    @if (d.server.id) {
+      <div class="actions">
+        <button type="button" class="pa-icon-btn" title="Rename" aria-label="Rename server" (click)="rename.emit(d.server)">
+          <lucide-icon [img]="icons.Type" [size]="15" [strokeWidth]="1.5" />
+        </button>
+        <button type="button" class="pa-icon-btn" title="Edit mappings" aria-label="Edit mappings" (click)="edit.emit(d.server)">
+          <lucide-icon [img]="icons.Pencil" [size]="15" [strokeWidth]="1.5" />
+        </button>
+        <button type="button" class="pa-icon-btn pa-icon-btn--danger" title="Delete" aria-label="Delete server" (click)="remove.emit(d.server)">
+          <lucide-icon [img]="icons.Trash2" [size]="15" [strokeWidth]="1.5" />
+        </button>
+      </div>
+    }
+  </div>
+  <div class="direction">
+    <div class="pa-seg" role="group" aria-label="Direction">
+      <button type="button" class="dir-btn" [class.is-active]="ws.direction() === 'out'" [attr.aria-pressed]="ws.direction() === 'out'" (click)="ws.direction.set('out')">
+        Outbound <span class="pa-mono">{{ d.server.out }}</span>
+      </button>
+      <button type="button" class="dir-btn" [class.is-active]="ws.direction() === 'in'" [attr.aria-pressed]="ws.direction() === 'in'" (click)="ws.direction.set('in')">
+        Inbound <span class="pa-mono">{{ d.server.in }}</span>
+      </button>
+    </div>
+  </div>
+  @if (d.groups.length) {
+    <div class="groups">
+      @for (g of d.groups; track g.peer) {
+        <div>
+          <div class="group-head">
+            <span class="arrow">{{ ws.direction() === 'out' ? '→' : '←' }}</span>
+            <span class="pa-heading peer">{{ g.peer }}</span>
+            <span class="count">{{ g.portCount }} {{ g.portCount === 1 ? 'PORT' : 'PORTS' }}</span>
+          </div>
+          <ng-container *ngTemplateOutlet="rowList; context: { $implicit: g.rows }" />
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="empty">No {{ ws.direction() === 'out' ? 'outbound' : 'inbound' }} mappings for this server.</div>
+  }
+} @else if (d.kind === 'edge') {
+  <div class="head head--edge">
+    <div class="pa-caption">Connection</div>
+    <h2 class="pa-heading name name--edge">
+      {{ d.edge.source }}<span class="edge-arrow">→</span>{{ d.edge.target }}
+    </h2>
+    <div class="summary">
+      {{ d.edge.protocolLabel }} · {{ d.edge.ports.length }} unique {{ d.edge.ports.length === 1 ? 'port' : 'ports' }}
+      · {{ d.edge.rows.length }} {{ d.edge.rows.length === 1 ? 'service' : 'services' }}
+    </div>
+  </div>
+  <div class="groups">
+    <ng-container *ngTemplateOutlet="rowList; context: { $implicit: d.edge.rows }" />
+  </div>
+} @else {
+  <div class="empty empty--hint">
+    Select a server to see its ports, or a connection label to see the ports between two servers.
+  </div>
+}
+
+@if (firewallPorts().tcp || firewallPorts().udp) {
+  <div class="copy-row">
+    <span class="pa-caption">Firewall list</span>
+    @if (firewallPorts().tcp) {
+      <button type="button" class="pa-text-btn" (click)="copyPorts('TCP')">Copy TCP</button>
+    }
+    @if (firewallPorts().udp) {
+      <button type="button" class="pa-text-btn" (click)="copyPorts('UDP')">Copy UDP</button>
+    }
+  </div>
+}
+
+<ng-template #rowList let-rows>
+  @for (r of rows; track r.service + r.protocol) {
+    <div class="row">
+      <div class="row-head">
+        <span class="service">{{ r.service }}</span>
+        <span class="pa-tag" [class.is-udp]="r.protocol === 'UDP'">{{ r.protocol }}</span>
+      </div>
+      <div class="chips">
+        @for (p of r.ports; track p) {
+          <span class="pa-chip">{{ p }}</span>
+        }
+      </div>
+    </div>
+  }
+</ng-template>

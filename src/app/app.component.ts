@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Toast } from 'primeng/toast';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { Dialog } from 'primeng/dialog';
+import { version } from '../../package.json';
+import { THEMES, ThemeService } from './theme.service';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +15,9 @@ import { Dialog } from 'primeng/dialog';
 })
 export class AppComponent implements OnInit {
   title = 'PortsApp - Modern Network Port Management';
-  isMobileMenuOpen = false;
+  readonly version = version;
+  readonly themes = THEMES;
+  readonly themeService = inject(ThemeService);
 
   showMcpPromo = false;
   dontShowAgain = false;
@@ -26,14 +30,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.maybeShowMcpPromo();
-  }
-
-  toggleMobileMenu(): void {
-    this.isMobileMenuOpen = !this.isMobileMenuOpen;
-  }
-
-  closeMobileMenu(): void {
-    this.isMobileMenuOpen = false;
   }
 
   private maybeShowMcpPromo(): void {

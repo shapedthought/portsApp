@@ -1,0 +1,158 @@
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 16px 18px;
+  border-bottom: 2px solid var(--line-strong);
+}
+
+.head--edge {
+  display: block;
+}
+
+.head-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.name {
+  margin: 4px 0 8px;
+  font-size: 26px;
+  line-height: 1.05;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.name--edge {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  margin-bottom: 6px;
+  font-size: 24px;
+  line-height: 1.1;
+}
+
+.edge-arrow {
+  color: var(--accent);
+}
+
+.product {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 3px 7px;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  color: var(--accent-text);
+}
+
+.actions {
+  display: flex;
+  gap: 2px;
+}
+
+.summary {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.direction {
+  padding: 12px 18px 0;
+}
+
+.dir-btn {
+  height: 30px !important;
+  padding: 0 12px !important;
+}
+
+.dir-btn .pa-mono {
+  margin-left: 4px;
+}
+
+.groups {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 4px 18px 18px;
+}
+
+.group-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 0 6px;
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.arrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--accent-text);
+}
+
+.peer {
+  font-size: 15px;
+}
+
+.count {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.row-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.service {
+  flex: 1;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.is-udp {
+  color: var(--accent-text);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.empty {
+  padding: 40px 18px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.empty--hint {
+  text-align: left;
+  line-height: 1.5;
+}
+
+.copy-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 18px;
+  border-top: 1px solid var(--line);
+}

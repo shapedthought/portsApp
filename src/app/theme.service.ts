@@ -1,0 +1,52 @@
+import { Injectable, computed, effect, signal } from '@angular/core';
+
+export type Theme = 'ops' | 'sheet' | 'blueprint';
+
+export const THEMES: { key: Theme; label: string }[] = [
+  { key: 'ops', label: 'Ops' },
+  { key: 'sheet', label: 'Datasheet' },
+  { key: 'blueprint', label: 'Blueprint' },
+];
+
+export const THEME_STORAGE_KEY = 'portsapp-redesign-theme';
+
+/** Section captions that change with the theme. */
+const COPY: Record<Theme, { dashKicker: string; mapKicker: string; list: string; map: string }> = {
+  ops: { dashKicker: '~/portsapp/servers', mapKicker: '~/portsapp/topology', list: '// servers', map: '// topology' },
+  sheet: { dashKicker: 'Section 1 — Servers', mapKicker: 'Section 2 — Topology', list: 'Table 1 · Configured servers', map: 'Fig. 1 · Network map' },
+  blueprint: { dashKicker: 'Dashboard', mapKicker: 'Topology', list: 'Servers', map: 'Network map' },
+};
+
+function isTheme(value: string | null): value is Theme {
+  return THEMES.some(t => t.key === value);
+}
+
+@Injectable({ providedIn: 'root' })
+export class ThemeService {
+  readonly theme = signal<Theme>(this.load());
+  readonly copy = computed(() => COPY[this.theme()]);
+
+  constructor() {
+    effect(() => {
+      document.documentElement.dataset['theme'] = this.theme();
+    });
+  }
+
+  setTheme(theme: Theme): void {
+    this.theme.set(theme);
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch {
+      // Storage unavailable (private mode); the choice lasts for this session only.
+    }
+  }
+
+  private load(): Theme {
+    try {
+      const saved = localStorage.getItem(THEME_STORAGE_KEY);
+      return isTheme(saved) ? saved : 'ops';
+    } catch {
+      return 'ops';
+    }
+  }
+}
