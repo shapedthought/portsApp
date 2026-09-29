@@ -1,7 +1,5 @@
 /* Modern Global Styles for PortsApp */
 
-/* Import PrimeNG and modern fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&display=swap');
 
 /* CSS Custom Properties for consistent theming */
 :root {
@@ -65,13 +63,17 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  background-color: var(--bg);
+}
+
 body {
   margin: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-family: var(--font-body);
   font-size: 14px;
   line-height: 1.6;
-  color: var(--text-primary);
-  background-color: var(--bg-secondary);
+  color: var(--ink);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

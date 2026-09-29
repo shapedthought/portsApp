@@ -1,0 +1,444 @@
+/*
+ * PortsApp redesign: theme tokens, shared primitives and PrimeNG overrides.
+ * Themes are applied as data-theme on <html> by ThemeService. No shadows anywhere.
+ */
+
+:root,
+:root[data-theme='ops'] {
+  --bg: #0f1316;
+  --panel: #141a1f;
+  --ink: #d9dfe4;
+  --muted: #8d98a2;
+  --line: #253039;
+  --line-strong: #3b4854;
+  --accent: #f0a830;
+  --accent-ink: #171004;
+  --accent-soft: rgba(240, 168, 48, 0.13);
+  --accent-text: #f5bb55;
+  --chip: #1c242b;
+  --nav-bg: #0a0d0f;
+  --nav-ink: #e8ecef;
+  --nav-muted: #7d8893;
+  --nav-line: #1f272e;
+  --dot: #222b33;
+  --danger: #ef7a6c;
+  --node-bg: #141a1f;
+  --label-bg: #0f1316;
+  --font-head: 'JetBrains Mono', monospace;
+  --font-body: 'JetBrains Mono', monospace;
+  --font-mono: 'JetBrains Mono', monospace;
+  --head-weight: 700;
+  --head-case: none;
+  --head-track: -0.02em;
+  --radius: 2px;
+  color-scheme: dark;
+}
+
+:root[data-theme='sheet'] {
+  --bg: #f3eee4;
+  --panel: #faf7f1;
+  --ink: #1d1b18;
+  --muted: #6a6358;
+  --line: #d8cebe;
+  --line-strong: #1d1b18;
+  --accent: #d4471b;
+  --accent-ink: #ffffff;
+  --accent-soft: #f6dfd3;
+  --accent-text: #b23a13;
+  --chip: #ebe3d5;
+  --nav-bg: #f3eee4;
+  --nav-ink: #1d1b18;
+  --nav-muted: #6a6358;
+  --nav-line: #1d1b18;
+  --dot: #d8cebe;
+  --danger: #b23a13;
+  --node-bg: #faf7f1;
+  --label-bg: #f3eee4;
+  --font-head: 'IBM Plex Sans Condensed', sans-serif;
+  --font-body: 'IBM Plex Sans', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --head-weight: 700;
+  --head-case: uppercase;
+  --head-track: 0.01em;
+  --radius: 0px;
+  color-scheme: light;
+}
+
+:root[data-theme='blueprint'] {
+  --bg: #f2f2f3;
+  --panel: #f7f7f9;
+  --ink: #1d1f20;
+  --muted: #5d5d60;
+  --line: #d4d4d7;
+  --line-strong: #1d1f20;
+  --accent: #416180;
+  --accent-ink: #ffffff;
+  --accent-soft: #d6ebff;
+  --accent-text: #416180;
+  --chip: #e7e7ea;
+  --nav-bg: #1d2d3d;
+  --nav-ink: #f5f5f8;
+  --nav-muted: #b7b7ba;
+  --nav-line: #1d2d3d;
+  --dot: #c9c9cc;
+  --danger: #9b3b3b;
+  --node-bg: #f7f7f9;
+  --label-bg: #f7f7f9;
+  --font-head: 'Barlow Condensed', sans-serif;
+  --font-body: 'Barlow', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --head-weight: 600;
+  --head-case: none;
+  --head-track: -0.01em;
+  --radius: 0px;
+  color-scheme: light;
+}
+
+/* ---------- Focus ring (every control) ---------- */
+
+:where(button, a, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---------- Type helpers ---------- */
+
+.pa-heading {
+  font-family: var(--font-head);
+  font-weight: var(--head-weight);
+  text-transform: var(--head-case);
+  letter-spacing: var(--head-track);
+}
+
+.pa-caption {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.pa-kicker {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+}
+
+.pa-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Buttons ---------- */
+
+.pa-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 36px;
+  padding: 0 14px;
+  background: transparent;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  font: 500 13px var(--font-body);
+  color: var(--ink);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.pa-btn:hover:not(:disabled) {
+  background: var(--chip);
+}
+
+.pa-btn--primary {
+  padding: 0 16px;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+
+.pa-btn--primary:hover:not(:disabled) {
+  background: var(--accent);
+  filter: brightness(1.08);
+}
+
+.pa-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.pa-icon-btn {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.pa-icon-btn:hover:not(:disabled) {
+  background: var(--chip);
+}
+
+.pa-icon-btn--danger {
+  color: var(--danger);
+}
+
+.pa-icon-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.pa-text-btn {
+  padding: 4px 0;
+  background: transparent;
+  border: 0;
+  font: 500 12px var(--font-body);
+  color: var(--accent-text);
+  cursor: pointer;
+}
+
+.pa-text-btn:hover {
+  text-decoration: underline;
+}
+
+.pa-text-btn--danger {
+  color: var(--danger);
+}
+
+/* ---------- Segmented controls ---------- */
+
+.pa-seg {
+  display: flex;
+  width: max-content;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+}
+
+.pa-seg > button,
+.pa-seg > a {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 28px;
+  padding: 0 11px;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font: 500 12px var(--font-body);
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.pa-seg > * + * {
+  border-left: 1px solid var(--line-strong);
+}
+
+.pa-seg > .is-active {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+/* ---------- Panels, tags, chips ---------- */
+
+.pa-panel {
+  min-width: 0;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.pa-panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 18px;
+  border-bottom: 2px solid var(--line-strong);
+}
+
+.pa-tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  white-space: nowrap;
+}
+
+.pa-chip {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  padding: 2px 7px;
+  background: var(--chip);
+  border-radius: var(--radius);
+}
+
+/* ---------- Form fields ---------- */
+
+.pa-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pa-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.pa-input {
+  height: 36px;
+  padding: 0 10px;
+  background: var(--bg);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  font: 400 14px var(--font-body);
+  color: var(--ink);
+}
+
+.pa-input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+}
+
+.pa-hint {
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.pa-hint--error {
+  color: var(--danger);
+}
+
+/* ---------- PrimeNG overrides ---------- */
+/* Prefixed with html: PrimeNG injects its styles after this sheet, so equal specificity would lose. */
+
+
+html .p-dialog {
+  background: var(--panel);
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  box-shadow: none;
+  font-family: var(--font-body);
+}
+
+html .p-dialog .p-dialog-header {
+  padding: 16px 18px;
+  border-bottom: 2px solid var(--line-strong);
+}
+
+html .p-dialog .p-dialog-title {
+  font-family: var(--font-head);
+  font-weight: var(--head-weight);
+  text-transform: var(--head-case);
+  letter-spacing: var(--head-track);
+  font-size: 20px;
+}
+
+html .p-dialog .p-dialog-content {
+  padding: 18px;
+}
+
+html .p-dialog .p-dialog-footer {
+  padding: 12px 18px 18px;
+}
+
+/* PrimeNG's own tokens are left alone so the pages not yet restyled keep their look;
+   dialogs and toasts are styled directly instead. */
+html .p-dialog .p-button {
+  height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--ink);
+  font: 500 13px var(--font-body);
+  box-shadow: none;
+}
+
+html .p-dialog .p-button:hover {
+  background: var(--chip);
+  color: var(--ink);
+  border-color: var(--line-strong);
+}
+
+html .p-dialog .p-confirmdialog-accept-button,
+html .p-dialog .p-confirmdialog-accept-button:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+
+html .p-dialog .p-confirmdialog-accept-button.p-button-danger,
+html .p-dialog .p-confirmdialog-accept-button.p-button-danger:hover {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: var(--panel);
+}
+
+html .p-dialog .p-dialog-close-button {
+  width: 32px;
+  padding: 0;
+  border-color: transparent;
+  color: var(--muted);
+}
+
+html .p-dialog .p-dialog-close-button:hover {
+  border-color: transparent;
+  background: var(--chip);
+  color: var(--ink);
+}
+
+html .p-dialog .p-confirmdialog-message {
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+html .p-dialog-mask.p-overlay-mask {
+  background: rgba(0, 0, 0, 0.55);
+}
+
+html .p-toast-message {
+  background: var(--panel);
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  box-shadow: none;
+  backdrop-filter: none;
+  font-family: var(--font-body);
+}
+
+html .p-toast-message-error {
+  border-left-color: var(--danger);
+}
+
+html .p-toast-message .p-toast-summary {
+  font-family: var(--font-head);
+  font-weight: var(--head-weight);
+  text-transform: var(--head-case);
+}
+
+html .p-toast-message .p-toast-detail,
+html .p-toast-message .p-toast-message-icon,
+html .p-toast-message .p-toast-close-button {
+  color: var(--ink);
+}

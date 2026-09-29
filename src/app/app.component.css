@@ -1,101 +1,172 @@
-/* Navigation header */
-.nav-header {
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-  border: none;
-  min-height: 4rem;
+.shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--bg);
 }
 
-.nav-burger {
-  color: white;
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  height: 54px;
+  padding: 0 32px;
+  background: var(--nav-bg);
+  color: var(--nav-ink);
+  border-bottom: 1px solid var(--nav-line);
 }
 
-/* Nav links */
-.nav-link {
-  color: white;
-  transition: all 0.2s;
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--nav-ink);
+  text-decoration: none;
 }
 
-.nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.1) !important;
-  color: white !important;
+.brand-mark {
+  color: var(--accent);
 }
 
-.nav-link.is-active {
-  background-color: rgba(255, 255, 255, 0.15) !important;
-  color: white !important;
+.brand-name {
+  font-size: 18px;
 }
 
-.nav-brand {
-  font-weight: 600;
-  font-size: 1.25rem;
+.nav-seg {
+  border-color: var(--nav-muted);
 }
 
-/* Version badge */
+.nav-seg > * {
+  color: var(--nav-ink);
+  padding: 0 10px;
+}
+
+.nav-seg > * + * {
+  border-left-color: var(--nav-muted);
+}
+
+.nav-seg--mode > * {
+  height: 32px;
+  padding: 0 14px;
+  font-size: 13px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 4px;
+}
+
+.nav-links a {
+  padding: 6px 12px;
+  font-size: 13px;
+  color: var(--nav-muted);
+  text-decoration: none;
+}
+
+.nav-links a:hover,
+.nav-links a.is-active {
+  color: var(--nav-ink);
+}
+
+.nav-end {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-theme-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--nav-muted);
+}
+
 .nav-version {
-  color: #5eead4;
-  font-size: 0.875rem;
+  margin-left: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--nav-muted);
 }
 
-/* Main content area */
-.main-content {
-  background-color: var(--bg-secondary);
-  min-height: calc(100vh - 4rem);
+.main {
+  flex: 1;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 32px 32px 44px;
 }
 
-.main-container {
-  padding-top: var(--spacing-xl);
-  padding-bottom: var(--spacing-xl);
+.site-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  padding: 14px 32px;
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+  color: var(--muted);
 }
 
-/* MCP promo dialog */
-:host ::ng-deep .mcp-promo-dialog .p-dialog-header {
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  color: white;
-  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-}
-:host ::ng-deep .mcp-promo-dialog .p-dialog-title {
-  color: white;
-  font-weight: 600;
-}
-:host ::ng-deep .mcp-promo-dialog .p-dialog-header-actions button {
-  color: rgba(255, 255, 255, 0.8);
-}
-:host ::ng-deep .mcp-promo-dialog .p-dialog-header-actions button:hover {
-  color: white;
-}
-:host ::ng-deep .mcp-promo-dialog .p-dialog-content {
-  padding: var(--spacing-xl);
-}
-:host ::ng-deep .mcp-promo-dialog .p-dialog-footer {
-  background-color: var(--gray-50);
-  border-top: 1px solid var(--gray-200);
-  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
-  padding: var(--spacing-lg);
+.site-footer a {
+  color: var(--accent-text);
+  text-decoration: none;
 }
 
-.mcp-promo-body {
-  color: var(--text-primary);
+.site-footer a:hover {
+  text-decoration: underline;
+}
+
+.footer-version {
+  margin-left: auto;
+  font-family: var(--font-mono);
+}
+
+.promo-body p {
+  margin: 0 0 16px;
+  color: var(--ink);
   line-height: 1.5;
 }
 
-.mcp-promo-checkbox {
+.promo-check {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
-  color: var(--text-secondary, #64748b);
+  gap: 8px;
+  font-size: 13px;
+  color: var(--muted);
   cursor: pointer;
 }
 
-.mcp-promo-checkbox input {
-  cursor: pointer;
+.promo-check input {
+  accent-color: var(--accent);
+  margin: 0;
 }
 
-.cancel-button {
-  font-weight: 500;
-  background-color: white;
-  border: 2px solid var(--gray-300) !important;
-  color: var(--text-primary);
-  transition: all 0.2s ease;
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+@media (max-width: 900px) {
+  .nav {
+    height: auto;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+    padding: 10px 16px;
+  }
+
+  .nav-end {
+    margin-left: 0;
+  }
+
+  .main {
+    padding: 20px 16px 32px;
+  }
+
+  .site-footer {
+    padding: 14px 16px;
+  }
 }

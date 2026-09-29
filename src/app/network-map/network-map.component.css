@@ -1,0 +1,190 @@
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 18px;
+  padding: 10px 14px;
+  border-bottom: 2px solid var(--line-strong);
+}
+
+.proto-btn {
+  font-family: var(--font-mono) !important;
+}
+
+.ports-toggle {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.ports-toggle input {
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+.hint {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.canvas-wrap {
+  position: relative;
+  flex: 1;
+  min-height: 560px;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+  background-image: radial-gradient(circle, var(--dot) 1px, transparent 1.3px);
+  background-size: 24px 24px;
+  background-attachment: local;
+}
+
+.stage {
+  position: relative;
+}
+
+.edges {
+  position: absolute;
+  inset: 0;
+}
+
+.edges path {
+  fill: none;
+  stroke: var(--line-strong);
+}
+
+.edges path.hot {
+  stroke: var(--accent);
+}
+
+.edge-label,
+.node {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+/* Faded labels and nodes keep a solid background so lines don't show through; only content and border fade. */
+.edge-label {
+  --border: var(--line);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  border: 1px solid color-mix(in srgb, var(--border) calc(var(--fade, 1) * 100%), var(--label-bg));
+  background: var(--label-bg);
+  color: var(--muted);
+  font: 500 12px var(--font-mono);
+  white-space: nowrap;
+}
+
+.edge-label > span {
+  opacity: var(--fade, 1);
+}
+
+.edge-label.hot {
+  --border: var(--accent);
+  color: var(--accent-text);
+}
+
+.edge-label.active {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.edge-label-proto {
+  font-weight: 700;
+}
+
+.node {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 172px;
+  padding: 10px 12px;
+  border: 1px solid var(--line-strong);
+  background: var(--node-bg);
+  color: var(--ink);
+  text-align: left;
+}
+
+.edge-label:hover {
+  --border: var(--accent);
+  --fade: 1;
+}
+
+.node:hover {
+  border-color: var(--accent);
+}
+
+.node.selected {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+.node.faded {
+  border-color: color-mix(in srgb, var(--line-strong) 45%, var(--node-bg));
+}
+
+.node.faded > * {
+  opacity: 0.45;
+}
+
+.node-name {
+  font-size: 16px;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.node-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+.empty {
+  padding: 40px 18px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.legend {
+  position: absolute;
+  left: 14px;
+  bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font: 11px var(--font-mono);
+  color: var(--muted);
+  pointer-events: none;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-line {
+  width: 22px;
+  border-top: 2px solid var(--muted);
+}
+
+.legend-line--udp {
+  border-top-style: dashed;
+}
