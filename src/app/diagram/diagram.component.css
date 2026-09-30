@@ -1,148 +1,117 @@
-/* Diagram container styling */
-.diagram-container {
-  position: relative;
-  width: 100%;
-  min-height: 400px;
+/* ViewEncapsulation.None (Mermaid injects its SVG), so every rule is scoped under app-diagram. */
+
+app-diagram {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
-.mermaid-diagram {
-  width: 100%;
-  min-height: 400px;
+app-diagram .layout {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+app-diagram .stats {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+app-diagram .paper {
+  margin: 14px;
+  min-height: 360px;
+  overflow: auto;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+app-diagram .mermaid-diagram {
   display: flex;
   justify-content: center;
-  align-items: center;
-  border: 1px solid var(--gray-200);
-  border-radius: var(--radius);
-  background-color: var(--bg-primary);
-  overflow: auto;
+  min-height: 360px;
+  padding: 16px;
 }
 
-/* Mermaid diagram styling overrides (ViewEncapsulation.None — scope to app-diagram) */
 app-diagram .mermaid-diagram svg {
   max-width: 100%;
   height: auto;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-app-diagram .mermaid-diagram .node rect {
-  rx: 8px;
-  ry: 8px;
+/* The paper is always light, so its messages use the light palette whatever the theme. */
+app-diagram .paper .pa-empty,
+app-diagram .paper .pa-empty strong {
+  color: #5d5d60;
 }
 
-app-diagram .mermaid-diagram .edgeLabel {
-  font-weight: 500;
+app-diagram .diagram-error {
+  align-self: flex-start;
+  width: 100%;
+  padding: 16px;
+  border: 1px dashed #9b3b3b;
+  color: #1d1f20;
+  font-size: 13px;
 }
 
-/* Control styling */
-.diagram-stats {
-  font-weight: 500;
-  background-color: var(--gray-50);
-  padding: 0.5rem 0.75rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--gray-200);
+app-diagram .diagram-error p {
+  margin: 4px 0 8px;
 }
 
-/* Checkbox label */
-.checkbox-label {
-  margin-left: 0.25rem;
-  font-size: 0.875rem;
+app-diagram .diagram-error pre {
+  white-space: pre-wrap;
+  font: 11px var(--font-mono);
 }
 
-/* Export buttons offset */
-.export-buttons {
-  margin-top: 1.5rem;
+app-diagram .foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 18px;
+  padding: 0 14px 14px;
 }
 
-/* Export button styling */
-.buttons .button {
-  transition: all 0.2s ease;
+app-diagram .legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  font: 11px var(--font-mono);
+  color: var(--muted);
 }
 
-.buttons .button:hover:not(:disabled) {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow);
+app-diagram .legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-/* Loading spinner centered */
-.loading-spinner--centered {
-  margin: 0 auto;
+app-diagram .line {
+  width: 22px;
+  border-top: 1px solid var(--muted);
 }
 
-/* Legend */
-.legend-text {
-  font-size: 0.8125rem;
-  color: var(--text-secondary);
+app-diagram .line--heavy {
+  border-top-width: 3px;
 }
 
-.legend-tcp { color: #3b82f6; }
-.legend-udp { color: #10b981; }
-.legend-mixed { color: #8b5cf6; }
+app-diagram .line--udp {
+  border-top: 2px dotted var(--muted);
+}
 
-/* Code preview */
-.code-summary {
+app-diagram .code-panel summary {
+  padding: 12px 18px;
   cursor: pointer;
-  color: var(--text-secondary);
 }
 
-.code-preview {
-  background-color: var(--gray-50);
-  border-radius: var(--radius-sm);
-  font-size: 0.8125rem;
-  overflow-x: auto;
-  border: 1px solid var(--gray-200);
+app-diagram .code-panel .pa-code {
+  margin: 0 14px 14px;
 }
 
-/* Loading spinner override */
-.loading-spinner {
-  border: 3px solid var(--gray-200);
-  border-top: 3px solid var(--primary-color);
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  animation: spin 1s linear infinite;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .diagram-container {
-    min-height: 300px;
-  }
-
-  .mermaid-diagram {
-    min-height: 300px;
-  }
-
-  .diagram-info .columns {
-    display: block !important;
-  }
-
-  .diagram-info .column.is-narrow {
-    margin-top: 0.5rem;
-    text-align: left !important;
-  }
-
-  .buttons {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .buttons .button {
-    margin: 0.125rem;
-  }
-}
-
-/* Print styles */
 @media print {
-  .modern-card:first-child {
+  app-diagram .pa-toolbar,
+  app-diagram .foot,
+  app-diagram .code-panel {
     display: none;
-  }
-
-  .diagram-info {
-    display: none;
-  }
-
-  .mermaid-diagram {
-    border: none;
-    box-shadow: none;
   }
 }

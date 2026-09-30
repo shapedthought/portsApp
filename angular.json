@@ -24,7 +24,7 @@
                 "input": "public"
               }
             ],
-            "styles": ["./node_modules/bulma/css/bulma.css", "src/styles.css", "src/theme.css"],
+            "styles": ["src/theme.css"],
             "scripts": []
           },
           "configurations": {

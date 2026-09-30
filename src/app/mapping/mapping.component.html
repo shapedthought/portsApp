@@ -1,633 +1,311 @@
-<!-- Modern Header Section -->
-<div class="modern-card slide-up">
-  <div class="flex items-center mb-6">
-    <button
-      class="button is-light mr-4 back-button"
-      [routerLink]="['/']"
-    >
-      <span class="icon">
-        <i class="fas fa-arrow-left"></i>
-      </span>
-    </button>
+<div class="pa-page">
+  <header class="pa-page-header">
     <div>
-      <h1 class="title is-3 mb-2 section-title">
-        <i class="fas fa-cogs mr-2 icon-primary"></i>
-        Port Mapping Configuration
-      </h1>
-      <p class="subtitle is-6 section-subtitle">
-        Configure network port mappings and service connections
-      </p>
+      <div class="pa-kicker">{{ theme.copy().mappingKicker }}</div>
+      <h1 class="pa-page-title">{{ selectedPortMapping.sourceServer || 'Server' }}</h1>
+      <p class="pa-page-subtitle">Choose the product, add the services this server talks to, then review and save</p>
     </div>
-  </div>
-</div>
+    <div class="pa-actions">
+      <button type="button" class="pa-btn" [routerLink]="['/']">Cancel</button>
+    </div>
+  </header>
 
-<!-- PrimeNG Stepper -->
-<div class="modern-card">
-  <p-stepper [(value)]="activeStep" [linear]="true">
-    <p-step-list>
-      <p-step [value]="1">Server &amp; Product</p-step>
-      <p-step [value]="2" [disabled]="!canProceedToStep2">Service Selection</p-step>
-      <p-step [value]="3" [disabled]="!canProceedToStep3">Review</p-step>
-    </p-step-list>
+  <section class="pa-panel">
+    <p-stepper [(value)]="activeStep" [linear]="true">
+      <p-step-list>
+        <p-step [value]="1">Server &amp; product</p-step>
+        <p-step [value]="2" [disabled]="!canProceedToStep2">Services</p-step>
+        <p-step [value]="3" [disabled]="!canProceedToStep3">Review</p-step>
+      </p-step-list>
 
-    <p-step-panels>
-      <!-- Step 1: Server & Product -->
-      <p-step-panel [value]="1">
-        <ng-template #content let-activateCallback="activateCallback">
-          <div class="step-content">
-            <h3 class="title is-5 mb-4 section-title">
-              <i class="fas fa-sliders-h mr-2 icon-secondary"></i>
-              Server Configuration
-            </h3>
-
-            <div class="columns">
-              <!-- Server Name Field -->
-              <div class="column">
-                <div class="field">
-                  <label class="label field-label">
-                    <i class="fas fa-server mr-2 icon-primary"></i>
-                    Server Name
-                  </label>
-                  <div class="control has-icons-left">
-                    <input
-                      class="input input-styled"
-                      type="text"
-                      [formControl]="serverForm.controls.serverName"
-                      (blur)="updateName()"
-                      placeholder="Enter server name"
-                    />
-                    <span class="icon is-left icon-muted">
-                      <i class="fas fa-server"></i>
-                    </span>
-                  </div>
-                  @if (serverForm.controls.serverName.hasError('required') && serverForm.controls.serverName.touched) {
-                  <div class="mt-2 p-2 validation-error text-sm">
-                    <i class="fas fa-exclamation-triangle mr-1"></i>
-                    Server name is required
-                  </div>
-                  } @else if (serverForm.controls.serverName.hasError('uniqueName') && serverForm.controls.serverName.touched) {
-                  <div class="mt-2 p-2 validation-error text-sm">
-                    <i class="fas fa-exclamation-triangle mr-1"></i>
-                    No duplicate server names allowed!
-                  </div>
-                  } @else if (serverForm.controls.serverName.hasError('minlength') && serverForm.controls.serverName.touched) {
-                  <div class="mt-2 p-2 validation-error text-sm">
-                    <i class="fas fa-exclamation-triangle mr-1"></i>
-                    Server name must be at least 3 characters
-                  </div>
-                  } @else if (serverForm.controls.serverName.hasError('maxlength') && serverForm.controls.serverName.touched) {
-                  <div class="mt-2 p-2 validation-error text-sm">
-                    <i class="fas fa-exclamation-triangle mr-1"></i>
-                    Server name must be at most 20 characters
-                  </div>
+      <p-step-panels>
+        <!-- Step 1: Server & product -->
+        <p-step-panel [value]="1">
+          <ng-template #content let-activateCallback="activateCallback">
+            <div class="step">
+              <div class="fields">
+                <div class="pa-field">
+                  <label class="pa-label" for="server-name">Server name</label>
+                  <input
+                    id="server-name"
+                    class="pa-input"
+                    type="text"
+                    autocomplete="off"
+                    [formControl]="serverForm.controls.serverName"
+                    (blur)="updateName()"
+                  />
+                  @let nameCtrl = serverForm.controls.serverName;
+                  @if (nameCtrl.touched && nameCtrl.hasError('required')) {
+                    <p class="pa-hint pa-hint--error">Server name is required.</p>
+                  } @else if (nameCtrl.touched && nameCtrl.hasError('uniqueName')) {
+                    <p class="pa-hint pa-hint--error">Another server already has this name.</p>
+                  } @else if (nameCtrl.touched && (nameCtrl.hasError('minlength') || nameCtrl.hasError('maxlength'))) {
+                    <p class="pa-hint pa-hint--error">Use 3–20 characters.</p>
+                  } @else {
+                    <p class="pa-hint">3–20 characters.</p>
                   }
                 </div>
+
+                <div class="pa-field">
+                  <label class="pa-label" for="product">Product</label>
+                  <select id="product" class="pa-input" [formControl]="serverForm.controls.selectedProduct" (change)="changeApp()">
+                    @for (item of products; track item.id) {
+                      <option>{{ item.productName }}</option>
+                    }
+                  </select>
+                  <p class="pa-hint">The target server is chosen per service in the next step.</p>
+                </div>
               </div>
 
-              <!-- Product Selection -->
-              <div class="column">
-                <div class="field">
-                  <label class="label field-label">
-                    <i class="fas fa-cube mr-2 icon-info"></i>
-                    Product
-                  </label>
-                  <div class="control has-icons-left">
-                    <div class="select is-fullwidth">
-                      <select
-                        [formControl]="serverForm.controls.selectedProduct"
-                        (change)="changeApp()"
-                        class="input-styled"
-                      >
-                        @for (item of products; track item.id) {
-                        <option>{{ item.productName }}</option>
+              <div class="step-nav step-nav--end">
+                <button type="button" class="pa-btn pa-btn--primary" [disabled]="!canProceedToStep2" (click)="activateCallback(2)">
+                  Next: services <lucide-icon [img]="icons.ArrowRight" [size]="15" [strokeWidth]="1.5" />
+                </button>
+              </div>
+            </div>
+          </ng-template>
+        </p-step-panel>
+
+        <!-- Step 2: Services -->
+        <p-step-panel [value]="2">
+          <ng-template #content let-activateCallback="activateCallback">
+            <div class="step">
+              <div class="filters">
+                <div class="search">
+                  <lucide-icon class="search-icon" [img]="icons.Search" [size]="14" [strokeWidth]="1.5" />
+                  <input
+                    class="pa-input pa-input--sm search-input"
+                    type="search"
+                    placeholder="Search services"
+                    aria-label="Search services"
+                    [(ngModel)]="searchTerm"
+                    (input)="onSearchChange($event)"
+                  />
+                </div>
+                <div class="pa-seg" role="group" aria-label="Protocol">
+                  @for (p of protocolOptions; track p) {
+                    <button type="button" class="proto-btn" [class.is-active]="protocolFilter === p" [attr.aria-pressed]="protocolFilter === p" (click)="onProtocolFilterChange(p)">{{ p }}</button>
+                  }
+                </div>
+                <select class="pa-input pa-input--sm" aria-label="Category" [(ngModel)]="categoryFilter" (change)="onCategoryFilterChange($event)">
+                  <option value="">All categories</option>
+                  @for (category of availableCategories; track category) {
+                    <option [value]="category">{{ category }}</option>
+                  }
+                </select>
+                @if (hasActiveFilters()) {
+                  <button type="button" class="pa-text-btn" (click)="clearAllFilters()">Clear filters</button>
+                }
+                <span class="filter-count pa-mono">
+                  {{ filteredSourceServices.length }} source · {{ filteredTargetServices.length }} target
+                </span>
+              </div>
+
+              @if (hasActiveFilters()) {
+                <div class="active-filters">
+                  @for (filter of getActiveFilters(); track filter.key) {
+                    <span class="filter-chip">
+                      {{ filter.label }}
+                      <button type="button" [attr.aria-label]="'Remove ' + filter.label" (click)="removeFilter(filter.key)">
+                        <lucide-icon [img]="icons.X" [size]="12" [strokeWidth]="1.5" />
+                      </button>
+                    </span>
+                  }
+                </div>
+              }
+
+              <div class="sub-panel">
+                <div class="sub-head">
+                  <span class="pa-caption">Source services · {{ selectedProduct }}</span>
+                  <span class="pa-mono count">{{ filteredSourceServices.length }} of {{ sourceServices.length }}</span>
+                </div>
+                <div class="pa-table-scroll source-scroll">
+                  <table class="pa-table">
+                    <thead>
+                      <tr><th>Category</th><th>Source service</th></tr>
+                    </thead>
+                    <tbody>
+                      @for (item of filteredSourceServices; track item.id) {
+                        <tr class="is-clickable" [class.is-selected]="item === selectedSourceService" (click)="selectService(item)">
+                          <td class="muted">{{ item.subheading }}</td>
+                          <td class="strong">{{ item.name }}</td>
+                        </tr>
+                      } @empty {
+                        <tr><td colspan="2"><div class="pa-empty">No source services match.</div></td></tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="sub-panel">
+                <div class="sub-head">
+                  <span class="pa-caption">Target services</span>
+                  @if (sourceServiceName.length > 0 && serverName !== 'Change me') {
+                    <label class="map-to">
+                      <span class="pa-label">Map to</span>
+                      <select class="pa-input pa-input--sm" [(ngModel)]="selectedTargetServer">
+                        @for (server of servers; track server) {
+                          <option>{{ server.name }}</option>
                         }
                       </select>
-                    </div>
-                    <span class="icon is-left icon-muted">
-                      <i class="fas fa-cube"></i>
-                    </span>
-                  </div>
+                    </label>
+                  }
+                  <span class="pa-mono count">{{ filteredTargetServices.length }} of {{ fullServiceResponse.length }}</span>
                 </div>
+
+                @if (sourceServiceName.length > 0 && serverName !== 'Change me') {
+                  <div class="pa-table-scroll">
+                    <table class="pa-table">
+                      <thead>
+                        <tr>
+                          <th>Section</th>
+                          <th>Subsection</th>
+                          <th>Target service</th>
+                          <th>Ports</th>
+                          <th>Protocol</th>
+                          <th class="num"><span class="sr-only">Add</span></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @for (item of filteredTargetServices; track item.id) {
+                          <tr class="is-clickable" (click)="updateDescription(item)">
+                            <td class="muted">{{ item.subheading }}</td>
+                            <td>
+                              {{ item.subheadingL2 }}
+                              @if (item.subheadingL3.length > 0) {
+                                <div class="muted small">{{ item.subheadingL3 }}</div>
+                              }
+                            </td>
+                            <td class="strong">{{ item.targetService }}</td>
+                            <td class="pa-mono ports">{{ item.port }}</td>
+                            <td><span class="pa-tag" [class.is-udp]="item.protocol === 'UDP'">{{ item.protocol }}</span></td>
+                            <td class="num">
+                              <button
+                                type="button"
+                                class="pa-btn add-btn"
+                                [disabled]="serverForm.controls.serverName.invalid"
+                                [attr.aria-label]="'Add ' + item.targetService + ' to ' + selectedTargetServer"
+                                (click)="updateService(item); $event.stopPropagation()"
+                              >
+                                <lucide-icon [img]="icons.Plus" [size]="14" [strokeWidth]="1.8" />Add
+                              </button>
+                            </td>
+                          </tr>
+                        } @empty {
+                          <tr><td colspan="6"><div class="pa-empty">No target services match the filters.</div></td></tr>
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                } @else if (serverName === 'Change me') {
+                  <div class="pa-empty">
+                    <strong>Rename the server first</strong>
+                    Change the server name from its default in step 1 to start mapping ports.
+                  </div>
+                } @else {
+                  <div class="pa-empty">
+                    <strong>Pick a source service</strong>
+                    Choose a source service above to see its target services.
+                  </div>
+                }
+              </div>
+
+              @if (selectedDescription) {
+                <div class="description">
+                  <span class="pa-caption">Description</span>
+                  <p>{{ selectedDescription }}</p>
+                </div>
+              }
+
+              <div class="step-nav">
+                <button type="button" class="pa-btn" (click)="activateCallback(1)">
+                  <lucide-icon [img]="icons.ArrowLeft" [size]="15" [strokeWidth]="1.5" />Back
+                </button>
+                <button type="button" class="pa-btn pa-btn--primary" [disabled]="!canProceedToStep3" (click)="activateCallback(3)">
+                  Next: review <lucide-icon [img]="icons.ArrowRight" [size]="15" [strokeWidth]="1.5" />
+                </button>
               </div>
             </div>
+          </ng-template>
+        </p-step-panel>
 
-            <p class="text-muted text-sm mt-2">
-              Target server is selected per-service in Step 2.
-            </p>
-
-            <div class="flex justify-end mt-4">
-              <button
-                class="button is-primary"
-                [disabled]="!canProceedToStep2"
-                (click)="activateCallback(2)"
-              >
-                <span>Next: Select Services</span>
-                <span class="icon is-small">
-                  <i class="fas fa-arrow-right"></i>
-                </span>
-              </button>
-            </div>
-          </div>
-        </ng-template>
-      </p-step-panel>
-
-      <!-- Step 2: Service Selection -->
-      <p-step-panel [value]="2">
-        <ng-template #content let-activateCallback="activateCallback">
-          <div class="step-content">
-            <!-- Service Filtering Section -->
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="title is-5 mb-0 section-title">
-                <i class="fas fa-filter mr-2 icon-secondary"></i>
-                Filter Services
-              </h3>
-              <div class="filter-results text-sm text-muted">
-                Showing {{ filteredSourceServices.length }} source,
-                {{ filteredTargetServices.length }} target services
-              </div>
-            </div>
-
-            <!-- Filter Controls -->
-            <div class="columns is-mobile">
-              <!-- Global Search -->
-              <div class="column is-4">
-                <div class="field">
-                  <label class="label is-small field-label--sm">Filter</label>
-                  <div class="control has-icons-left">
-                    <input
-                      class="input is-small input-styled"
-                      type="text"
-                      [(ngModel)]="searchTerm"
-                      (input)="onSearchChange($event)"
-                      placeholder="Search services..."
-                    />
-                    <span class="icon is-left is-small">
-                      <i class="fas fa-search icon-muted"></i>
-                    </span>
-                  </div>
+        <!-- Step 3: Review & save -->
+        <p-step-panel [value]="3">
+          <ng-template #content let-activateCallback="activateCallback">
+            <div class="step">
+              <div class="sub-panel">
+                <div class="sub-head">
+                  <span class="pa-caption">Port mappings for {{ selectedPortMapping.sourceServer }}</span>
+                  <span class="pa-mono count">{{ selectedPortMapping.mappedPorts.length }} mappings</span>
                 </div>
-              </div>
-
-              <!-- Protocol Filters -->
-              <div class="column is-3">
-                <div class="field">
-                  <label class="label is-small field-label--sm">Protocol</label>
-                  <div class="buttons has-addons is-small">
-                    <button
-                      class="button protocol-btn--left"
-                      [class.is-primary]="protocolFilter === 'ALL'"
-                      [class.is-light]="protocolFilter !== 'ALL'"
-                      (click)="onProtocolFilterChange('ALL')"
-                    >
-                      All
-                    </button>
-                    <button
-                      class="button"
-                      [class.is-success]="protocolFilter === 'TCP'"
-                      [class.is-light]="protocolFilter !== 'TCP'"
-                      (click)="onProtocolFilterChange('TCP')"
-                    >
-                      TCP
-                    </button>
-                    <button
-                      class="button protocol-btn--right"
-                      [class.is-info]="protocolFilter === 'UDP'"
-                      [class.is-light]="protocolFilter !== 'UDP'"
-                      (click)="onProtocolFilterChange('UDP')"
-                    >
-                      UDP
-                    </button>
+                @if (selectedPortMapping.mappedPorts.length > 0) {
+                  <div class="pa-table-scroll">
+                    <table class="pa-table">
+                      <thead>
+                        <tr>
+                          <th>Product</th>
+                          <th>Target server</th>
+                          <th>Source service</th>
+                          <th>Target service</th>
+                          <th>Ports</th>
+                          <th>Protocol</th>
+                          <th class="num"><span class="sr-only">Remove</span></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @for (item of selectedPortMapping.mappedPorts; track item; let index = $index) {
+                          <tr>
+                            <td class="muted pa-mono small">{{ item.product }}</td>
+                            <td>
+                              <select class="pa-input pa-input--sm" aria-label="Target server" [(ngModel)]="item.targetServerName" (change)="updateTargetPortmapping()">
+                                @for (server of servers; track server) {
+                                  <option>{{ server.name }}</option>
+                                }
+                              </select>
+                            </td>
+                            <td>{{ item.sourceService }}</td>
+                            <td class="strong">{{ item.targetService }}</td>
+                            <td class="pa-mono ports">{{ item.port }}</td>
+                            <td><span class="pa-tag" [class.is-udp]="item.protocol === 'UDP'">{{ item.protocol }}</span></td>
+                            <td class="num">
+                              <button type="button" class="pa-icon-btn pa-icon-btn--danger" title="Remove this mapping" aria-label="Remove mapping" (click)="removeService(index)">
+                                <lucide-icon [img]="icons.Trash2" [size]="15" [strokeWidth]="1.5" />
+                              </button>
+                            </td>
+                          </tr>
+                        }
+                      </tbody>
+                    </table>
                   </div>
-                </div>
-              </div>
-
-              <!-- Category Filter -->
-              <div class="column is-3">
-                <div class="field">
-                  <label class="label is-small field-label--sm">Category</label>
-                  <div class="select is-fullwidth is-small">
-                    <select
-                      [(ngModel)]="categoryFilter"
-                      (change)="onCategoryFilterChange($event)"
-                    >
-                      <option value="">All Categories</option>
-                      @for (category of availableCategories; track category) {
-                      <option [value]="category">{{ category }}</option>
-                      }
-                    </select>
+                } @else {
+                  <div class="pa-empty">
+                    <strong>No port mappings yet</strong>
+                    Go back to step 2 and add services.
                   </div>
-                </div>
+                }
               </div>
 
-              <!-- Clear Filters -->
-              <div class="column is-2">
-                <div class="field clear-filters-field">
+              <div class="step-nav">
+                <button type="button" class="pa-btn" (click)="activateCallback(2)">
+                  <lucide-icon [img]="icons.ArrowLeft" [size]="15" [strokeWidth]="1.5" />Back to services
+                </button>
+                <div class="pa-actions">
+                  <button type="button" class="pa-btn" [routerLink]="['/']">Cancel</button>
                   <button
-                    class="button is-light is-small is-fullwidth"
-                    (click)="clearAllFilters()"
-                    [disabled]="!hasActiveFilters()"
+                    type="button"
+                    class="pa-btn pa-btn--primary"
+                    [disabled]="selectedPortMapping.mappedPorts.length === 0 || serverForm.controls.serverName.invalid"
+                    (click)="saveMapping()"
                   >
-                    <span class="icon is-small">
-                      <i class="fas fa-times"></i>
-                    </span>
-                    <span>Clear</span>
+                    <lucide-icon [img]="icons.Save" [size]="15" [strokeWidth]="1.5" />Save
                   </button>
                 </div>
               </div>
             </div>
-
-            <!-- Active Filters Display -->
-            @if (hasActiveFilters()) {
-            <div class="active-filters mb-3">
-              <span class="active-filters-label">Active filters:</span>
-              @for (filter of getActiveFilters(); track filter.key) {
-              <span class="tag is-primary is-light is-small mr-1 mb-1 tag-rounded">
-                {{ filter.label }}
-                <button
-                  class="delete is-small ml-1"
-                  (click)="removeFilter(filter.key)"
-                ></button>
-              </span>
-              }
-            </div>
-            }
-
-            <!-- Source Services -->
-            <div class="mb-5">
-              <div class="flex items-center justify-between mb-3">
-                <h4 class="title is-6 mb-0 section-title">
-                  <i class="fas fa-list-ul mr-2 icon-success"></i>
-                  Source Services for {{ selectedProduct }}
-                </h4>
-                <span class="tag is-light tag-rounded">
-                  {{ filteredSourceServices.length }} of
-                  {{ sourceServices.length }} services
-                </span>
-              </div>
-
-              <div class="scrollable-table-container table-wrapper table-scroll--sm">
-                <table class="table is-fullwidth is-hoverable mapping-table">
-                  <thead>
-                    <tr class="gradient-thead thead-sticky">
-                      <th class="th-cell">
-                        <i class="fas fa-service-stack mr-2 icon-success"></i>
-                        Subheading
-                      </th>
-                      <th class="th-cell">
-                        <i class="fas fa-service-stack mr-2 icon-success"></i>
-                        Source Service
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @for (item of filteredSourceServices; track item.id; let index = $index)
-                    {
-                    <tr
-                      [class.is-selected]="index === sourceServiceSelected"
-                      (click)="selectService(index)"
-                      class="row-clickable td-bold"
-                      [class.source-row--selected]="index === sourceServiceSelected"
-                      [style.border-left]="
-                        index === sourceServiceSelected
-                          ? '4px solid var(--primary-color)'
-                          : '4px solid transparent'
-                      "
-                    >
-                      <td class="td-cell">
-                        <div class="flex items-center">
-                          <div class="mr-3 status-dot status-dot--sm status-dot--success source-dot"></div>
-                          {{ item.subheading }}
-                        </div>
-                      </td>
-                      <td class="td-cell">
-                        <div class="flex items-center">
-                          {{ item.name }}
-                        </div>
-                      </td>
-                    </tr>
-                    }
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <!-- Target Services -->
-            <div class="mb-5">
-              <div class="flex items-center justify-between mb-3">
-                <h4 class="title is-6 mb-0 section-title">
-                  <i class="fas fa-crosshairs mr-2 icon-info"></i>
-                  Available Target Services
-                </h4>
-                <span class="tag is-info is-light tag-rounded">
-                  {{ filteredTargetServices.length }} of
-                  {{ fullServiceResponse.length }} services
-                </span>
-              </div>
-
-              @if (sourceServiceName.length > 0 && serverName != 'Change me') {
-              <div class="scrollable-table-container table-wrapper table-scroll">
-                <table class="table is-fullwidth is-hoverable mapping-table">
-                  <thead>
-                    <tr class="gradient-thead thead-sticky">
-                      <th class="th-cell">Section</th>
-                      <th class="th-cell">Subsection</th>
-                      <th class="th-cell">Target Service</th>
-                      <th class="th-cell td-center">Ports</th>
-                      <th class="th-cell td-center">Protocol</th>
-                      <th class="th-cell">Target Server</th>
-                      <th class="th-cell action-col">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @for (item of filteredTargetServices; track item.id; let index = $index)
-                    {
-                    <tr
-                      (click)="updateDescription(index)"
-                      class="row-clickable"
-                    >
-                      <td class="td-cell td-bold">
-                        <span class="tag is-light tag-rounded text-xs">
-                          {{ item.subheading }}
-                        </span>
-                      </td>
-                      <td class="td-cell">
-                        <div>
-                          <div class="td-bold" style="color: var(--text-primary);">
-                            {{ item.subheadingL2 }}
-                          </div>
-                          @if(item.subheadingL3.length > 0) {
-                          <div class="subsection-detail">
-                            {{ item.subheadingL3 }}
-                          </div>
-                          }
-                        </div>
-                      </td>
-                      <td class="td-cell td-bold" style="color: var(--text-primary);">
-                        {{ item.targetService }}
-                      </td>
-                      <td class="td-cell td-center">
-                        <code class="port-code">
-                          {{ item.port }}
-                        </code>
-                      </td>
-                      <td class="td-cell td-center">
-                        <span
-                          class="tag tag-rounded td-bold"
-                          [class.is-success]="item.protocol === 'TCP'"
-                        [class.is-info]="item.protocol !== 'TCP'"
-                        >
-                          {{ item.protocol }}
-                        </span>
-                      </td>
-                      <td class="td-cell">
-                        <div class="select is-small">
-                          <select
-                            [(ngModel)]="selectedTargetServer"
-                            class="target-select"
-                          >
-                            @for (server of servers; track server) {
-                            <option>{{ server.name }}</option>
-                            }
-                          </select>
-                        </div>
-                      </td>
-                      <td class="td-cell">
-                        <button
-                          class="button is-primary is-small add-button"
-                          (click)="updateService(index); $event.stopPropagation()"
-                          [disabled]="serverForm.controls.serverName.invalid"
-                          title="Add this service mapping"
-                        >
-                          <span class="icon is-small">
-                            <i class="fas fa-plus"></i>
-                          </span>
-                          <span>Add</span>
-                        </button>
-                      </td>
-                    </tr>
-                    }
-                  </tbody>
-                </table>
-              </div>
-              } @else if (serverName == 'Change me') {
-              <div class="has-text-centered p-6 empty-state">
-                <i class="fas fa-edit fa-3x mb-3 icon-muted"></i>
-                <h4 class="title is-6 text-muted">Update Server Name</h4>
-                <p class="text-muted text-sm">
-                  Please change the server name from the default value to continue with port
-                  mapping configuration.
-                </p>
-              </div>
-              } @else {
-              <div class="has-text-centered p-6 empty-state">
-                <i class="fas fa-hand-pointer fa-3x mb-3 icon-muted"></i>
-                <h4 class="title is-6 text-muted">Select Source Service</h4>
-                <p class="text-muted text-sm">
-                  Choose a source service from the list above to see available target
-                  services and begin mapping ports.
-                </p>
-              </div>
-              }
-            </div>
-
-            <!-- Service Description -->
-            @if (selectedDescription) {
-            <div class="info-box description-box mb-4">
-              <h4 class="title is-7 mb-2 section-title">
-                <i class="fas fa-info-circle mr-2 icon-info"></i>
-                Service Description
-              </h4>
-              <p class="section-subtitle" style="line-height: 1.6;">
-                {{ selectedDescription }}
-              </p>
-            </div>
-            }
-
-            <div class="flex justify-between mt-4">
-              <button
-                class="button is-light"
-                (click)="activateCallback(1)"
-              >
-                <span class="icon is-small">
-                  <i class="fas fa-arrow-left"></i>
-                </span>
-                <span>Back</span>
-              </button>
-              <button
-                class="button is-primary"
-                [disabled]="!canProceedToStep3"
-                (click)="activateCallback(3)"
-              >
-                <span>Next: Review</span>
-                <span class="icon is-small">
-                  <i class="fas fa-arrow-right"></i>
-                </span>
-              </button>
-            </div>
-          </div>
-        </ng-template>
-      </p-step-panel>
-
-      <!-- Step 3: Review & Save -->
-      <p-step-panel [value]="3">
-        <ng-template #content let-activateCallback="activateCallback">
-          <div class="step-content">
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="title is-5 mb-0 section-title">
-                <i class="fas fa-sitemap mr-2 icon-success"></i>
-                Current Port Mappings
-              </h3>
-              @if (selectedPortMapping.mappedPorts.length > 0) {
-              <span class="tag is-success is-light tag-rounded">
-                {{ selectedPortMapping.mappedPorts.length }} mappings
-              </span>
-              } @else {
-              <span class="tag is-light tag-rounded">
-                No mappings yet
-              </span>
-              }
-            </div>
-
-            @if (selectedPortMapping.mappedPorts.length > 0) {
-            <div class="scrollable-table-container table-wrapper table-scroll--lg">
-              <table class="table is-fullwidth mapping-table">
-                <thead class="thead-sticky">
-                  <tr class="gradient-thead">
-                    <th class="th-cell">Product</th>
-                    <th class="th-cell">Source Server</th>
-                    <th class="th-cell">Target Server</th>
-                    <th class="th-cell">Source Service</th>
-                    <th class="th-cell">Target Service</th>
-                    <th class="th-cell td-center">Ports</th>
-                    <th class="th-cell td-center">Protocol</th>
-                    <th class="th-cell action-col">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @for (item of selectedPortMapping.mappedPorts; track item; let index =
-                  $index) {
-                  <tr class="row-clickable">
-                    <td class="td-cell">
-                      <span class="tag is-light tag-rounded text-xs">
-                        {{ item.product }}
-                      </span>
-                    </td>
-                    <td class="td-cell td-bold">
-                      <div class="flex items-center">
-                        <div class="mr-2 status-dot status-dot--sm status-dot--primary"></div>
-                        {{ selectedPortMapping.sourceServer }}
-                      </div>
-                    </td>
-                    <td class="td-cell">
-                      <div class="select is-fullwidth">
-                        <select
-                          [(ngModel)]="item.targetServerName"
-                          (change)="updateTargetPortmapping()"
-                          class="target-select"
-                        >
-                          @for (server of servers; track server) {
-                          <option>{{ server.name }}</option>
-                          }
-                        </select>
-                      </div>
-                    </td>
-                    <td class="td-cell td-bold">
-                      {{ item.sourceService }}
-                    </td>
-                    <td class="td-cell" style="color: var(--text-primary);">
-                      {{ item.targetService }}
-                    </td>
-                    <td class="td-cell td-center">
-                      <code class="port-code">
-                        {{ item.port }}
-                      </code>
-                    </td>
-                    <td class="td-cell td-center">
-                      <span
-                        class="tag tag-rounded td-bold"
-                        [class.is-success]="item.protocol === 'TCP'"
-                        [class.is-info]="item.protocol !== 'TCP'"
-                      >
-                        {{ item.protocol }}
-                      </span>
-                    </td>
-                    <td class="td-cell">
-                      <button
-                        class="button is-danger is-small"
-                        (click)="removeService(index)"
-                        title="Remove this mapping"
-                      >
-                        <span class="icon is-small">
-                          <i class="fas fa-trash"></i>
-                        </span>
-                      </button>
-                    </td>
-                  </tr>
-                  }
-                </tbody>
-              </table>
-            </div>
-            } @else {
-            <div class="has-text-centered p-6 empty-state">
-              <i class="fas fa-sitemap fa-3x mb-3 icon-muted"></i>
-              <h4 class="title is-6 text-muted">No Port Mappings</h4>
-              <p class="text-muted text-sm">
-                Go back to Step 2 to add port mappings by selecting services.
-              </p>
-            </div>
-            }
-
-            <!-- Ready to Save -->
-            <div class="flex items-center mt-4 p-3 info-box">
-              <div class="mr-4 status-dot status-dot--lg status-dot--success pulse-dot"></div>
-              <div>
-                <h6 class="title is-7 mb-1 section-title">
-                  Ready to Save
-                </h6>
-                <p class="text-muted text-sm" style="margin: 0;">
-                  @if (selectedPortMapping.mappedPorts.length > 0) {
-                    Configuration complete with {{ selectedPortMapping.mappedPorts.length }} port mapping(s)
-                  } @else {
-                    Add some port mappings before saving your configuration
-                  }
-                </p>
-              </div>
-            </div>
-
-            <div class="flex justify-between mt-4">
-              <button
-                class="button is-light"
-                (click)="activateCallback(2)"
-              >
-                <span class="icon is-small">
-                  <i class="fas fa-arrow-left"></i>
-                </span>
-                <span>Back to Selection</span>
-              </button>
-              <div class="buttons">
-                <button
-                  class="button is-success btn-bold hover-lift"
-                  [disabled]="
-                    selectedPortMapping.mappedPorts.length == 0 || serverForm.controls.serverName.invalid
-                  "
-                  (click)="saveMapping()"
-                >
-                  <span class="icon">
-                    <i class="fas fa-save"></i>
-                  </span>
-                  <span>Save Configuration</span>
-                </button>
-                <button
-                  class="button is-light back-to-dashboard"
-                  [routerLink]="['/']"
-                >
-                  <span>Cancel</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </ng-template>
-      </p-step-panel>
-    </p-step-panels>
-  </p-stepper>
+          </ng-template>
+        </p-step-panel>
+      </p-step-panels>
+    </p-stepper>
+  </section>
 </div>

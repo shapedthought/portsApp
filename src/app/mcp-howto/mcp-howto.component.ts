@@ -1,14 +1,21 @@
-import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
+import { Copy, LucideAngularModule } from 'lucide-angular';
+import { MessageService } from 'primeng/api';
+import { ThemeService } from '../theme.service';
 
 @Component({
   selector: 'app-mcp-howto',
   standalone: true,
-  imports: [RouterLink],
+  imports: [NgTemplateOutlet, LucideAngularModule],
   templateUrl: './mcp-howto.component.html',
   styleUrl: './mcp-howto.component.css',
 })
 export class McpHowtoComponent {
+  readonly theme = inject(ThemeService);
+  private readonly messageService = inject(MessageService);
+  readonly icons = { Copy };
+
   readonly claudeDesktopConfig = `{
   "mcpServers": {
     "veeam-ports": {
@@ -46,8 +53,14 @@ export class McpHowtoComponent {
     'Create a Magic Ports import file for my VB365 deployment',
   ];
 
-  copyText(text: string, event: Event): void {
-    event.preventDefault();
-    navigator.clipboard?.writeText(text);
+  copyText(text: string, label: string): void {
+    if (!navigator.clipboard) {
+      this.messageService.add({ severity: 'error', summary: 'Copy failed', detail: 'Clipboard access is not available in this browser.' });
+      return;
+    }
+    navigator.clipboard.writeText(text).then(
+      () => this.messageService.add({ severity: 'success', summary: `${label} copied` }),
+      () => this.messageService.add({ severity: 'error', summary: 'Copy failed', detail: 'Clipboard access was blocked by the browser.' }),
+    );
   }
 }

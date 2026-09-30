@@ -1,27 +1,44 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import { Download, LucideAngularModule, Search, Table as TableIcon, Trash2, Workflow } from 'lucide-angular';
 import { DataService } from '../data.service';
 import { PortMapping, MappedPorts } from '../services';
 import { DiagramComponent } from '../diagram/diagram.component';
 import { TableModule, Table } from 'primeng/table';
-import { InputText } from 'primeng/inputtext';
 import { MessageService, ConfirmationService } from 'primeng/api';
+import { ThemeService } from '../theme.service';
+import { splitPorts } from '../topology';
 
 interface FlatMapping extends MappedPorts {
   sourceServer: string;
+  /** Port field split into display chips. */
+  chips: string[];
 }
 
 @Component({
     selector: 'app-report',
-    imports: [RouterLink, FormsModule, DiagramComponent, TableModule, InputText],
-    providers: [],
+    imports: [DiagramComponent, TableModule, LucideAngularModule],
     templateUrl: './report.component.html',
     styleUrl: './report.component.css'
 })
 export class ReportComponent implements OnInit {
 
   @ViewChild('dt') dt!: Table;
+
+  readonly theme = inject(ThemeService);
+  readonly icons = { Download, Search, Table: TableIcon, Trash2, Workflow };
+
+  /** minWidth keeps columns readable; the table scrolls sideways on narrow screens instead of squashing them. */
+  readonly columns: { field: keyof FlatMapping; label: string; minWidth: number }[] = [
+    { field: 'sourceServer', label: 'Source server', minWidth: 130 },
+    { field: 'targetServerName', label: 'Target server', minWidth: 130 },
+    { field: 'product', label: 'Product', minWidth: 120 },
+    { field: 'sourceService', label: 'Source service', minWidth: 140 },
+    { field: 'targetService', label: 'Target service', minWidth: 200 },
+    { field: 'port', label: 'Ports', minWidth: 240 },
+    { field: 'protocol', label: 'Protocol', minWidth: 90 },
+  ];
+
+  statCells: { label: string; value: number }[] = [];
 
   portMapping: PortMapping[] = [];
   flatMappings: FlatMapping[] = [];
@@ -55,7 +72,8 @@ export class ReportComponent implements OnInit {
         this.flatMappings.push({
           ...target,
           sourceServerId: item.id,
-          sourceServer: item.sourceServer
+          sourceServer: item.sourceServer,
+          chips: splitPorts(target.port),
         });
       });
     });
@@ -76,6 +94,11 @@ export class ReportComponent implements OnInit {
 
     this.uniqueServers = Array.from(servers).sort();
     this.uniqueProtocols = Array.from(protocols).sort();
+    this.statCells = [
+      { label: 'Mappings', value: this.flatMappings.length },
+      { label: 'Source servers', value: this.uniqueServers.length },
+      ...this.uniqueProtocols.map(p => ({ label: p, value: this.protocolCounts.get(p) ?? 0 })),
+    ];
   }
 
   clearGlobalFilter(table: Table, input: HTMLInputElement): void {

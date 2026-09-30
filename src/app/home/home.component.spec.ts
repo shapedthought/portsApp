@@ -39,7 +39,7 @@ describe('HomeComponent', () => {
   it('renders the stat strip and the server table in Dashboard mode', () => {
     const fixture = setup('dash');
     const el: HTMLElement = fixture.nativeElement;
-    const stats = [...el.querySelectorAll('.stat-value')].map(s => s.textContent?.trim());
+    const stats = [...el.querySelectorAll('.pa-stat-value')].map(s => s.textContent?.trim());
     expect(stats).toEqual(['2', '1', '2', '2', '0']);
     const rows = el.querySelectorAll('.server-row');
     expect(rows.length).toBe(2);
@@ -60,7 +60,7 @@ describe('HomeComponent', () => {
     const fixture = setup('map');
     const el: HTMLElement = fixture.nativeElement;
     expect(el.querySelector('app-network-map')).not.toBeNull();
-    expect(el.querySelector('.page-title')?.textContent).toContain('Network map');
+    expect(el.querySelector('.pa-page-title')?.textContent).toContain('Network map');
   });
 
   it('keeps the renamed server selected', () => {
