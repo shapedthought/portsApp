@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { HttpService } from './http.service';
+import { HttpService, excelDownloadUrl } from './http.service';
 import { environment } from '../environments/environment';
 import { createTestPortMapping, createTestMappedPort } from './testing/test-utils';
 
@@ -168,5 +168,20 @@ describe('HttpService', () => {
       const req = httpMock.expectOne(`${baseUrl}/sourceDetails`);
       req.flush('Not Found', { status: 404, statusText: 'Not Found' });
     });
+  });
+});
+
+describe('excelDownloadUrl', () => {
+  it('joins a relative path from the backend onto the ports server', () => {
+    expect(excelDownloadUrl('/ports_server', '/download/abc.xlsx')).toBe('/ports_server/download/abc.xlsx');
+    expect(excelDownloadUrl('http://localhost:8001', '/download/abc.xlsx')).toBe('http://localhost:8001/download/abc.xlsx');
+  });
+
+  it('keeps only the path of an absolute URL, so the download still goes through the proxy', () => {
+    expect(excelDownloadUrl('/ports_server', 'https://api.example.com/download/abc.xlsx')).toBe('/ports_server/download/abc.xlsx');
+  });
+
+  it('handles a trailing slash on the ports server and a query string', () => {
+    expect(excelDownloadUrl('/ports_server/', '/download/abc.xlsx?v=1')).toBe('/ports_server/download/abc.xlsx?v=1');
   });
 });
