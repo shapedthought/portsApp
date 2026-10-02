@@ -12,6 +12,16 @@ import {
 } from './services';
 import { environment } from '../environments/environment';
 
+/**
+ * Builds the browser URL for a generated Excel file. The backend returns either a path
+ * ("/download/x.xlsx") or, in older versions, an absolute URL on its own host; either way
+ * only the path is kept and it is fetched through the ports server (the /ports_server proxy in production).
+ */
+export function excelDownloadUrl(portsServer: string, fileUrl: string): string {
+  const { pathname, search } = new URL(fileUrl, 'http://backend.invalid');
+  return `${portsServer.replace(/\/+$/, '')}${pathname}${search}`;
+}
+
 @Injectable({
   providedIn: 'root',
 })

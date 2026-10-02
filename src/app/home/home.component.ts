@@ -6,7 +6,7 @@ import { Dialog } from 'primeng/dialog';
 import { ChevronDown, Download, LucideAngularModule, Plus, Upload } from 'lucide-angular';
 import { v4 as uuidv4 } from 'uuid';
 import { DataService } from '../data.service';
-import { HttpService } from '../http.service';
+import { HttpService, excelDownloadUrl } from '../http.service';
 import { environment } from '../../environments/environment';
 import { NetworkMapComponent } from '../network-map/network-map.component';
 import { ServerDetailComponent } from '../server-detail/server-detail.component';
@@ -239,10 +239,7 @@ export class HomeComponent implements OnInit {
 
     this.httpService.generateExcelData(this.dataService.mappedPorts()).subscribe({
       next: data => {
-        const urlUpdated = this.portsServer.includes('localhost')
-          ? `${this.portsServer}${data.file_url}`
-          : `${this.portsServer}${data.file_url.split('.com/')[1]}`;
-        window.open(urlUpdated);
+        window.open(excelDownloadUrl(this.portsServer, data.file_url));
         this.isDownloading = false;
         this.messageService.add({
           severity: 'success',
