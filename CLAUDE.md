@@ -57,7 +57,7 @@ The backend API is a separate service. `src/environments/environment.ts` points 
     - A `v*` git tag or a manual `workflow_dispatch` with `deploy: true` also deploys: it SSHes to the VPS and runs `kubectl set image` on `ports-frontend-deployment`.
     - Pass only the image **tag** between jobs, never the full `user/repo:tag` ref. Actions redacts outputs that contain secrets, which leaves the deploy job with an empty ref.
   - The cluster uses `imagePullPolicy: IfNotPresent`, so every deploy needs a new tag.
-- Version is in `package.json` (currently 0.7.1). The nav and footer read it from there, so bumping it updates the web app. Release by pushing a `v<version>` tag, which builds and deploys.
+- Version is in `package.json` (currently 0.7.2). The nav and footer read it from there, so bumping it updates the web app. Release by pushing a `v<version>` tag, which builds and deploys.
 
 ## Project docs
 
