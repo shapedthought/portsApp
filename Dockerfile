@@ -12,7 +12,7 @@ RUN npm run build
 
 # stage 2
 
-FROM nginx:alpine
+FROM nginx:1.31.9-alpine
 
 COPY --from=build /usr/src/app/dist/ports-app/browser /usr/share/nginx/html
 
